@@ -8,7 +8,7 @@
 
 import Foundation
 
-// Requirement #3: ✅
+// Requirement #3: ✅ (fetch online data from REST API)
 
 class APIController {
     
