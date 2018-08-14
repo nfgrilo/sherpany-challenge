@@ -20,6 +20,11 @@
 		28DD3B312121EDF200B05A4B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 28DD3B2F2121EDF200B05A4B /* Main.storyboard */; };
 		28DD3B332121EDF300B05A4B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 28DD3B322121EDF300B05A4B /* Assets.xcassets */; };
 		28DD3B362121EDF300B05A4B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 28DD3B342121EDF300B05A4B /* LaunchScreen.storyboard */; };
+		28ECB12E2123215400764592 /* APIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28ECB12D2123215400764592 /* APIController.swift */; };
+		28ECB130212321E500764592 /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28ECB12F212321E500764592 /* APIError.swift */; };
+		28ECB1322123220C00764592 /* APIResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28ECB1312123220C00764592 /* APIResponse.swift */; };
+		28ECB134212324EB00764592 /* APIResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28ECB133212324EB00764592 /* APIResource.swift */; };
+		28ECB13621232FF600764592 /* APIRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28ECB13521232FF600764592 /* APIRequest.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +43,11 @@
 		28DD3B322121EDF300B05A4B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		28DD3B352121EDF300B05A4B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		28DD3B372121EDF300B05A4B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		28ECB12D2123215400764592 /* APIController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIController.swift; sourceTree = "<group>"; };
+		28ECB12F212321E500764592 /* APIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
+		28ECB1312123220C00764592 /* APIResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIResponse.swift; sourceTree = "<group>"; };
+		28ECB133212324EB00764592 /* APIResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIResource.swift; sourceTree = "<group>"; };
+		28ECB13521232FF600764592 /* APIRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIRequest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +112,7 @@
 				28111F4C2122445300CA324F /* MainCoordinator.swift */,
 				28111F4E2122505700CA324F /* Post List [master] */,
 				28111F4F2122506100CA324F /* Post Details [detail] */,
+				28ECB12C2123211300764592 /* Rest API */,
 				286DE1DC212241C900F2ED03 /* Common */,
 				28DD3B2F2121EDF200B05A4B /* Main.storyboard */,
 				28DD3B342121EDF300B05A4B /* LaunchScreen.storyboard */,
@@ -110,6 +121,18 @@
 				28DD3B372121EDF300B05A4B /* Info.plist */,
 			);
 			path = Source;
+			sourceTree = "<group>";
+		};
+		28ECB12C2123211300764592 /* Rest API */ = {
+			isa = PBXGroup;
+			children = (
+				28ECB12D2123215400764592 /* APIController.swift */,
+				28ECB133212324EB00764592 /* APIResource.swift */,
+				28ECB13521232FF600764592 /* APIRequest.swift */,
+				28ECB1312123220C00764592 /* APIResponse.swift */,
+				28ECB12F212321E500764592 /* APIError.swift */,
+			);
+			path = "Rest API";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -186,12 +209,17 @@
 				28DD3B272121EDF200B05A4B /* AppDelegate.swift in Sources */,
 				28DD3B2A2121EDF200B05A4B /* Posts.xcdatamodeld in Sources */,
 				286DE1DE212241E600F2ED03 /* Coordinator.swift in Sources */,
+				28ECB12E2123215400764592 /* APIController.swift in Sources */,
+				28ECB134212324EB00764592 /* APIResource.swift in Sources */,
 				28111F532122529F00CA324F /* PostsViewController.swift in Sources */,
+				28ECB130212321E500764592 /* APIError.swift in Sources */,
 				28DD3B2E2121EDF200B05A4B /* PostDetailsViewController.swift in Sources */,
+				28ECB1322123220C00764592 /* APIResponse.swift in Sources */,
 				286DE1E02122424600F2ED03 /* Storyboarded.swift in Sources */,
 				28111F57212258E600CA324F /* PostsDataSource.swift in Sources */,
 				28111F512122507A00CA324F /* PostsCoordinator.swift in Sources */,
 				28111F4D2122445300CA324F /* MainCoordinator.swift in Sources */,
+				28ECB13621232FF600764592 /* APIRequest.swift in Sources */,
 				28111F55212255C300CA324F /* PostDetailsCoordinator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
