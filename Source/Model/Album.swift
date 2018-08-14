@@ -18,7 +18,7 @@ struct Album: Equatable {
 
 extension Album {
     init(managedAlbum: ManagedAlbum) {
-        // PS: both `String` attributes are defined as non-optionals, which is not being respected on the generated managed object classes.
+        // PS: `title` `String` attribute is defined as non-optional, which is not being respected on the generated managed object class.
         
         // attributes
         id = managedAlbum.id
