@@ -8,6 +8,8 @@
 
 import Foundation
 
+// Requirement #3: ✅
+
 class APIController {
     
     /// API request completion results.
