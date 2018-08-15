@@ -2,30 +2,30 @@
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14135" systemVersion="17G65" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="ManagedAlbum" representedClassName="ManagedAlbum" syncable="YES" codeGenerationType="class">
         <attribute name="id" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="title" attributeType="String" syncable="YES"/>
-        <relationship name="photos" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ManagedPhoto" inverseName="album" inverseEntity="ManagedPhoto" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="photos" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ManagedPhoto" inverseName="album" inverseEntity="ManagedPhoto" syncable="YES"/>
         <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ManagedUser" inverseName="albums" inverseEntity="ManagedUser" syncable="YES"/>
     </entity>
     <entity name="ManagedPhoto" representedClassName="ManagedPhoto" syncable="YES" codeGenerationType="class">
         <attribute name="id" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="thumbnailUrl" attributeType="URI" syncable="YES"/>
-        <attribute name="title" attributeType="String" syncable="YES"/>
-        <attribute name="url" attributeType="URI" syncable="YES"/>
+        <attribute name="thumbnailUrl" optional="YES" attributeType="URI" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="url" optional="YES" attributeType="URI" syncable="YES"/>
         <relationship name="album" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ManagedAlbum" inverseName="photos" inverseEntity="ManagedAlbum" syncable="YES"/>
     </entity>
     <entity name="ManagedPost" representedClassName="ManagedPost" syncable="YES" codeGenerationType="class">
-        <attribute name="body" attributeType="String" syncable="YES"/>
+        <attribute name="body" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="id" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="title" attributeType="String" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ManagedUser" inverseName="posts" inverseEntity="ManagedUser" syncable="YES"/>
     </entity>
     <entity name="ManagedUser" representedClassName="ManagedUser" syncable="YES" codeGenerationType="class">
-        <attribute name="email" attributeType="String" syncable="YES"/>
+        <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="id" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="name" attributeType="String" syncable="YES"/>
-        <attribute name="username" attributeType="String" syncable="YES"/>
-        <relationship name="albums" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ManagedAlbum" inverseName="user" inverseEntity="ManagedAlbum" syncable="YES"/>
-        <relationship name="posts" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ManagedPost" inverseName="user" inverseEntity="ManagedPost" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="username" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="albums" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ManagedAlbum" inverseName="user" inverseEntity="ManagedAlbum" syncable="YES"/>
+        <relationship name="posts" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ManagedPost" inverseName="user" inverseEntity="ManagedPost" syncable="YES"/>
     </entity>
     <elements>
         <element name="ManagedPost" positionX="-63" positionY="-18" width="128" height="105"/>
