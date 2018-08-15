@@ -9,20 +9,22 @@
 import Foundation
 import CoreData
 
+/// An immutable and thread-safe `Photo` model based on the correspondent Core Data managed object (`ManagedPhoto`).
 struct Photo: Equatable {
     let id: Int64
-    let title: String
+    let title: String?
     let url: URL?
     let thumbnailUrl: URL?
 }
 
 extension Photo {
+    /// Intialize model from the correspondent Core Data managed object.
+    ///
+    /// - Parameter managedPhoto: The CoreData managed object
     init(managedPhoto: ManagedPhoto) {
-        // PS: `title` `String` attribute is defined as non-optional, which is not being respected on the generated managed object class.
-        
         // attributes
         id = managedPhoto.id
-        title = managedPhoto.title ?? ""
+        title = managedPhoto.title
         url = managedPhoto.url
         thumbnailUrl = managedPhoto.thumbnailUrl
     }

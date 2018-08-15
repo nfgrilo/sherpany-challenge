@@ -9,28 +9,33 @@
 import Foundation
 import CoreData
 
+/// An immutable and thread-safe `User` model based on the correspondent Core Data managed object (`ManagedUser`).
 struct User: Equatable {
     let id: Int64
-    let name: String
-    let username: String
-    let email: String
+    let name: String?
+    let username: String?
+    let email: String?
     
     let albums: [Album]
 }
 
 extension User {
-    init(managedUser: ManagedUser) {
-        // PS: both `String` attributes are defined as non-optionals, which is not being respected on the generated managed object classes.
-        
+    /// Intialize model from the correspondent Core Data managed object.
+    ///
+    /// - Parameters:
+    ///   - managedUser: The CoreData managed object
+    ///   - fetchAlbums: Whether to fetch the `albums` relationship upon initialization. This will also fetch the `ManagedAlbum.photos` relationship.
+    init(managedUser: ManagedUser, fetchAlbums: Bool = false) {
         // attributes
         id = managedUser.id
-        name = managedUser.name ?? ""
-        username = managedUser.username ?? ""
-        email = managedUser.email ?? ""
+        name = managedUser.name
+        username = managedUser.username
+        email = managedUser.email
         
         // relationship: ManagedUser -> 1:N -> ManagedAlbum
         var albumList: [Album] = []
-        if let managedAlbums = managedUser.albums?.allObjects as? [ManagedAlbum] {
+        if fetchAlbums,
+            let managedAlbums = managedUser.albums?.allObjects as? [ManagedAlbum] {
             managedAlbums.forEach {
                 albumList.append(Album(managedAlbum: $0))
             }

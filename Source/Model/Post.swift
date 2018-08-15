@@ -9,26 +9,30 @@
 import Foundation
 import CoreData
 
+/// An immutable and thread-safe `Post` model based on the correspondent Core Data managed object (`ManagedPost`).
 struct Post: Equatable {
     let id: Int64
-    let title: String
-    let body: String
+    let title: String?
+    let body: String?
     
     let user: User?
 }
 
 extension Post {
-    init(managedPost: ManagedPost) {
-        // PS: both `String` attributes are defined as non-optionals, which is not being respected on the generated managed object classes.
-        
+    /// Intialize model from the correspondent Core Data managed object.
+    ///
+    /// - Parameters:
+    ///   - managedPost: The CoreData managed object
+    ///   - fetchUserAlbums: Whether to fetch the `User.albums` relationship upon initialization. This will also fetch the `User.albums.photos` relationship.
+    init(managedPost: ManagedPost, fetchUserAlbums: Bool = false) {
         // attributes
         id = managedPost.id
-        title = managedPost.title ?? ""
-        body = managedPost.body ?? ""
+        title = managedPost.title
+        body = managedPost.body
         
         // relationship: ManagedPost -> N:1 -> ManagedUser
         if let managedUser = managedPost.user {
-            user = User(managedUser: managedUser)
+            user = User(managedUser: managedUser, fetchAlbums: fetchUserAlbums)
         }
         else {
             user = nil

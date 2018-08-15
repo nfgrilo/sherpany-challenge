@@ -9,17 +9,19 @@
 import Foundation
 import CoreData
 
+/// An immutable and thread-safe `Album` model based on the correspondent Core Data managed object (`ManagedAlbum`).
 struct Album: Equatable {
     let id: Int64
-    let title: String
+    let title: String?
     
     let photos: [Photo]
 }
 
 extension Album {
+    /// Intialize model from the correspondent Core Data managed object.
+    ///
+    /// - Parameter managedAlbum: The CoreData managed object
     init(managedAlbum: ManagedAlbum) {
-        // PS: `title` `String` attribute is defined as non-optional, which is not being respected on the generated managed object class.
-        
         // attributes
         id = managedAlbum.id
         title = managedAlbum.title ?? ""
