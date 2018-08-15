@@ -67,3 +67,10 @@ struct PhotoResponse: Codable, APIResponse {
     /// Photo thumbnail URL.
     let thumbnailUrl: URL
 }
+
+struct AggregateResponse: Codable, APIResponse {
+    let posts: [PostResponse]
+    let users: [UserResponse]
+    let albums: [AlbumResponse]
+    let photos: [PhotoResponse]
+}

@@ -176,6 +176,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 28DD3B3A2121EDF300B05A4B /* Build configuration list for PBXNativeTarget "Sherpany Posts" */;
 			buildPhases = (
+				28ECB145212434F500764592 /* TODO / FIXME / WARN / ERROR */,
 				28DD3B1F2121EDF200B05A4B /* Sources */,
 				28DD3B202121EDF200B05A4B /* Frameworks */,
 				28DD3B212121EDF200B05A4B /* Resources */,
@@ -234,6 +235,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		28ECB145212434F500764592 /* TODO / FIXME / WARN / ERROR */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "TODO / FIXME / WARN / ERROR";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "TAGS=\"TODO|FIXME|WARN|\\?\\?\\?:|\\!\\!\\!:\"\nERRORTAG=\"ERROR:|\\?\\?\\?:|\\!\\!\\!:\"\nfind \"${SRCROOT}/Source\" \\( -name \"*.h\" -or -name \"*.m\" -or -name \"*.swift\" -type f \\) -print0 | xargs -0 egrep --with-filename --line-number --only-matching \"($TAGS).*\\$|($ERRORTAG).*\\$\" | perl -p -e \"s/($TAGS)/ warning: \\$1/\" | perl -p -e \"s/($ERRORTAG)/ error: \\$1/\"";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		28DD3B1F2121EDF200B05A4B /* Sources */ = {

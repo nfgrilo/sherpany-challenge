@@ -10,6 +10,7 @@ import Foundation
 
 // Requirement #3: ✅ (fetch online data from REST API)
 
+/// The REST API controller allows interaction (currently only fetching) with the JSON Placeholder API
 class APIController {
     
     /// API request completion results.
@@ -22,7 +23,86 @@ class APIController {
     private var requests: [AnyObject] = []
     
     
-    // MARK: - Posts
+    // MARK: - Fetch All Data
+    
+    /// Fetch all data from the API (posts, users, albums & photos).
+    ///
+    /// - Parameter completion: Completion closure called when response is received and parsed, or an error occurs.
+    func fetchAllData(completion: @escaping (APIResult<AggregateResponse>) -> Void) {
+        let dispatchGroup = DispatchGroup()
+        
+        // variables that will hold fetched values
+        var posts: [PostResponse]!
+        var users: [UserResponse]!
+        var albums: [AlbumResponse]!
+        var photos: [PhotoResponse]!
+        var errors: [Error] = []
+        
+        // fetch all posts
+        dispatchGroup.enter()
+        fetchPosts { result in
+            switch result {
+            case .success(let response):
+                posts = response
+            case .failure(let error):
+                print("Error fetching posts: \(error)")
+                errors.append(error)
+            }
+            dispatchGroup.leave()
+        }
+        
+        // fetch all users
+        dispatchGroup.enter()
+        fetchUsers { result in
+            switch result {
+            case .success(let response):
+                users = response
+            case .failure(let error):
+                print("Error fetching users: \(error)")
+                errors.append(error)
+            }
+            dispatchGroup.leave()
+        }
+        
+        // fetch all albums
+        dispatchGroup.enter()
+        fetchAlbums { result in
+            switch result {
+            case .success(let response):
+                albums = response
+            case .failure(let error):
+                print("Error fetching albums: \(error)")
+                errors.append(error)
+            }
+            dispatchGroup.leave()
+        }
+        
+        // fetch all photos
+        dispatchGroup.enter()
+        fetchPhotos { result in
+            switch result {
+            case .success(let response):
+                photos = response
+            case .failure(let error):
+                print("Error fetching photos: \(error)")
+                errors.append(error)
+            }
+            dispatchGroup.leave()
+        }
+        
+        // process all results
+        dispatchGroup.notify(queue: DispatchQueue.global(qos: .background)) {
+            guard errors.isEmpty else {
+                completion(.failure( APIError.compoundErrors(errors: errors) ))
+                return
+            }
+            let allData = AggregateResponse(posts: posts, users: users, albums: albums, photos: photos)
+            completion(.success( [allData] ))
+        }
+    }
+    
+    
+    // MARK: - Individual data fetching
     
     /// Fetch one or all posts from the API.
     ///
@@ -52,9 +132,6 @@ class APIController {
         }
     }
     
-    
-    // MARK: - Users
-    
     /// Fetch one or all users from the API.
     ///
     /// - Parameters:
@@ -82,9 +159,6 @@ class APIController {
             }
         }
     }
-    
-    
-    // MARK: - Albums
     
     /// Fetch one or all albums from the API.
     ///
@@ -120,9 +194,6 @@ class APIController {
             }
         }
     }
-    
-    
-    // MARK: - Photos
     
     /// Fetch one or all photos from the API.
     ///

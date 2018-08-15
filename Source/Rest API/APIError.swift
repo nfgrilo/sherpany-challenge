@@ -22,6 +22,9 @@ enum APIError: Error {
     /// Invalid request error.
     case invalidRequest(message: String)
     
+    /// Compound errors.
+    case compoundErrors(errors: [Error])
+    
     /// Error description.
     var description: String {
         switch self {
@@ -33,6 +36,8 @@ enum APIError: Error {
             return "Call returned an empty response."
         case .invalidRequest(let message):
             return "Invalid request: \"\(message)\"."
+        case .compoundErrors(let errors):
+            return "Multiple errors: \"\(errors)\"."
         }
     }
     

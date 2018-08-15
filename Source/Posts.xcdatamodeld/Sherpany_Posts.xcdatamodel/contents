@@ -5,6 +5,11 @@
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="photos" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ManagedPhoto" inverseName="album" inverseEntity="ManagedPhoto" syncable="YES"/>
         <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ManagedUser" inverseName="albums" inverseEntity="ManagedUser" syncable="YES"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="id"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
     </entity>
     <entity name="ManagedPhoto" representedClassName="ManagedPhoto" syncable="YES" codeGenerationType="class">
         <attribute name="id" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
@@ -12,12 +17,22 @@
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="url" optional="YES" attributeType="URI" syncable="YES"/>
         <relationship name="album" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ManagedAlbum" inverseName="photos" inverseEntity="ManagedAlbum" syncable="YES"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="id"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
     </entity>
     <entity name="ManagedPost" representedClassName="ManagedPost" syncable="YES" codeGenerationType="class">
         <attribute name="body" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="id" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ManagedUser" inverseName="posts" inverseEntity="ManagedUser" syncable="YES"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="id"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
     </entity>
     <entity name="ManagedUser" representedClassName="ManagedUser" syncable="YES" codeGenerationType="class">
         <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
@@ -26,11 +41,16 @@
         <attribute name="username" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="albums" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ManagedAlbum" inverseName="user" inverseEntity="ManagedAlbum" syncable="YES"/>
         <relationship name="posts" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ManagedPost" inverseName="user" inverseEntity="ManagedPost" syncable="YES"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="id"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
     </entity>
     <elements>
-        <element name="ManagedPost" positionX="-63" positionY="-18" width="128" height="105"/>
-        <element name="ManagedUser" positionX="-54" positionY="0" width="128" height="135"/>
         <element name="ManagedAlbum" positionX="-45" positionY="54" width="128" height="105"/>
         <element name="ManagedPhoto" positionX="-36" positionY="63" width="128" height="120"/>
+        <element name="ManagedPost" positionX="-63" positionY="-18" width="128" height="105"/>
+        <element name="ManagedUser" positionX="-54" positionY="0" width="128" height="135"/>
     </elements>
 </model>

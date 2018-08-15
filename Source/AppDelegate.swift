@@ -22,6 +22,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     
     /// Model controller.
     private var modelController: ModelController?
+    
+    /// REST API controller.
+    private var apiController: APIController?
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
@@ -32,6 +35,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         // setup main coordinator
         let coordinator = MainCoordinator(window: window)
         self.coordinator = coordinator
+        
+        // model controller
+        let apiController = APIController()
+        self.apiController = apiController
+        self.modelController = ModelController(apiController: apiController)
         
         // take control
         coordinator.start()
