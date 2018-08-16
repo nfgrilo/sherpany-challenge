@@ -8,7 +8,12 @@
 
 import UIKit
 
+// Requirement #7: ✅ (display table with all posts...)
+
 class PostsCoordinator: Coordinator {
+    /// Child coordinators.
+    var childCoordinators: [Coordinator] = []
+    
     /// The navigation view controller currently being used to present view controllers.
     var navigationController: UINavigationController
     
@@ -23,22 +28,19 @@ class PostsCoordinator: Coordinator {
     /// Model controller.
     private let modelController: ModelController
     
+    /// Posts data source.
+    private var dataSource: PostsDataSource?
+    
+    /// Currently selected post
+    private var selectedPost: Post?
+    
+    
     /// Creates a new coordinator.
     ///
     /// - Parameter navigationController: The root view controller "BOSSed" by this coordinator.
     init(navigationController: UINavigationController, modelController: ModelController) {
         self.navigationController = navigationController
         self.modelController = modelController
-    }
-    
-    /// Posts data source.
-    private var dataSource: PostsDataSource?
-    
-    /// Currently selected post
-    private var selectedPost: Post? {
-        didSet {
-            print("Post id=\(selectedPost?.id ?? -1) was selected.")
-        }
     }
     
     
@@ -80,7 +82,11 @@ class PostsCoordinator: Coordinator {
     ///
     /// - Parameter id: The index path of selected post.
     func postDeleted(in tableView: UITableView, at indexPath: IndexPath) {
+        // remove from Core Data
         dataSource?.removePost(in: tableView, at: indexPath)
+        
+        // inform post selection delegate that selected post has been changed
+        postSelectedDelegate?.postSelected(postId: nil)
     }
 }
 

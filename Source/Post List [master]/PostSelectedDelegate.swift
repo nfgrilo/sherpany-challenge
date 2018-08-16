@@ -12,5 +12,5 @@ protocol PostSelectedDelegate: class {
     /// Informs delegate that a post has been selected.
     ///
     /// - Parameter postId: The ID of selected post.
-    func postSelected(postId: Int64)
+    func postSelected(postId: Int64?)
 }

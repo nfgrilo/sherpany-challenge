@@ -9,6 +9,9 @@
 import UIKit
 
 class PostDetailsCoordinator: Coordinator {
+    /// Child coordinators.
+    var childCoordinators: [Coordinator] = []
+    
     /// The navigation view controller currently being used to present view controllers.
     var navigationController: UINavigationController
     
@@ -19,6 +22,7 @@ class PostDetailsCoordinator: Coordinator {
     
     /// Model controller.
     private let modelController: ModelController
+    
     
     /// Creates a coordinator.
     ///
@@ -41,8 +45,21 @@ class PostDetailsCoordinator: Coordinator {
     }
 }
 
+
+// MARK: - Post selection delegate
+
 extension PostDetailsCoordinator: PostSelectedDelegate {
-    func postSelected(postId: Int64) {
-        viewController?.detailItem = "Post id = \(postId) selected."
+    // Requirement #9: ✅
+    func postSelected(postId: Int64?) {
+        // selection cleared out?
+        guard let postId = postId else {
+            viewController?.post = nil
+            return
+        }
+        
+        // get post from Core Data
+        modelController.post(with: postId, completion: { [weak self] post in
+            self?.viewController?.post = post
+        })
     }
 }

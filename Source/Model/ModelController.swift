@@ -45,7 +45,7 @@ class ModelController {
             do {
                 let managedPosts = try context.fetch(fetchRequest) as [ManagedPost]
                 for managedPost in managedPosts {
-                    let post = Post(managedPost: managedPost, fetchUserAlbums: false)
+                    let post = Post(managedPost: managedPost)
                     posts.append(post)
                 }
             } catch {
@@ -53,6 +53,33 @@ class ModelController {
             }
             
             completion(posts)
+        }
+    }
+    
+    /// Gets the post with the specified id
+    ///
+    /// - Parameters:
+    ///   - id: The post id.
+    ///   - completion: Completion closure called when complete.
+    func post(with id: Int64, completion: @escaping (Post?) -> Void) {
+        persistentContainer.performBackgroundTask { context in
+            // setup fetch request
+            let fetchRequest: NSFetchRequest<ManagedPost> = ManagedPost.fetchRequest()
+            fetchRequest.predicate = NSPredicate(format: "id == %i", id)
+            fetchRequest.fetchLimit = 1
+            
+            // get post
+            var post: Post?
+            do {
+                if let managedPost = try context.fetch(fetchRequest).first {
+                    post = Post(managedPost: managedPost, fetchUserAlbums: true)
+                }
+            } catch {
+                print("Failed to delete post with error: \(error)")
+            }
+            
+            // call completion
+            completion(post)
         }
     }
     

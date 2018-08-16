@@ -9,20 +9,18 @@
 import UIKit
 
 class MainCoordinator: Coordinator {
-    /// Master child coordinator.
-    var masterCoordinator: PostsCoordinator?
-    
-    /// Detail child coordinator.
-    var detailCoordinator: PostDetailsCoordinator?
-    
-    /// The root view controller currently being used to present view controllers.
-    let splitViewController: UISplitViewController
+    /// Child coordinators.
+    var childCoordinators: [Coordinator] = []
     
     /// The app window.
     private let window: UIWindow
     
     /// Model controller.
     private let modelController: ModelController
+    
+    /// The root view controller currently being used to present view controllers.
+    private var splitViewController: UISplitViewController?
+    
     
     /// Creates a new main coordinator.
     ///
@@ -32,28 +30,32 @@ class MainCoordinator: Coordinator {
     init(window: UIWindow, modelController: ModelController) {
         self.window = window
         self.modelController = modelController
-        
-        // childs: coordinators + VCs
-        //  -> master
-        let masterNavigationController = UINavigationController()
-        masterCoordinator = PostsCoordinator(navigationController: masterNavigationController, modelController: modelController)
-        masterCoordinator?.start()
-        //  -> detail
-        let detailNavigationController = UINavigationController()
-        detailCoordinator = PostDetailsCoordinator(navigationController: detailNavigationController, modelController: modelController)
-        detailCoordinator?.start()
-        masterCoordinator?.postSelectedDelegate = detailCoordinator
-        
-        // root: split view controller -> // Requirement #6: ✅
-        splitViewController = UISplitViewController()
-        splitViewController.viewControllers = [masterNavigationController, detailNavigationController]
-        splitViewController.preferredDisplayMode = .allVisible
-        splitViewController.minimumPrimaryColumnWidth = 300
-        splitViewController.maximumPrimaryColumnWidth = splitViewController.minimumPrimaryColumnWidth
     }
     
     /// Take control!
     func start() {
+        // childs: coordinators + VCs
+        //  -> master
+        let masterNavigationController = UINavigationController()
+        let masterCoordinator = PostsCoordinator(navigationController: masterNavigationController, modelController: modelController)
+        childCoordinators.append(masterCoordinator)
+        masterCoordinator.start()
+        //  -> detail
+        let detailNavigationController = UINavigationController()
+        let detailsCoordinator = PostDetailsCoordinator(navigationController: detailNavigationController, modelController: modelController)
+        childCoordinators.append(detailsCoordinator)
+        detailsCoordinator.start()
+        masterCoordinator.postSelectedDelegate = detailsCoordinator
+        
+        // root: split view controller -> Requirement #6: ✅
+        let splitViewController = UISplitViewController()
+        self.splitViewController = splitViewController
+        splitViewController.viewControllers = [masterNavigationController, detailNavigationController]
+        splitViewController.preferredDisplayMode = .allVisible
+        splitViewController.minimumPrimaryColumnWidth = 300
+        splitViewController.maximumPrimaryColumnWidth = splitViewController.minimumPrimaryColumnWidth
+        
+        // show
         window.rootViewController = splitViewController
         window.makeKeyAndVisible()
     }

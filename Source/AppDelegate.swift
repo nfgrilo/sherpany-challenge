@@ -28,17 +28,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // setup window
+        // window
         let window = UIWindow(frame: UIScreen.main.bounds)
         self.window = window
         
-        // controllers
+        // shared controllers
         let apiController = APIController()
         self.apiController = apiController
         let modelController = ModelController(apiController: apiController)
         self.modelController = modelController
         
-        // setup main coordinator
+        // main coordinator
         let coordinator = MainCoordinator(window: window, modelController: modelController)
         self.coordinator = coordinator
         

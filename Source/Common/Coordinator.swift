@@ -10,6 +10,9 @@ import UIKit
 
 protocol Coordinator {
     
+    /// Child coordinators.
+    var childCoordinators: [Coordinator] { get set }
+    
     /// Make the coordinator take control.
     func start()
     
