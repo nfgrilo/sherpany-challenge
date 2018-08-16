@@ -19,22 +19,28 @@ class MainCoordinator: Coordinator {
     let splitViewController: UISplitViewController
     
     /// The app window.
-    let window: UIWindow
+    private let window: UIWindow
+    
+    /// Model controller.
+    private let modelController: ModelController
     
     /// Creates a new main coordinator.
     ///
-    /// - Parameter window: The app window.
-    init(window: UIWindow) {
+    /// - Parameters:
+    ///   - window: The app window.
+    ///   - modelController: The model controller
+    init(window: UIWindow, modelController: ModelController) {
         self.window = window
+        self.modelController = modelController
         
         // childs: coordinators + VCs
         //  -> master
         let masterNavigationController = UINavigationController()
-        masterCoordinator = PostsCoordinator(navigationController: masterNavigationController)
+        masterCoordinator = PostsCoordinator(navigationController: masterNavigationController, modelController: modelController)
         masterCoordinator?.start()
         //  -> detail
         let detailNavigationController = UINavigationController()
-        detailCoordinator = PostDetailsCoordinator(navigationController: detailNavigationController)
+        detailCoordinator = PostDetailsCoordinator(navigationController: detailNavigationController, modelController: modelController)
         detailCoordinator?.start()
         masterCoordinator?.postSelectedDelegate = detailCoordinator
         

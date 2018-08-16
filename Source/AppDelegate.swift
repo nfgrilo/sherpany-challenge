@@ -32,16 +32,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         let window = UIWindow(frame: UIScreen.main.bounds)
         self.window = window
         
-        // setup main coordinator
-        let coordinator = MainCoordinator(window: window)
-        self.coordinator = coordinator
-        
-        // model controller
+        // controllers
         let apiController = APIController()
         self.apiController = apiController
-        self.modelController = ModelController(apiController: apiController)
+        let modelController = ModelController(apiController: apiController)
+        self.modelController = modelController
         
-        // take control
+        // setup main coordinator
+        let coordinator = MainCoordinator(window: window, modelController: modelController)
+        self.coordinator = coordinator
+        
+        // let main coordinator take control
         coordinator.start()
         
         return true

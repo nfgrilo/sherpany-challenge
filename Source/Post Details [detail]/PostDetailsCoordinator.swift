@@ -17,11 +17,15 @@ class PostDetailsCoordinator: Coordinator {
     /// A strong reference is already made when vc is presented (added to vc hierarchy).
     private weak var viewController: PostDetailsViewController?
     
+    /// Model controller.
+    private let modelController: ModelController
+    
     /// Creates a coordinator.
     ///
     /// - Parameter navigationController: The root view controller "BOSSed" by this coordinator.
-    init(navigationController: UINavigationController) {
+    init(navigationController: UINavigationController, modelController: ModelController) {
         self.navigationController = navigationController
+        self.modelController = modelController
     }
     
     /// Take control!

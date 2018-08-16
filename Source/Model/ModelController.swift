@@ -21,7 +21,7 @@ class ModelController {
     }
     
     
-    // MARK: - Model access
+    // MARK: - Posts
     
     /// Retrieve all posts as `[Post]` - the immutable & thread-safe version of `ManagedPost`.
     ///
@@ -36,7 +36,6 @@ class ModelController {
                 let managedPosts = try context.fetch(fetchRequest) as [ManagedPost]
                 for managedPost in managedPosts {
                     let post = Post(managedPost: managedPost, fetchUserAlbums: false)
-                    print("Processing \(post)")
                     posts.append(post)
                 }
             } catch {
@@ -44,6 +43,29 @@ class ModelController {
             }
             
             completion(posts)
+        }
+    }
+    
+    /// Remove the post with the specified id.
+    ///
+    /// - Parameters:
+    ///   - id: The post id.
+    ///   - completion: Completion closure called when complete.
+    func removePost(_ id: Int64, completion: @escaping () -> Void) {
+        persistentContainer.performBackgroundTask { context in
+            let fetchRequest: NSFetchRequest<ManagedPost> = ManagedPost.fetchRequest()
+            fetchRequest.predicate = NSPredicate(format: "id == %i)", id)
+            fetchRequest.fetchLimit = 1
+            
+            do {
+                let objects = try context.fetch(fetchRequest)
+                for object in objects {
+                    print("Deleting \(object)")
+                    context.delete(object)
+                }
+            } catch {
+                print("Failed to delete post with error: \(error)")
+            }
         }
     }
     
@@ -56,6 +78,7 @@ class ModelController {
     /// persisted data on Core Data.
     func refreshDataOnline() {
         // 1. fetch all data at once (Requirement #3)
+        print("Fetching data from REST API...")
         apiController.fetchAllData { [weak self] result in
             // this closure is executed on a background thread (background QOS)
             
@@ -82,6 +105,7 @@ class ModelController {
     ///
     /// - Parameter fetchedData: An `AggregateResponse` object with all fresh fetched data.
     private func mergeData(from fetchedData: AggregateResponse) {
+        print("Merging fetched data with persisted data...")
         // Merging will be performed by:
         //  - removing any persisted item that is not on fetched data (never happens on this app)
         //  - making use of "upsert", that is, checking if entity exists by
@@ -169,10 +193,10 @@ class ModelController {
             do {
                 if context.hasChanges {
                     try context.save()
-                    print("Successfuly saved to Core Data")
+                    print("Successfuly saved to Core Data.")
                 }
             } catch {
-                print("Failed to save to Core Data: \(error)")
+                print("Failed to save to Core Data: \(error).")
                 return
             }
         })
