@@ -32,6 +32,9 @@
 		28ECB1422123595B00764592 /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28ECB1412123595B00764592 /* Album.swift */; };
 		28ECB1442123596000764592 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28ECB1432123596000764592 /* Photo.swift */; };
 		28FC07AD21257A6E00C6EE7B /* PostTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28FC07AC21257A6E00C6EE7B /* PostTableViewCell.swift */; };
+		28FC07B1212590AE00C6EE7B /* ModelControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28FC07B0212590AE00C6EE7B /* ModelControllerDelegate.swift */; };
+		28FC07B32125995700C6EE7B /* NSPointerArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28FC07B22125995700C6EE7B /* NSPointerArray.swift */; };
+		28FC07B52125ADA600C6EE7B /* PostSelectedDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28FC07B42125ADA600C6EE7B /* PostSelectedDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -62,6 +65,9 @@
 		28ECB1412123595B00764592 /* Album.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Album.swift; sourceTree = "<group>"; };
 		28ECB1432123596000764592 /* Photo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
 		28FC07AC21257A6E00C6EE7B /* PostTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostTableViewCell.swift; sourceTree = "<group>"; };
+		28FC07B0212590AE00C6EE7B /* ModelControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelControllerDelegate.swift; sourceTree = "<group>"; };
+		28FC07B22125995700C6EE7B /* NSPointerArray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSPointerArray.swift; sourceTree = "<group>"; };
+		28FC07B42125ADA600C6EE7B /* PostSelectedDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostSelectedDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +87,7 @@
 				28111F502122507A00CA324F /* PostsCoordinator.swift */,
 				28111F522122529F00CA324F /* PostsViewController.swift */,
 				28111F56212258E600CA324F /* PostsDataSource.swift */,
+				28FC07B42125ADA600C6EE7B /* PostSelectedDelegate.swift */,
 				28FC07AC21257A6E00C6EE7B /* PostTableViewCell.swift */,
 			);
 			path = "Post List [master]";
@@ -156,6 +163,7 @@
 			isa = PBXGroup;
 			children = (
 				28ECB138212348C700764592 /* ModelController.swift */,
+				28FC07B0212590AE00C6EE7B /* ModelControllerDelegate.swift */,
 				28ECB13D2123509C00764592 /* Post.swift */,
 				28ECB13F2123595300764592 /* User.swift */,
 				28ECB1412123595B00764592 /* Album.swift */,
@@ -167,6 +175,7 @@
 		28ECB13A21234A1A00764592 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				28FC07B22125995700C6EE7B /* NSPointerArray.swift */,
 				28ECB13B21234A2600764592 /* UIAlertController.swift */,
 			);
 			path = Extensions;
@@ -273,16 +282,19 @@
 				28DD3B2E2121EDF200B05A4B /* PostDetailsViewController.swift in Sources */,
 				28ECB1322123220C00764592 /* APIResponse.swift in Sources */,
 				28FC07AD21257A6E00C6EE7B /* PostTableViewCell.swift in Sources */,
+				28FC07B52125ADA600C6EE7B /* PostSelectedDelegate.swift in Sources */,
 				286DE1E02122424600F2ED03 /* Storyboarded.swift in Sources */,
 				28111F57212258E600CA324F /* PostsDataSource.swift in Sources */,
 				28111F512122507A00CA324F /* PostsCoordinator.swift in Sources */,
 				28111F4D2122445300CA324F /* MainCoordinator.swift in Sources */,
+				28FC07B1212590AE00C6EE7B /* ModelControllerDelegate.swift in Sources */,
 				28ECB13621232FF600764592 /* APIRequest.swift in Sources */,
 				28ECB13E2123509C00764592 /* Post.swift in Sources */,
 				28111F55212255C300CA324F /* PostDetailsCoordinator.swift in Sources */,
 				28ECB13C21234A2600764592 /* UIAlertController.swift in Sources */,
 				28ECB1402123595300764592 /* User.swift in Sources */,
 				28ECB1422123595B00764592 /* Album.swift in Sources */,
+				28FC07B32125995700C6EE7B /* NSPointerArray.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -16,6 +16,15 @@ class ModelController {
     /// REST API controller.
     private var apiController: APIController
     
+    /// Delegates (weak reference to delegates).
+    ///
+    /// This is handled on `ModelController+Delegate`.
+    fileprivate var delegates = NSPointerArray.weakObjects()
+    
+    
+    /// Initialize the model controller.
+    ///
+    /// - Parameter apiController: The shared instance of API controller for data fetching.
     init(apiController: APIController) {
         self.apiController = apiController
     }
@@ -29,6 +38,7 @@ class ModelController {
     func allPosts(completion: @escaping ([Post]) -> Void) {
         persistentContainer.performBackgroundTask { context in
             let fetchRequest: NSFetchRequest<ManagedPost> = ManagedPost.fetchRequest()
+            fetchRequest.sortDescriptors = [NSSortDescriptor(key: "id", ascending: true)]
             fetchRequest.relationshipKeyPathsForPrefetching = ["user"]
             
             var posts: [Post] = []
@@ -52,19 +62,29 @@ class ModelController {
     ///   - id: The post id.
     ///   - completion: Completion closure called when complete.
     func removePost(_ id: Int64, completion: @escaping () -> Void) {
-        persistentContainer.performBackgroundTask { context in
+        persistentContainer.performBackgroundTask { [weak self] context in
+            // setup fetch request
             let fetchRequest: NSFetchRequest<ManagedPost> = ManagedPost.fetchRequest()
-            fetchRequest.predicate = NSPredicate(format: "id == %i)", id)
+            fetchRequest.predicate = NSPredicate(format: "id == %i", id)
             fetchRequest.fetchLimit = 1
             
+            // remove post
             do {
                 let objects = try context.fetch(fetchRequest)
                 for object in objects {
-                    print("Deleting \(object)")
                     context.delete(object)
                 }
+                try context.save()
             } catch {
                 print("Failed to delete post with error: \(error)")
+            }
+            
+            // call completion
+            completion()
+            
+            // notify delegates
+            self?.notifyDelegates() { delegate in
+                delegate.postWasRemoved(postId: id)
             }
         }
     }
@@ -95,7 +115,12 @@ class ModelController {
             guard let fetchedData = onlineData else { return }
             
             // 2. merge fetched data with persisted data
-            self?.mergeData(from: fetchedData)
+            //    & notify delegates when done
+            self?.mergeData(from: fetchedData) { [weak self] in
+                self?.notifyDelegates() { delegate in
+                    delegate.dataDidRefresh()
+                }
+            }
         }
     }
     
@@ -104,7 +129,7 @@ class ModelController {
     /// Requirement #5: ✅ (merge fetched data with persisted data)
     ///
     /// - Parameter fetchedData: An `AggregateResponse` object with all fresh fetched data.
-    private func mergeData(from fetchedData: AggregateResponse) {
+    private func mergeData(from fetchedData: AggregateResponse, completion: (() -> Void)? = nil) {
         print("Merging fetched data with persisted data...")
         // Merging will be performed by:
         //  - removing any persisted item that is not on fetched data (never happens on this app)
@@ -197,8 +222,10 @@ class ModelController {
                 }
             } catch {
                 print("Failed to save to Core Data: \(error).")
-                return
             }
+            
+            // finish
+            completion?()
         })
     }
     
@@ -260,5 +287,37 @@ class ModelController {
         })
         return container
     }()
+    
+}
+
+
+// MARK: - Delegate handling.
+
+extension ModelController {
+    
+    /// Adds a new delegate.
+    ///
+    /// - Parameter delegate: The new delegate.
+    func addDelegate(_ delegate: ModelControllerDelegate) {
+        delegates.addObject(delegate)
+    }
+    
+    /// Removes the specified delegate.
+    ///
+    /// - Parameter delegate: The delegate to be removed.
+    func removeDelegate(_ delegate: ModelControllerDelegate) {
+        delegates.removeObject(delegate)
+    }
+    
+    /// Notify delegates by calling a closure for each delegate.
+    ///
+    /// - Parameter closure: The closure to be called for each delegate.
+    func notifyDelegates(_ closure: (ModelControllerDelegate) -> Void) {
+        for i in 0..<delegates.count {
+            if let delegate = delegates.object(at: i) as? ModelControllerDelegate {
+                closure(delegate)
+            }
+        }
+    }
     
 }

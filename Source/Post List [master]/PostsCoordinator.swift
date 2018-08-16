@@ -34,30 +34,78 @@ class PostsCoordinator: Coordinator {
     /// Posts data source.
     private var dataSource: PostsDataSource?
     
+    /// Currently selected post
+    private var selectedPost: Post? {
+        didSet {
+            print("Post id=\(selectedPost?.id ?? -1) was selected.")
+        }
+    }
+    
+    
     /// Take control!
     func start() {
         // create & setup vc
-        guard let postsVC = PostsViewController.instantiate() else { return }
-        postsVC.coordinator = self
-        self.viewController = postsVC
+        guard let viewController = PostsViewController.instantiate() else { return }
+        self.viewController = viewController
+        viewController.coordinator = self
         
-        // table view
-        dataSource = PostsDataSource(modelController: modelController)
-        postsVC.tableView.dataSource = dataSource
-        dataSource?.refreshPostList(in: postsVC.tableView)
+        // table view data source
+        let dataSource = PostsDataSource(modelController: modelController)
+        self.dataSource = dataSource
+        viewController.tableView.dataSource = dataSource
+        dataSource.refreshPostList(in: viewController.tableView)
+        
+        // model controller delegate
+        modelController.addDelegate(self)
         
         // present it
-        navigationController.pushViewController(postsVC, animated: false)
+        navigationController.pushViewController(viewController, animated: false)
         navigationController.topViewController?.title = nil
     }
     
-}
-
-
-protocol PostSelectedDelegate: class {
-    /// Informs delegate that a post has been selected.
+    /// Called from table view controller when a post has been selected.
     ///
-    /// - Parameter id: The ID of selected post.
-    func postSelected(id: Int)
+    /// - Parameter id: The index path of selected post.
+    func postSelected(in tableView: UITableView, at indexPath: IndexPath) {
+        // remember selection
+        selectedPost = dataSource?.post(at: indexPath)
+        
+        // inform post selection delegate that selected post has been changed
+        if let postId = selectedPost?.id {
+            postSelectedDelegate?.postSelected(postId: postId)
+        }
+    }
+    
+    /// Called from table view controller when a post has been deleted.
+    ///
+    /// - Parameter id: The index path of selected post.
+    func postDeleted(in tableView: UITableView, at indexPath: IndexPath) {
+        dataSource?.removePost(in: tableView, at: indexPath)
+    }
 }
 
+
+// MARK: - ModelController delegate
+extension PostsCoordinator: ModelControllerDelegate {
+    func postWasRemoved(postId: Int64) {
+        // do nothing - already handled
+    }
+    
+    func dataDidRefresh() {
+        guard let tableView = viewController?.tableView else { return  }
+        
+        // refresh data source
+        dataSource?.refreshPostList(in: tableView) { [weak self] in
+            // re-select post (if any was previously selected)
+            // ps: this closure runs on main thread
+            if let previousSelectedPostId = self?.selectedPost?.id,
+                let newSelection = self?.dataSource?.indexPath(for: previousSelectedPostId) {
+                // select and call appropriate table view controller delegate methods
+                // so notifications are sent to observers
+                let _ = tableView.delegate?.tableView?(tableView, willSelectRowAt: newSelection)
+                tableView.selectRow(at: newSelection, animated: false, scrollPosition: .none)
+                tableView.delegate?.tableView?(tableView, didSelectRowAt: newSelection)
+            }
+        }
+    }
+}

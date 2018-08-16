@@ -42,7 +42,7 @@ class PostDetailsCoordinator: Coordinator {
 }
 
 extension PostDetailsCoordinator: PostSelectedDelegate {
-    func postSelected(id: Int) {
-        viewController?.detailItem = "Post \(id) selected."
+    func postSelected(postId: Int64) {
+        viewController?.detailItem = "Post id = \(postId) selected."
     }
 }

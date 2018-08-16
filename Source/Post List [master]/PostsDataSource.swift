@@ -60,21 +60,38 @@ class PostsDataSource: NSObject, UITableViewDataSource {
         return model[indexPath.row]
     }
     
+    /// Get the table view index path for a given Post id.
+    ///
+    /// - Parameter postId: The post id to be looked up.
+    /// - Returns: The corresponding index path.
+    func indexPath(for postId: Int64) -> IndexPath? {
+        for row in 0..<model.count {
+            if model[row].id == postId {
+                return IndexPath(row: row, section: 0)
+            }
+        }
+        return nil
+    }
+    
     /// Refresh post list.
-    func refreshPostList(in tableView: UITableView) {
+    func refreshPostList(in tableView: UITableView, completion: (() -> Void)? = nil) {
+        // retrieve all posts
         modelController.allPosts { [weak self] posts in
             // update model
             self?.model = posts
             
-            // refresh table
             DispatchQueue.main.async {
+                // refresh table
                 tableView.reloadData()
+                
+                // done
+                completion?()
             }
         }
     }
     
     /// Remove a post.
-    private func removePost(in tableView: UITableView, at indexPath: IndexPath) {
+    func removePost(in tableView: UITableView, at indexPath: IndexPath) {
         // get post being removed
         guard let post = self.post(at: indexPath) else {
             return
@@ -82,16 +99,14 @@ class PostsDataSource: NSObject, UITableViewDataSource {
         
         // remove from Core Data
         modelController.removePost(post.id) { [weak self] in
-            // update table data source
+            // remove from table data source
             if let modelIndex = self?.model.index(of: post) {
                 self?.model.remove(at: modelIndex)
             }
             
-            // reload table view
+            // remove row from table view
             DispatchQueue.main.async {
-                tableView.beginUpdates()
-                tableView.deleteRows(at: [indexPath], with: .automatic)
-                tableView.endUpdates()
+                tableView.deleteRows(at: [indexPath], with: .fade)
             }
         }
     }
