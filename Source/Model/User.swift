@@ -39,6 +39,7 @@ extension User {
             managedAlbums.forEach {
                 albumList.append(Album(managedAlbum: $0))
             }
+            albumList.sort { return $0.id < $1.id }
         }
         albums = albumList
     }

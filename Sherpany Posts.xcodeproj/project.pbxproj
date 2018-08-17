@@ -14,6 +14,9 @@
 		28111F57212258E600CA324F /* PostsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28111F56212258E600CA324F /* PostsDataSource.swift */; };
 		286DE1DE212241E600F2ED03 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286DE1DD212241E600F2ED03 /* Coordinator.swift */; };
 		286DE1E02122424600F2ED03 /* Storyboarded.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286DE1DF2122424600F2ED03 /* Storyboarded.swift */; };
+		28D6F2052126FFF800CD6090 /* PostAlbumCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28D6F2042126FFF800CD6090 /* PostAlbumCollectionViewController.swift */; };
+		28D6F207212703C700CD6090 /* PostAlbumDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28D6F206212703C700CD6090 /* PostAlbumDataSource.swift */; };
+		28D6F2092127050400CD6090 /* PostAlbumCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28D6F2082127050400CD6090 /* PostAlbumCollectionViewCell.swift */; };
 		28DD3B272121EDF200B05A4B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28DD3B262121EDF200B05A4B /* AppDelegate.swift */; };
 		28DD3B2A2121EDF200B05A4B /* Posts.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 28DD3B282121EDF200B05A4B /* Posts.xcdatamodeld */; };
 		28DD3B2E2121EDF200B05A4B /* PostDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28DD3B2D2121EDF200B05A4B /* PostDetailsViewController.swift */; };
@@ -49,6 +52,9 @@
 		28111F56212258E600CA324F /* PostsDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostsDataSource.swift; sourceTree = "<group>"; };
 		286DE1DD212241E600F2ED03 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		286DE1DF2122424600F2ED03 /* Storyboarded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storyboarded.swift; sourceTree = "<group>"; };
+		28D6F2042126FFF800CD6090 /* PostAlbumCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostAlbumCollectionViewController.swift; sourceTree = "<group>"; };
+		28D6F206212703C700CD6090 /* PostAlbumDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostAlbumDataSource.swift; sourceTree = "<group>"; };
+		28D6F2082127050400CD6090 /* PostAlbumCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostAlbumCollectionViewCell.swift; sourceTree = "<group>"; };
 		28DD3B232121EDF200B05A4B /* Sherpany Posts.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Sherpany Posts.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		28DD3B262121EDF200B05A4B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		28DD3B292121EDF200B05A4B /* Sherpany_Posts.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Sherpany_Posts.xcdatamodel; sourceTree = "<group>"; };
@@ -193,7 +199,9 @@
 		28FC07C22126D60100C6EE7B /* Albums */ = {
 			isa = PBXGroup;
 			children = (
-				28FC07BC2125E73C00C6EE7B /* PostAlbumTableViewCell.swift */,
+				28D6F2042126FFF800CD6090 /* PostAlbumCollectionViewController.swift */,
+				28D6F206212703C700CD6090 /* PostAlbumDataSource.swift */,
+				28D6F2082127050400CD6090 /* PostAlbumCollectionViewCell.swift */,
 			);
 			path = Albums;
 			sourceTree = "<group>";
@@ -204,6 +212,7 @@
 				28DD3B2D2121EDF200B05A4B /* PostDetailsViewController.swift */,
 				28FC07BE2125E79400C6EE7B /* PostDetailsDataSource.swift */,
 				28FC07BA2125E6E900C6EE7B /* PostDetailsTableViewCell.swift */,
+				28FC07BC2125E73C00C6EE7B /* PostAlbumTableViewCell.swift */,
 				28FC07C22126D60100C6EE7B /* Albums */,
 			);
 			path = "Post Details";
@@ -306,6 +315,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				28D6F207212703C700CD6090 /* PostAlbumDataSource.swift in Sources */,
+				28D6F2052126FFF800CD6090 /* PostAlbumCollectionViewController.swift in Sources */,
 				28FC07BB2125E6E900C6EE7B /* PostDetailsTableViewCell.swift in Sources */,
 				28FC07BD2125E73C00C6EE7B /* PostAlbumTableViewCell.swift in Sources */,
 				28ECB1442123596000764592 /* Photo.swift in Sources */,
@@ -318,6 +329,7 @@
 				28ECB134212324EB00764592 /* APIResource.swift in Sources */,
 				28111F532122529F00CA324F /* PostsViewController.swift in Sources */,
 				28ECB130212321E500764592 /* APIError.swift in Sources */,
+				28D6F2092127050400CD6090 /* PostAlbumCollectionViewCell.swift in Sources */,
 				28DD3B2E2121EDF200B05A4B /* PostDetailsViewController.swift in Sources */,
 				28ECB1322123220C00764592 /* APIResponse.swift in Sources */,
 				28FC07AD21257A6E00C6EE7B /* PostTableViewCell.swift in Sources */,

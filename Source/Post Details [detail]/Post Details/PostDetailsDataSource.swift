@@ -44,7 +44,10 @@ class PostDetailsDataSource: NSObject, UITableViewDataSource {
             postCell.model = PostDetailsTableViewCell.Model(post: post)
         }
         else if let albumsCell = cell as? PostAlbumTableViewCell {
-            guard let albums = post.user?.albums else { return cell }
+            guard let albums = post.user?.albums else {
+                albumsCell.model = nil
+                return cell
+            }
             let index = indexPath.section - 1
             if index >= 0 && index < albums.count {
                 albumsCell.model = PostAlbumTableViewCell.Model(photos: albums[index].photos)
