@@ -86,8 +86,8 @@ class PostDetailsDataSource: NSObject, UITableViewDataSource, UITableViewDelegat
     
     private func createAlbumTitleView(title: String?) -> UIView {
         // header view
-        let headerView = UIView()
-        headerView.backgroundColor = UIColor.clear
+        let blurEffect = UIBlurEffect(style: .extraLight)
+        let headerView = UIVisualEffectView(effect: blurEffect)
         
         // album title
         let label = UILabel(frame: .zero)
@@ -100,11 +100,11 @@ class PostDetailsDataSource: NSObject, UITableViewDataSource, UITableViewDelegat
         label.numberOfLines = 0
         
         // layout
-        headerView.addSubview(label)
+        headerView.contentView.addSubview(label)
         let views: [String: Any] = ["title": label]
         let options: NSLayoutFormatOptions = .init(rawValue: 0)
-        headerView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-20-[title]-20-|", options: options, metrics: nil, views: views))
-        headerView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-8-[title]-8-|", options: options, metrics: nil, views: views))
+        headerView.contentView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-20-[title]-20-|", options: options, metrics: nil, views: views))
+        headerView.contentView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-8-[title]-8-|", options: options, metrics: nil, views: views))
         
         return headerView
     }
