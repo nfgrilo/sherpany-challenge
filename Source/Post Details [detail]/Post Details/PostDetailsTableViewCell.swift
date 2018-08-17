@@ -33,7 +33,6 @@ class PostDetailsTableViewCell: UITableViewCell {
             postTitle.text = model.title
             postBody.text = model.body
             relatedAlbums.text = model.hasAlbums ? "Author's Favorite Albums" : "No Favorite Albums"
-            relatedAlbums.font = UIFont.preferredFont(forTextStyle: model.hasAlbums ? .title2 : .title3)
         }
     }
 }

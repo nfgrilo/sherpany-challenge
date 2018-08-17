@@ -93,10 +93,11 @@ class PostDetailsCoordinator: Coordinator {
         self.noPostDetailsViewController = noPostDetailsViewController
         noPostDetailsViewController.title = "Challenge Accepted!" // Requirement #1: ✅
         
-        // table view data source (post details)
+        // table view data source & delegate (post details)
         let dataSource = PostDetailsDataSource()
         self.dataSource = dataSource
         postDetailsViewController.tableView.dataSource = dataSource
+        postDetailsViewController.tableView.delegate = dataSource
         
         // present it
         navigationController.pushViewController(noPostDetailsViewController, animated: false)

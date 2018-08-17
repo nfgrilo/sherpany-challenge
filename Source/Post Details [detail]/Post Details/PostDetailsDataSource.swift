@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PostDetailsDataSource: NSObject, UITableViewDataSource {
+class PostDetailsDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
     
     /// Model (lightweight, immutable, thread-safe model based of managed objects).
     var post: Post?
@@ -57,7 +57,10 @@ class PostDetailsDataSource: NSObject, UITableViewDataSource {
         return cell
     }
     
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    
+    // MARK: - Table data delegate
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         // title & body -> (none)
         guard section > 0 else { return nil }
         
@@ -66,7 +69,44 @@ class PostDetailsDataSource: NSObject, UITableViewDataSource {
         let index = section - 1
         guard index >= 0 && index < albums.count else { return nil }
         
-        // Requirement #10: ✅ (album title)
-        return albums[index].title
+        // album title (header view) // Requirement #10: ✅ (album title)
+        let albumTitle =  albums[index].title
+        let headerView = createAlbumTitleView(title: albumTitle)
+        
+        return headerView
     }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        // title & body -> (none)
+        guard section > 0 else { return 0 }
+        
+        // album titles
+        return 40
+    }
+    
+    private func createAlbumTitleView(title: String?) -> UIView {
+        // header view
+        let headerView = UIView()
+        headerView.backgroundColor = UIColor.clear
+        
+        // album title
+        let label = UILabel(frame: .zero)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.preferredFont(forTextStyle: .title3)
+        if let albumTitleColor = UIColor(named: "Album Title") {
+            label.textColor = albumTitleColor
+        }
+        label.text = title ?? "(untitled album)"
+        label.numberOfLines = 0
+        
+        // layout
+        headerView.addSubview(label)
+        let views: [String: Any] = ["title": label]
+        let options: NSLayoutFormatOptions = .init(rawValue: 0)
+        headerView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-20-[title]-20-|", options: options, metrics: nil, views: views))
+        headerView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-8-[title]-8-|", options: options, metrics: nil, views: views))
+        
+        return headerView
+    }
+    
 }

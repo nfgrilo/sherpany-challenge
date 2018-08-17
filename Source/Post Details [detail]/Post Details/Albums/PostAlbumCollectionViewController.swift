@@ -8,6 +8,8 @@
 
 import UIKit
 
+// Requirement #10: ✅ (collection view for photos)
+
 class PostAlbumCollectionViewController: UICollectionViewController, Storyboarded {
     
 }
