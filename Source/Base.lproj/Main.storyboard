@@ -5,8 +5,9 @@
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14113"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -15,27 +16,27 @@
             <objects>
                 <tableViewController storyboardIdentifier="PostsViewController" title="Master" clearsSelectionOnViewWillAppear="NO" id="7bK-jq-Zjz" userLabel="Post List [Master]" customClass="PostsViewController" customModule="Sherpany_Posts" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="r7i-6Z-zg0">
-                        <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+                        <rect key="frame" x="0.0" y="0.0" width="300" height="768"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <color key="separatorColor" name="Separator"/>
                         <inset key="separatorInset" minX="10" minY="0.0" maxX="10" maxY="0.0"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="PostCellId" rowHeight="84" id="WCw-Qf-5nD" customClass="PostTableViewCell" customModule="Sherpany_Posts" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="28" width="1024" height="84"/>
+                                <rect key="frame" x="0.0" y="28" width="300" height="84"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="WCw-Qf-5nD" id="37f-cq-3Eg">
-                                    <rect key="frame" x="0.0" y="0.0" width="1024" height="83.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="300" height="83.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Post Title" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x4k-Kk-6V8">
-                                            <rect key="frame" x="20" y="15" width="984" height="29.5"/>
+                                            <rect key="frame" x="20" y="15" width="260" height="29.5"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleTitle3"/>
                                             <color key="textColor" name="Post Title"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" verticalCompressionResistancePriority="751" text="Author" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wWJ-Ib-iw8">
-                                            <rect key="frame" x="20" y="52.5" width="984" height="16"/>
+                                            <rect key="frame" x="20" y="52.5" width="260" height="16"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
                                             <color key="textColor" name="Post Author"/>
                                             <nil key="highlightedColor"/>
@@ -61,10 +62,11 @@
                         <sections/>
                     </tableView>
                     <navigationItem key="navigationItem" title="Master" id="Zdf-7t-Un8"/>
+                    <size key="freeformSize" width="300" height="768"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Rux-fX-hf1" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="708.984375" y="-630.46875"/>
+            <point key="canvasLocation" x="463" y="-692"/>
         </scene>
         <!--Post Details [Detail]-->
         <scene sceneID="4IZ-Xx-GNY">
@@ -84,13 +86,13 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="Post Title" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NGd-3y-CIN">
-                                            <rect key="frame" x="20" y="15" width="984" height="31.5"/>
+                                            <rect key="frame" x="20" y="15" width="760" height="31.5"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
                                             <color key="textColor" name="Post Title"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Post Body" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5eq-ta-IOx">
-                                            <rect key="frame" x="20" y="54.5" width="984" height="136.5"/>
+                                            <rect key="frame" x="20" y="54.5" width="760" height="136.5"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                             <color key="textColor" name="Post Body"/>
                                             <nil key="highlightedColor"/>
@@ -120,7 +122,55 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bXt-ry-m6r" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="708.984375" y="46.875"/>
+            <point key="canvasLocation" x="884" y="-692"/>
+        </scene>
+        <!--No Post Details View Controller-->
+        <scene sceneID="CuX-ri-eQ2">
+            <objects>
+                <viewController storyboardIdentifier="NoPostDetailsViewController" id="fRQ-wE-lqk" customClass="NoPostDetailsViewController" customModule="Sherpany_Posts" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="dLf-IA-TAb">
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wtD-H5-XKi">
+                                <rect key="frame" x="401" y="364" width="222" height="60.5"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Post" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZQx-zQ-JHg">
+                                        <rect key="frame" x="0.0" y="0.0" width="222" height="31.5"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
+                                        <color key="textColor" name="Post Title"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select a post on the side bar." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aNv-c9-LZM">
+                                        <rect key="frame" x="0.0" y="39.5" width="222" height="21"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                        <color key="textColor" name="Post Body"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="ZQx-zQ-JHg" secondAttribute="trailing" id="7Tm-MN-QY3"/>
+                                    <constraint firstItem="aNv-c9-LZM" firstAttribute="leading" secondItem="ZQx-zQ-JHg" secondAttribute="leading" id="BNB-TL-lMX"/>
+                                    <constraint firstItem="aNv-c9-LZM" firstAttribute="top" secondItem="ZQx-zQ-JHg" secondAttribute="bottom" constant="8" id="TaD-u8-7dO"/>
+                                    <constraint firstItem="ZQx-zQ-JHg" firstAttribute="top" secondItem="wtD-H5-XKi" secondAttribute="top" id="XDb-qO-bYj"/>
+                                    <constraint firstItem="aNv-c9-LZM" firstAttribute="trailing" secondItem="ZQx-zQ-JHg" secondAttribute="trailing" id="cxv-JQ-wVq"/>
+                                    <constraint firstItem="ZQx-zQ-JHg" firstAttribute="leading" secondItem="wtD-H5-XKi" secondAttribute="leading" id="gWu-J4-G6M"/>
+                                    <constraint firstAttribute="bottom" secondItem="aNv-c9-LZM" secondAttribute="bottom" id="j3z-cP-Exy"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="wtD-H5-XKi" firstAttribute="centerY" secondItem="reR-GN-xdl" secondAttribute="centerY" id="DPA-nV-5GA"/>
+                            <constraint firstItem="wtD-H5-XKi" firstAttribute="centerX" secondItem="reR-GN-xdl" secondAttribute="centerX" id="Vfd-zU-Aof"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="reR-GN-xdl"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="br8-sY-HF8" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="884" y="-1383"/>
         </scene>
     </scenes>
     <resources>

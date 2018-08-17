@@ -38,6 +38,7 @@
 		28FC07BB2125E6E900C6EE7B /* PostDetailsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28FC07BA2125E6E900C6EE7B /* PostDetailsTableViewCell.swift */; };
 		28FC07BD2125E73C00C6EE7B /* PostAlbumTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28FC07BC2125E73C00C6EE7B /* PostAlbumTableViewCell.swift */; };
 		28FC07BF2125E79400C6EE7B /* PostDetailsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28FC07BE2125E79400C6EE7B /* PostDetailsDataSource.swift */; };
+		28FC07C12126CD7700C6EE7B /* NoPostDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28FC07C02126CD7700C6EE7B /* NoPostDetailsViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -74,6 +75,7 @@
 		28FC07BA2125E6E900C6EE7B /* PostDetailsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailsTableViewCell.swift; sourceTree = "<group>"; };
 		28FC07BC2125E73C00C6EE7B /* PostAlbumTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostAlbumTableViewCell.swift; sourceTree = "<group>"; };
 		28FC07BE2125E79400C6EE7B /* PostDetailsDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailsDataSource.swift; sourceTree = "<group>"; };
+		28FC07C02126CD7700C6EE7B /* NoPostDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoPostDetailsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +105,7 @@
 			isa = PBXGroup;
 			children = (
 				28111F54212255C300CA324F /* PostDetailsCoordinator.swift */,
+				28FC07C02126CD7700C6EE7B /* NoPostDetailsViewController.swift */,
 				28DD3B2D2121EDF200B05A4B /* PostDetailsViewController.swift */,
 				28FC07BE2125E79400C6EE7B /* PostDetailsDataSource.swift */,
 				28FC07BA2125E6E900C6EE7B /* PostDetailsTableViewCell.swift */,
@@ -285,6 +288,7 @@
 				28DD3B272121EDF200B05A4B /* AppDelegate.swift in Sources */,
 				28DD3B2A2121EDF200B05A4B /* Posts.xcdatamodeld in Sources */,
 				286DE1DE212241E600F2ED03 /* Coordinator.swift in Sources */,
+				28FC07C12126CD7700C6EE7B /* NoPostDetailsViewController.swift in Sources */,
 				28ECB12E2123215400764592 /* APIController.swift in Sources */,
 				28ECB139212348C700764592 /* ModelController.swift in Sources */,
 				28ECB134212324EB00764592 /* APIResource.swift in Sources */,
