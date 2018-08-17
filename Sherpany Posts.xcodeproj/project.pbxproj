@@ -35,6 +35,9 @@
 		28FC07B1212590AE00C6EE7B /* ModelControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28FC07B0212590AE00C6EE7B /* ModelControllerDelegate.swift */; };
 		28FC07B32125995700C6EE7B /* NSPointerArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28FC07B22125995700C6EE7B /* NSPointerArray.swift */; };
 		28FC07B52125ADA600C6EE7B /* PostSelectedDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28FC07B42125ADA600C6EE7B /* PostSelectedDelegate.swift */; };
+		28FC07BB2125E6E900C6EE7B /* PostDetailsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28FC07BA2125E6E900C6EE7B /* PostDetailsTableViewCell.swift */; };
+		28FC07BD2125E73C00C6EE7B /* PostAlbumTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28FC07BC2125E73C00C6EE7B /* PostAlbumTableViewCell.swift */; };
+		28FC07BF2125E79400C6EE7B /* PostDetailsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28FC07BE2125E79400C6EE7B /* PostDetailsDataSource.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -68,6 +71,9 @@
 		28FC07B0212590AE00C6EE7B /* ModelControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelControllerDelegate.swift; sourceTree = "<group>"; };
 		28FC07B22125995700C6EE7B /* NSPointerArray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSPointerArray.swift; sourceTree = "<group>"; };
 		28FC07B42125ADA600C6EE7B /* PostSelectedDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostSelectedDelegate.swift; sourceTree = "<group>"; };
+		28FC07BA2125E6E900C6EE7B /* PostDetailsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailsTableViewCell.swift; sourceTree = "<group>"; };
+		28FC07BC2125E73C00C6EE7B /* PostAlbumTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostAlbumTableViewCell.swift; sourceTree = "<group>"; };
+		28FC07BE2125E79400C6EE7B /* PostDetailsDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailsDataSource.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +104,9 @@
 			children = (
 				28111F54212255C300CA324F /* PostDetailsCoordinator.swift */,
 				28DD3B2D2121EDF200B05A4B /* PostDetailsViewController.swift */,
+				28FC07BE2125E79400C6EE7B /* PostDetailsDataSource.swift */,
+				28FC07BA2125E6E900C6EE7B /* PostDetailsTableViewCell.swift */,
+				28FC07BC2125E73C00C6EE7B /* PostAlbumTableViewCell.swift */,
 			);
 			path = "Post Details [detail]";
 			sourceTree = "<group>";
@@ -270,6 +279,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				28FC07BB2125E6E900C6EE7B /* PostDetailsTableViewCell.swift in Sources */,
+				28FC07BD2125E73C00C6EE7B /* PostAlbumTableViewCell.swift in Sources */,
 				28ECB1442123596000764592 /* Photo.swift in Sources */,
 				28DD3B272121EDF200B05A4B /* AppDelegate.swift in Sources */,
 				28DD3B2A2121EDF200B05A4B /* Posts.xcdatamodeld in Sources */,
@@ -293,6 +304,7 @@
 				28111F55212255C300CA324F /* PostDetailsCoordinator.swift in Sources */,
 				28ECB13C21234A2600764592 /* UIAlertController.swift in Sources */,
 				28ECB1402123595300764592 /* User.swift in Sources */,
+				28FC07BF2125E79400C6EE7B /* PostDetailsDataSource.swift in Sources */,
 				28ECB1422123595B00764592 /* Album.swift in Sources */,
 				28FC07B32125995700C6EE7B /* NSPointerArray.swift in Sources */,
 			);

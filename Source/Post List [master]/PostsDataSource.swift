@@ -17,8 +17,11 @@ class PostsDataSource: NSObject, UITableViewDataSource {
     private var model: [Post] = []
     
     /// Cell identifier.
-    private let cellIdentifier                      = "PostCellId"
+    private let cellIdentifier = "PostCellId"
     
+    /// Initialize data source.
+    ///
+    /// - Parameter modelController: The shared model controller.
     init(modelController: ModelController) {
         self.modelController = modelController
     }

@@ -23,6 +23,9 @@ class PostDetailsCoordinator: Coordinator {
     /// Model controller.
     private let modelController: ModelController
     
+    /// Posts data source.
+    private var dataSource: PostDetailsDataSource?
+    
     
     /// Creates a coordinator.
     ///
@@ -35,12 +38,17 @@ class PostDetailsCoordinator: Coordinator {
     /// Take control!
     func start() {
         // create & setup vc
-        guard let postDetailsVC = PostDetailsViewController.instantiate() else { return }
-        postDetailsVC.coordinator = self
-        viewController = postDetailsVC
+        guard let viewController = PostDetailsViewController.instantiate() else { return }
+        self.viewController = viewController
+        viewController.coordinator = self
+        
+        // table view data source (post details)
+        let dataSource = PostDetailsDataSource()
+        self.dataSource = dataSource
+        viewController.tableView.dataSource = dataSource
         
         // present it
-        navigationController.pushViewController(postDetailsVC, animated: false)
+        navigationController.pushViewController(viewController, animated: false)
         navigationController.topViewController?.title = "Challenge Accepted!" // Requirement #1: ✅
     }
 }
@@ -49,17 +57,27 @@ class PostDetailsCoordinator: Coordinator {
 // MARK: - Post selection delegate
 
 extension PostDetailsCoordinator: PostSelectedDelegate {
+    
     // Requirement #9: ✅
     func postSelected(postId: Int64?) {
         // selection cleared out?
         guard let postId = postId else {
-            viewController?.post = nil
+            dataSource?.post = nil
+            refreshUI()
             return
         }
-        
+
         // get post from Core Data
         modelController.post(with: postId, completion: { [weak self] post in
-            self?.viewController?.post = post
+            self?.dataSource?.post = post
+            self?.refreshUI()
         })
     }
+    
+    private func refreshUI() {
+        DispatchQueue.main.async { [weak self] in
+            self?.viewController?.tableView.reloadData()
+        }
+    }
+    
 }

@@ -8,48 +8,18 @@
 
 import UIKit
 
-class PostDetailsViewController: UIViewController, Storyboarded {
+class PostDetailsViewController: UITableViewController, Storyboarded {
     
     /// Weak reference to parent coordinator.
     weak var coordinator: PostDetailsCoordinator?
     
-    @IBOutlet weak var detailDescriptionLabel: UILabel!
     
-    /// Post.
-    var post: Post? {
-        didSet {
-            configureView()
-        }
-    }
+    // MARK: - Table view setup
     
-    /// Called after view has been loaded.
     override func viewDidLoad() {
-        super.viewDidLoad()
-        configureView()
+        // dynamic row heights based on auto layout
+        tableView.rowHeight = UITableViewAutomaticDimension
     }
-
-    /// Update the UI for the post.
-    func configureView() {
-        // no post?
-        guard let post = post else {
-            // TODO: show "no selection" view
-            DispatchQueue.main.async { [weak self] in
-                self?.detailDescriptionLabel.text = "No Post Selected"
-            }
-            return
-        }
-        
-        // show post
-        DispatchQueue.main.async { [weak self] in
-            self?.detailDescriptionLabel.text = "Post: id = \(post.id)"
-        }
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
 
 }
 
