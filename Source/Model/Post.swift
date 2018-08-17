@@ -23,7 +23,7 @@ extension Post {
     ///
     /// - Parameters:
     ///   - managedPost: The CoreData managed object
-    ///   - fetchUserAlbums: Whether to fetch the `User.albums` relationship upon initialization. This will also fetch the `User.albums.photos` relationship.
+    ///   - fetchUserAlbums: Whether to fetch the `user.albums` & `user.albums.photos` relationships upon initialization.
     init(managedPost: ManagedPost, fetchUserAlbums: Bool = false) {
         // attributes
         id = managedPost.id

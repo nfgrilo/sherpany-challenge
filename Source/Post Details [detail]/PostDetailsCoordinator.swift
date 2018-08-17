@@ -109,7 +109,7 @@ class PostDetailsCoordinator: Coordinator {
 
 extension PostDetailsCoordinator: PostSelectedDelegate {
     
-    // Requirement #9: ✅
+    // Requirement #9: ✅ (display the post details)
     func postSelected(postId: Int64?) {
         // no post selected?
         guard let postId = postId else {

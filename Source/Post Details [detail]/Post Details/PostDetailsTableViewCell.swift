@@ -31,7 +31,7 @@ class PostDetailsTableViewCell: UITableViewCell {
 }
 
 
-/// Posts table view cell view-model.
+/// Posts Details table view cell view-model.
 extension PostDetailsTableViewCell {
     struct Model {
         let title: String

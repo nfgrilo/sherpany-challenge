@@ -37,8 +37,10 @@ class ModelController {
     /// - Parameter completion: An array of `Post` objects.
     func allPosts(completion: @escaping ([Post]) -> Void) {
         persistentContainer.performBackgroundTask { context in
+            // setup fetch request
             let fetchRequest: NSFetchRequest<ManagedPost> = ManagedPost.fetchRequest()
             fetchRequest.sortDescriptors = [NSSortDescriptor(key: "id", ascending: true)]
+            //  -> pre-fetching avoiding multiple fault fires
             fetchRequest.relationshipKeyPathsForPrefetching = ["user"]
             
             var posts: [Post] = []
@@ -66,6 +68,8 @@ class ModelController {
             // setup fetch request
             let fetchRequest: NSFetchRequest<ManagedPost> = ManagedPost.fetchRequest()
             fetchRequest.predicate = NSPredicate(format: "id == %i", id)
+            //  -> pre-fetching avoiding multiple fault fires
+            fetchRequest.relationshipKeyPathsForPrefetching = ["user.albums.photos"]
             fetchRequest.fetchLimit = 1
             
             // get post

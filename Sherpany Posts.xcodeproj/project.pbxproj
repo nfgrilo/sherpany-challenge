@@ -105,23 +105,20 @@
 			isa = PBXGroup;
 			children = (
 				28111F54212255C300CA324F /* PostDetailsCoordinator.swift */,
-				28FC07C02126CD7700C6EE7B /* NoPostDetailsViewController.swift */,
-				28DD3B2D2121EDF200B05A4B /* PostDetailsViewController.swift */,
-				28FC07BE2125E79400C6EE7B /* PostDetailsDataSource.swift */,
-				28FC07BA2125E6E900C6EE7B /* PostDetailsTableViewCell.swift */,
-				28FC07BC2125E73C00C6EE7B /* PostAlbumTableViewCell.swift */,
+				28FC07C42126D62F00C6EE7B /* No Post */,
+				28FC07C32126D62600C6EE7B /* Post Details */,
 			);
 			path = "Post Details [detail]";
 			sourceTree = "<group>";
 		};
-		286DE1DC212241C900F2ED03 /* Common */ = {
+		286DE1DC212241C900F2ED03 /* [Shared] */ = {
 			isa = PBXGroup;
 			children = (
 				286DE1DD212241E600F2ED03 /* Coordinator.swift */,
 				286DE1DF2122424600F2ED03 /* Storyboarded.swift */,
 				28ECB13A21234A1A00764592 /* Extensions */,
 			);
-			path = Common;
+			path = "[Shared]";
 			sourceTree = "<group>";
 		};
 		28DD3B1A2121EDF200B05A4B = {
@@ -149,7 +146,7 @@
 				28111F4F2122506100CA324F /* Post Details [detail] */,
 				28ECB137212348B300764592 /* Model */,
 				28ECB12C2123211300764592 /* Rest API */,
-				286DE1DC212241C900F2ED03 /* Common */,
+				286DE1DC212241C900F2ED03 /* [Shared] */,
 				28DD3B2F2121EDF200B05A4B /* Main.storyboard */,
 				28DD3B342121EDF300B05A4B /* LaunchScreen.storyboard */,
 				28DD3B322121EDF300B05A4B /* Assets.xcassets */,
@@ -191,6 +188,33 @@
 				28ECB13B21234A2600764592 /* UIAlertController.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		28FC07C22126D60100C6EE7B /* Albums */ = {
+			isa = PBXGroup;
+			children = (
+				28FC07BC2125E73C00C6EE7B /* PostAlbumTableViewCell.swift */,
+			);
+			path = Albums;
+			sourceTree = "<group>";
+		};
+		28FC07C32126D62600C6EE7B /* Post Details */ = {
+			isa = PBXGroup;
+			children = (
+				28DD3B2D2121EDF200B05A4B /* PostDetailsViewController.swift */,
+				28FC07BE2125E79400C6EE7B /* PostDetailsDataSource.swift */,
+				28FC07BA2125E6E900C6EE7B /* PostDetailsTableViewCell.swift */,
+				28FC07C22126D60100C6EE7B /* Albums */,
+			);
+			path = "Post Details";
+			sourceTree = "<group>";
+		};
+		28FC07C42126D62F00C6EE7B /* No Post */ = {
+			isa = PBXGroup;
+			children = (
+				28FC07C02126CD7700C6EE7B /* NoPostDetailsViewController.swift */,
+			);
+			path = "No Post";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

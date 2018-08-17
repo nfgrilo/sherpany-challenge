@@ -24,7 +24,7 @@ extension User {
     ///
     /// - Parameters:
     ///   - managedUser: The CoreData managed object
-    ///   - fetchAlbums: Whether to fetch the `albums` relationship upon initialization. This will also fetch the `ManagedAlbum.photos` relationship.
+    ///   - fetchAlbums: Whether to fetch the `user.albums` & `user.albums.photos` relationships upon initialization.
     init(managedUser: ManagedUser, fetchAlbums: Bool = false) {
         // attributes
         id = managedUser.id
