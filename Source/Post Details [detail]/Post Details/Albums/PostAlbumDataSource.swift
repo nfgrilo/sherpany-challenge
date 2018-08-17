@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PostAlbumDataSource: NSObject, UICollectionViewDataSource {
+class PostAlbumDataSource: NSObject, UICollectionViewDataSource, UICollectionViewDelegate {
     
     /// Alias for data source model
     typealias Model = PostAlbumTableViewCell.Model
@@ -23,7 +23,7 @@ class PostAlbumDataSource: NSObject, UICollectionViewDataSource {
     // MARK: - Collection data source
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return model?.photos.count ?? 0
+        return model?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -33,13 +33,16 @@ class PostAlbumDataSource: NSObject, UICollectionViewDataSource {
         // set model
         let index = indexPath.row
         if let photoCell = cell as? PostAlbumCollectionViewCell,
-            index < model?.photos.count ?? 0 && index < model?.titles.count ?? 0,
-            let photo = model?.photos[indexPath.row] {
+            index < model?.count ?? 0,
+            let photoUrl = model?.photosUrl[indexPath.row] {
+            let photo = UIImage(named: "Sample Photo")!
             let title = model?.titles[indexPath.row]
             photoCell.model = PostAlbumCollectionViewCell.Model(title: title, photo: photo)
         }
         
         return cell
     }
+    
+    
     
 }

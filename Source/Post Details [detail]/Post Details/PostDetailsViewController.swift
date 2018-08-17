@@ -19,6 +19,9 @@ class PostDetailsViewController: UITableViewController, Storyboarded {
     override func viewDidLoad() {
         // dynamic row heights based on auto layout
         tableView.rowHeight = UITableViewAutomaticDimension
+        
+        // required in order to use autolayout for cells
+        tableView.estimatedRowHeight = 100
     }
 
 }
