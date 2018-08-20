@@ -82,7 +82,9 @@ class PostAlbumTableViewCell: UITableViewCell {
         collectionView.frame = CGRect(x: 0, y: 0, width: targetSize.width, height: 1)
         collectionView.layoutIfNeeded()
         
-        return collectionView.collectionViewLayout.collectionViewContentSize
+        var collectionViewSize = collectionView.collectionViewLayout.collectionViewContentSize
+        collectionViewSize.height += 40 // add bottom padding
+        return collectionViewSize
     }
 }
 
