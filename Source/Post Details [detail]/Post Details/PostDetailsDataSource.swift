@@ -109,7 +109,7 @@ extension PostDetailsDataSource: UITableViewDataSource {
     
 }
 
-// MARK: - Table data delegate
+// MARK: - Table delegate
 extension PostDetailsDataSource: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
