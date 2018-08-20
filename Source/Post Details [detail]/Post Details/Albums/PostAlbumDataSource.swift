@@ -35,7 +35,7 @@ class PostAlbumDataSource: NSObject, UICollectionViewDataSource, UICollectionVie
         if let photoCell = cell as? PostAlbumCollectionViewCell,
             index < model?.count ?? 0,
             let photoUrl = model?.photosUrl[indexPath.row] {
-            let photo = UIImage(named: "Sample Photo")!
+            let photo = UIImage(named: "Sample Photo Thumb")!
             let title = model?.titles[indexPath.row]
             photoCell.model = PostAlbumCollectionViewCell.Model(title: title, photo: photo)
         }

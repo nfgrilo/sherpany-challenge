@@ -16,6 +16,9 @@ class PostAlbumCollectionViewCell: UICollectionViewCell {
     /// Photo.
     @IBOutlet weak var photo: UIImageView!
     
+    /// Cell width constraint.
+    var widthConstraint: NSLayoutConstraint?
+    
     /// View-model.
     var model: Model? {
         didSet {
@@ -26,7 +29,23 @@ class PostAlbumCollectionViewCell: UICollectionViewCell {
             // update UI
             title.text = model.title
             photo.image = model.photo
+            
+            // force width to image width + leading & trailing space
+            widthConstraint?.constant = 20 + model.photo.size.width + 20
+            widthConstraint?.isActive = true
         }
+    }
+    
+    /// IB initialization.
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setup()
+    }
+
+    /// Set up cell.
+    private func setup() {
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        widthConstraint = contentView.widthAnchor.constraint(equalToConstant: 1)
     }
     
 }

@@ -30,9 +30,13 @@ class PostAlbumTableViewCell: UITableViewCell {
             
             // layout collection view on table's view cell
             guard let collectionView = albumViewController?.collectionView else { return }
+            //  -> layout this cell's contents (to get width)
             contentView.layoutIfNeeded()
+            //  -> load collection view photos
             collectionView.reloadData()
-            albumViewHeightConstraint?.constant = collectionView.contentSize.height
+            //  -> trigger collection view layout on this runloop
+            collectionView.setNeedsLayout()
+            collectionView.layoutIfNeeded()
         }
     }
     
@@ -55,7 +59,12 @@ class PostAlbumTableViewCell: UITableViewCell {
         let dataSource = PostAlbumDataSource()
         self.albumViewDataSource = dataSource
         collectionView.dataSource = dataSource
+        collectionView.prefetchDataSource = dataSource
         collectionView.delegate = dataSource
+        // custom flow layout that top-align photos
+        let flowLayout = PostAlbumCollectionViewFlowLayout()
+        flowLayout.estimatedItemSize = CGSize(width: 1, height: 1) // enable dynamic cell sizing
+        collectionView.collectionViewLayout = flowLayout
         
         // add photos collection view to view hierarchy
         contentView.addSubview(collectionView)
@@ -63,13 +72,18 @@ class PostAlbumTableViewCell: UITableViewCell {
         let options: NSLayoutFormatOptions = .init(rawValue: 0)
         contentView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[photos]|", options: options, metrics: nil, views: views))
         contentView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[photos]|", options: options, metrics: nil, views: views))
-        
-        // create height constraint
-        albumViewHeightConstraint = NSLayoutConstraint(item: collectionView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 100)
-        albumViewHeightConstraint?.priority = .defaultHigh
-        contentView.addConstraint(albumViewHeightConstraint!)
     }
     
+    override func systemLayoutSizeFitting(_ targetSize: CGSize, withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority, verticalFittingPriority: UILayoutPriority) -> CGSize {
+        guard let collectionView = albumViewController?.collectionView else { return .zero }
+        
+        // autolayout is enabled on collection view's cells (with `.estimatedItemSize`)
+        //  => force collection view relayout with the given width
+        collectionView.frame = CGRect(x: 0, y: 0, width: targetSize.width, height: 1)
+        collectionView.layoutIfNeeded()
+        
+        return collectionView.collectionViewLayout.collectionViewContentSize
+    }
 }
 
 
