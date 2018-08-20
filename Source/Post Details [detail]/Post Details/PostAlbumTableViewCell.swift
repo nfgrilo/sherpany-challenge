@@ -12,79 +12,20 @@ import UIKit
 
 class PostAlbumTableViewCell: UITableViewCell {
     
-    /// Post Albums collection view controller
-    var albumViewController: PostAlbumCollectionViewController?
-    
-    /// Post Albums collection view data source
-    var albumViewDataSource: PostAlbumDataSource?
-    
-    /// Post Album height constraint.
-    var albumViewHeightConstraint: NSLayoutConstraint?
+    /// Cell delegate.
+    weak var delegate: PostAlbumTableViewCellDelegate?
     
     /// View-model.
     var model: Model? {
         didSet {
-            // update collection view
-            albumViewDataSource?.model = model
-            albumViewController?.view.isHidden = (model == nil)
-            
-            // layout collection view on table's view cell
-            guard let collectionView = albumViewController?.collectionView else { return }
-            //  -> layout this cell's contents (to get width)
-            contentView.layoutIfNeeded()
-            //  -> load collection view photos
-            collectionView.reloadData()
-            //  -> trigger collection view layout on this runloop
-            collectionView.setNeedsLayout()
-            collectionView.layoutIfNeeded()
+            // let delegate know the model has just been set
+            delegate?.didSetModel(model)
         }
     }
     
-    /// IB initialization.
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        setup()
-    }
-    
-    /// Add collection view to cell content view.
-    private func setup() {
-        // photos collection view controller
-        guard let viewController = PostAlbumCollectionViewController.instantiate() else { return }
-        self.albumViewController = viewController
-        
-        // setup photos collection view
-        guard let collectionView = viewController.collectionView else { return }
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.isScrollEnabled = false
-        let dataSource = PostAlbumDataSource()
-        self.albumViewDataSource = dataSource
-        collectionView.dataSource = dataSource
-        collectionView.prefetchDataSource = dataSource
-        collectionView.delegate = dataSource
-        // custom flow layout that top-align photos
-        let flowLayout = PostAlbumCollectionViewFlowLayout()
-        flowLayout.estimatedItemSize = CGSize(width: 1, height: 1) // enable dynamic cell sizing
-        collectionView.collectionViewLayout = flowLayout
-        
-        // add photos collection view to view hierarchy
-        contentView.addSubview(collectionView)
-        let views: [String: Any] = ["photos": collectionView]
-        let options: NSLayoutFormatOptions = .init(rawValue: 0)
-        contentView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[photos]|", options: options, metrics: nil, views: views))
-        contentView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[photos]|", options: options, metrics: nil, views: views))
-    }
-    
     override func systemLayoutSizeFitting(_ targetSize: CGSize, withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority, verticalFittingPriority: UILayoutPriority) -> CGSize {
-        guard let collectionView = albumViewController?.collectionView else { return .zero }
-        
-        // autolayout is enabled on collection view's cells (with `.estimatedItemSize`)
-        //  => force collection view relayout with the given width
-        collectionView.frame = CGRect(x: 0, y: 0, width: targetSize.width, height: 1)
-        collectionView.layoutIfNeeded()
-        
-        var collectionViewSize = collectionView.collectionViewLayout.collectionViewContentSize
-        collectionViewSize.height += 40 // add bottom padding
-        return collectionViewSize
+        // call delegate to get optimal content view size
+        return delegate?.contentViewSizeFitting(targetSize) ?? .zero
     }
 }
 
@@ -104,4 +45,22 @@ extension PostAlbumTableViewCell {
             self.titles = photos.compactMap { $0.title }
         }
     }
+}
+
+
+/// Album table view cell delegate.
+protocol PostAlbumTableViewCellDelegate: class {
+    
+    /// Called when the cell model is set.
+    ///
+    /// - Parameter model: The cell model.
+    func didSetModel(_ model: PostAlbumTableViewCell.Model?)
+    
+    
+    /// Called to calculate optimal size of the content view.
+    ///
+    /// - Parameter targetSize: The size that you prefer for the view.
+    /// - Returns: The optimal size for the view.
+    func contentViewSizeFitting(_ targetSize: CGSize) -> CGSize
+    
 }

@@ -19,6 +19,7 @@
 		28D6F2092127050400CD6090 /* PostAlbumCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28D6F2082127050400CD6090 /* PostAlbumCollectionViewCell.swift */; };
 		28D6F20B21270F5800CD6090 /* PhotoStorageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28D6F20A21270F5800CD6090 /* PhotoStorageController.swift */; };
 		28D6F20D2127427000CD6090 /* PostAlbumCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28D6F20C2127427000CD6090 /* PostAlbumCollectionViewFlowLayout.swift */; };
+		28D6F20F212AE1F400CD6090 /* PostAlbumCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28D6F20E212AE1F400CD6090 /* PostAlbumCoordinator.swift */; };
 		28DD3B272121EDF200B05A4B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28DD3B262121EDF200B05A4B /* AppDelegate.swift */; };
 		28DD3B2A2121EDF200B05A4B /* Posts.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 28DD3B282121EDF200B05A4B /* Posts.xcdatamodeld */; };
 		28DD3B2E2121EDF200B05A4B /* PostDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28DD3B2D2121EDF200B05A4B /* PostDetailsViewController.swift */; };
@@ -59,6 +60,7 @@
 		28D6F2082127050400CD6090 /* PostAlbumCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostAlbumCollectionViewCell.swift; sourceTree = "<group>"; };
 		28D6F20A21270F5800CD6090 /* PhotoStorageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoStorageController.swift; sourceTree = "<group>"; };
 		28D6F20C2127427000CD6090 /* PostAlbumCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostAlbumCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
+		28D6F20E212AE1F400CD6090 /* PostAlbumCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostAlbumCoordinator.swift; sourceTree = "<group>"; };
 		28DD3B232121EDF200B05A4B /* Sherpany Posts.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Sherpany Posts.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		28DD3B262121EDF200B05A4B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		28DD3B292121EDF200B05A4B /* Sherpany_Posts.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Sherpany_Posts.xcdatamodel; sourceTree = "<group>"; };
@@ -204,6 +206,7 @@
 		28FC07C22126D60100C6EE7B /* Albums */ = {
 			isa = PBXGroup;
 			children = (
+				28D6F20E212AE1F400CD6090 /* PostAlbumCoordinator.swift */,
 				28D6F2042126FFF800CD6090 /* PostAlbumCollectionViewController.swift */,
 				28D6F206212703C700CD6090 /* PostAlbumDataSource.swift */,
 				28D6F2082127050400CD6090 /* PostAlbumCollectionViewCell.swift */,
@@ -338,6 +341,7 @@
 				28111F532122529F00CA324F /* PostsViewController.swift in Sources */,
 				28ECB130212321E500764592 /* APIError.swift in Sources */,
 				28D6F2092127050400CD6090 /* PostAlbumCollectionViewCell.swift in Sources */,
+				28D6F20F212AE1F400CD6090 /* PostAlbumCoordinator.swift in Sources */,
 				28DD3B2E2121EDF200B05A4B /* PostDetailsViewController.swift in Sources */,
 				28ECB1322123220C00764592 /* APIResponse.swift in Sources */,
 				28FC07AD21257A6E00C6EE7B /* PostTableViewCell.swift in Sources */,

@@ -10,6 +10,9 @@ import UIKit
 
 class PostDetailsDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
     
+    /// Weak reference to parent coordinator.
+    weak var coordinator: PostDetailsCoordinator?
+    
     /// Model (lightweight, immutable, thread-safe model based of managed objects).
     var post: Post?
     
@@ -41,9 +44,14 @@ class PostDetailsDataSource: NSObject, UITableViewDataSource, UITableViewDelegat
         
         // set model
         if let postCell = cell as? PostDetailsTableViewCell {
+            //  -> post details (title & body)
             postCell.model = PostDetailsTableViewCell.Model(post: post)
         }
         else if let albumsCell = cell as? PostAlbumTableViewCell {
+            //  -> albums
+            // let coordinator handle the album setup
+            coordinator?.setupAlbumCell(albumsCell)
+            // set cell's model
             guard let albums = post.user?.albums else {
                 albumsCell.model = nil
                 return cell
@@ -84,6 +92,10 @@ class PostDetailsDataSource: NSObject, UITableViewDataSource, UITableViewDelegat
         return 40
     }
     
+    /// Create a table section header view.
+    ///
+    /// - Parameter title: The album title to be used as section title.
+    /// - Returns: A view to be used as table section header.
     private func createAlbumTitleView(title: String?) -> UIView {
         // header view
         let blurEffect = UIBlurEffect(style: .extraLight)

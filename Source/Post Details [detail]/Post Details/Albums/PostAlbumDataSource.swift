@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PostAlbumDataSource: NSObject, UICollectionViewDataSource, UICollectionViewDelegate {
+class PostAlbumDataSource: NSObject, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDataSourcePrefetching {
     
     /// Alias for data source model
     typealias Model = PostAlbumTableViewCell.Model
@@ -44,5 +44,18 @@ class PostAlbumDataSource: NSObject, UICollectionViewDataSource, UICollectionVie
     }
     
     
+    // MARK: - Prefetching data source
+    
+    func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+        for indexPath in indexPaths {
+            // TODO: asynchronously fetch photo
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
+        for indexPath in indexPaths {
+            // TODO: cancel any current photo requests
+        }
+    }
     
 }

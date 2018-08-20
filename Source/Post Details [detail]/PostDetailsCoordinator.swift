@@ -10,7 +10,7 @@ import UIKit
 
 class PostDetailsCoordinator: Coordinator {
     /// Child coordinators.
-    var childCoordinators: [Coordinator] = []
+    var childCoordinators: [UITableViewCell: PostAlbumCoordinator] = [:]
     
     /// The navigation view controller currently being used to present view controllers.
     var navigationController: UINavigationController
@@ -102,11 +102,33 @@ class PostDetailsCoordinator: Coordinator {
         // table view data source & delegate (post details)
         let dataSource = PostDetailsDataSource()
         self.dataSource = dataSource
+        dataSource.coordinator = self
         postDetailsViewController.tableView.dataSource = dataSource
         postDetailsViewController.tableView.delegate = dataSource
         
         // present it
         navigationController.pushViewController(noPostDetailsViewController, animated: false)
+    }
+    
+    /// Setup a new/existing cell to show the photos collection.
+    ///
+    /// - Parameters:
+    ///   - cell: The cell that will show the photos collection.
+    ///   - album: The `Album` model to setup the cell.
+    func setupAlbumCell(_ cell: PostAlbumTableViewCell) {
+        // create or reuse coordinator
+        let albumCoordinator: PostAlbumCoordinator!
+        if let coordinator = childCoordinators[cell] {
+            albumCoordinator = coordinator
+        }
+        else {
+            albumCoordinator = PostAlbumCoordinator(cell: cell, modelController: modelController)
+            albumCoordinator.start()
+            childCoordinators[cell] = albumCoordinator
+        }
+        
+        // setup cell delegate
+        cell.delegate = albumCoordinator
     }
     
 }
