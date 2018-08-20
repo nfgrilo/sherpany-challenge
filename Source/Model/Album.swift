@@ -32,6 +32,7 @@ extension Album {
             managedPhotos.forEach {
                 photoList.append(Photo(managedPhoto: $0))
             }
+            photoList.sort { return $0.id < $1.id }
         }
         photos = photoList
     }
