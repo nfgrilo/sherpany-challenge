@@ -8,13 +8,47 @@
 
 import UIKit
 
-class PostDetailsDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
+class PostDetailsDataSource: NSObject {
     
     /// Weak reference to parent coordinator.
     weak var coordinator: PostDetailsCoordinator?
     
     /// Model (lightweight, immutable, thread-safe model based of managed objects).
-    var post: Post?
+    var post: Post? {
+        didSet {
+            // attempt to restore previous expanded state
+            let isSamePost = oldValue?.id == post?.id
+            var previouslyCollapsed: [Int64: Bool]?
+            if isSamePost {
+                previouslyCollapsed = (albumSections ?? []).reduce([:]) { dictionary, albumSection in
+                    var mapping = dictionary
+                    mapping?[albumSection.id] = albumSection.isCollapsed
+                    return mapping
+                }
+            }
+            
+            // compute sections (album titles)
+            var sections: [AlbumSection] = []
+            for album in post?.user?.albums ?? [] {
+                let collapsed = previouslyCollapsed?[album.id] ?? true
+                sections.append(AlbumSection(id: album.id, title: album.title, isCollapsed: collapsed))
+            }
+            self.albumSections = sections
+        }
+    }
+    
+    /// Table view sections.
+    var albumSections: [AlbumSection]?
+    
+    /// Struct describing an album title (table section header).
+    struct AlbumSection {
+        let id: Int64
+        let title: String?
+        var isCollapsed: Bool
+    }
+    
+    /// Album title header view identifier.
+    private let albumTitleHeaderViewIdentifier = "AlbumTitleHeaderViewId"
     
     /// Post details cell identifier.
     private let postDetailsCellIdentifier = "PostDetailsCellId"
@@ -22,16 +56,24 @@ class PostDetailsDataSource: NSObject, UITableViewDataSource, UITableViewDelegat
     /// Post details cell identifier.
     private let postAlbumsCellIdentifier = "PostAlbumsCellId"
     
-    
-    // MARK: - Table data source
+}
+
+// MARK: - Table data source
+extension PostDetailsDataSource: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1 /* title & body */
-            + (post?.user?.albums.count ?? 0) /* user albums */
+            + (albumSections?.count ?? 0) /* user albums */
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        // title & body -> 1
+        guard section > 0 else { return 1 }
+        let albumSectionIndex = section - 1
+        
+        // album -> depend on collapsed state
+        guard let sections = self.albumSections, albumSectionIndex >= 0 && albumSectionIndex < sections.count else { return 0 }
+        return sections[albumSectionIndex].isCollapsed ? 0 : 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -56,30 +98,36 @@ class PostDetailsDataSource: NSObject, UITableViewDataSource, UITableViewDelegat
                 albumsCell.model = nil
                 return cell
             }
-            let index = indexPath.section - 1
-            if index >= 0 && index < albums.count {
-                albumsCell.model = PostAlbumTableViewCell.Model(photos: albums[index].photos)
+            let albumSectionIndex = indexPath.section - 1
+            if albumSectionIndex >= 0 && albumSectionIndex < albums.count {
+                albumsCell.model = PostAlbumTableViewCell.Model(photos: albums[albumSectionIndex].photos)
             }
         }
         
         return cell
     }
     
-    
-    // MARK: - Table data delegate
+}
+
+// MARK: - Table data delegate
+extension PostDetailsDataSource: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         // title & body -> (none)
         guard section > 0 else { return nil }
         
         // albums
-        guard let albums = post?.user?.albums else { return nil }
-        let index = section - 1
-        guard index >= 0 && index < albums.count else { return nil }
+        guard let sections = self.albumSections else { return nil }
+        let albumSectionIndex = section - 1
+        guard albumSectionIndex >= 0 && albumSectionIndex < sections.count else { return nil }
         
         // album title (header view) // Requirement #10: ✅ (album title)
-        let albumTitle =  albums[index].title
-        let headerView = createAlbumTitleView(title: albumTitle)
+        let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: albumTitleHeaderViewIdentifier) as? PostAlbumTableViewHeaderView ?? PostAlbumTableViewHeaderView(reuseIdentifier: albumTitleHeaderViewIdentifier)
+        headerView.configure(with: sections[albumSectionIndex].title,
+                             isCollapsed: sections[albumSectionIndex].isCollapsed,
+                             section: section,
+                             tableView: tableView,
+                             delegate: self)
         
         return headerView
     }
@@ -87,38 +135,26 @@ class PostDetailsDataSource: NSObject, UITableViewDataSource, UITableViewDelegat
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         // title & body -> (none)
         guard section > 0 else { return 0 }
-        
+
         // album titles
-        return 40
+        return PostAlbumTableViewHeaderView.headerHeight
     }
+}
+
+// MARK: - PostAlbumTableViewHeaderView delegate
+extension PostDetailsDataSource: PostAlbumTableViewHeaderViewDelegate {
     
-    /// Create a table section header view.
-    ///
-    /// - Parameter title: The album title to be used as section title.
-    /// - Returns: A view to be used as table section header.
-    private func createAlbumTitleView(title: String?) -> UIView {
-        // header view
-        let blurEffect = UIBlurEffect(style: .extraLight)
-        let headerView = UIVisualEffectView(effect: blurEffect)
+    func tableView(tableView: UITableView?, headerTapped: PostAlbumTableViewHeaderView, section: Int?) {
+        guard let section = section else { return }
+        let albumSectionIndex = section - 1
         
-        // album title
-        let label = UILabel(frame: .zero)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.preferredFont(forTextStyle: .title3)
-        if let albumTitleColor = UIColor(named: "Album Title") {
-            label.textColor = albumTitleColor
-        }
-        label.text = title ?? "(untitled album)"
-        label.numberOfLines = 0
+        // toggle collapsed state
+        let currentIsCollapsed = albumSections?[albumSectionIndex].isCollapsed ?? true
+        albumSections?[albumSectionIndex].isCollapsed = !currentIsCollapsed
+        headerTapped.isCollapsed = !currentIsCollapsed
         
-        // layout
-        headerView.contentView.addSubview(label)
-        let views: [String: Any] = ["title": label]
-        let options: NSLayoutFormatOptions = .init(rawValue: 0)
-        headerView.contentView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-20-[title]-20-|", options: options, metrics: nil, views: views))
-        headerView.contentView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-8-[title]-8-|", options: options, metrics: nil, views: views))
-        
-        return headerView
+        // update table view header
+        tableView?.reloadSections(IndexSet.init(integer: section), with: .automatic)
     }
     
 }

@@ -62,14 +62,23 @@ class PostDetailsCoordinator: Coordinator {
                 let postChanged = post.id != (dataSource?.post?.id ?? Int64(NSNotFound))
                 dataSource?.post = post
                 DispatchQueue.main.async { [weak self] in
+                    // remember scrolling offset
+                    let previousScrollOffset = viewController.tableView.contentOffset
+                    // reload post data
+                    self?.postDetailsViewController?.tableView.reloadData()
+                    self?.postDetailsViewController?.tableView.layoutIfNeeded()
+                    // handle scroll offset
+                    if postChanged {
+                        // scroll to top (if post changed)
+                        viewController.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+                    }
+                    else {
+                        // restore scrolling
+                        viewController.tableView.contentOffset = previousScrollOffset
+                    }
                     // switch view controllers
                     if self?.navigationController.topViewController != viewController {
                         self?.navigationController.viewControllers = [viewController]
-                    }
-                    self?.postDetailsViewController?.tableView.reloadData()
-                    // scroll to top (if post changed)
-                    if postChanged {
-                        viewController.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
                     }
                 }
             }

@@ -8,6 +8,10 @@
 
 import UIKit
 
+/// Coordinator protocol.
+///
+/// This is inspired on the great Coordinator pattern by Soroush Khanlou.
+/// More info at http://khanlou.com/2015/10/coordinators-redux/
 protocol Coordinator {
     
     /// Make the coordinator take control.
