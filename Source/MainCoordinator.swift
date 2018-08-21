@@ -18,6 +18,9 @@ class MainCoordinator: Coordinator {
     /// Model controller.
     private let modelController: ModelController
     
+    /// Photo controller.
+    private let photoController: PhotoController
+    
     /// The root view controller currently being used to present view controllers.
     private var splitViewController: UISplitViewController?
     
@@ -27,9 +30,10 @@ class MainCoordinator: Coordinator {
     /// - Parameters:
     ///   - window: The app window.
     ///   - modelController: The model controller
-    init(window: UIWindow, modelController: ModelController) {
+    init(window: UIWindow, modelController: ModelController, photoController: PhotoController) {
         self.window = window
         self.modelController = modelController
+        self.photoController = photoController
     }
     
     /// Take control!
@@ -42,7 +46,7 @@ class MainCoordinator: Coordinator {
         masterCoordinator.start()
         //  -> detail
         let detailNavigationController = UINavigationController()
-        let detailsCoordinator = PostDetailsCoordinator(navigationController: detailNavigationController, modelController: modelController)
+        let detailsCoordinator = PostDetailsCoordinator(navigationController: detailNavigationController, modelController: modelController, photoController: photoController)
         childCoordinators.append(detailsCoordinator)
         detailsCoordinator.start()
         masterCoordinator.postSelectedDelegate = detailsCoordinator

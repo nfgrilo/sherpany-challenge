@@ -1,5 +1,5 @@
 //
-//  PhotoStorageController.swift
+//  PhotoController+DiskCache.swift
 //  Sherpany Posts
 //
 //  Created by Nuno Grilo on 17/08/2018.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PhotoStorageController {
+extension PhotoController {
     
     /// Get a photo from local storage by its `id`.
     ///

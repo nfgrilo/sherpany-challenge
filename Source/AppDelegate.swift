@@ -23,6 +23,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     /// Model controller.
     private var modelController: ModelController?
     
+    /// Photo controller.
+    private var photoController: PhotoController?
+    
     /// REST API controller.
     private var apiController: APIController?
 
@@ -37,9 +40,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         self.apiController = apiController
         let modelController = ModelController(apiController: apiController)
         self.modelController = modelController
+        let photoController = PhotoController()
+        self.photoController = photoController
         
         // main coordinator
-        let coordinator = MainCoordinator(window: window, modelController: modelController)
+        let coordinator = MainCoordinator(window: window, modelController: modelController, photoController: photoController)
         self.coordinator = coordinator
         
         // let main coordinator take control

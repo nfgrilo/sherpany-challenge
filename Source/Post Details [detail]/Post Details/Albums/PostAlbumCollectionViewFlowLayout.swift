@@ -11,7 +11,10 @@ import UIKit
 class PostAlbumCollectionViewFlowLayout: UICollectionViewFlowLayout {
     
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
-        guard let attrs = super.layoutAttributesForElements(in: rect) else { return nil }
+        // need to work on a copy of the original attributes, otherwise some issues may occur
+        guard let attrs = (super.layoutAttributesForElements(in: rect)?.map { $0.copy() as! UICollectionViewLayoutAttributes }) else {
+            return nil
+        }
         
         // top align items
         var lineCenterY: CGFloat = 0

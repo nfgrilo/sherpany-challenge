@@ -18,6 +18,9 @@ class PostAlbumCoordinator: Coordinator {
     /// Model controller.
     private let modelController: ModelController
     
+    /// Photo controller.
+    private let photoController: PhotoController
+    
     /// Post Albums collection view controller
     var albumViewController: PostAlbumCollectionViewController?
     
@@ -28,9 +31,10 @@ class PostAlbumCoordinator: Coordinator {
     /// Creates a coordinator.
     ///
     /// - Parameter navigationController: The root view controller "BOSSed" by this coordinator.
-    init(cell: UITableViewCell, modelController: ModelController) {
+    init(cell: UITableViewCell, modelController: ModelController, photoController: PhotoController) {
         self.cell = cell
         self.modelController = modelController
+        self.photoController = photoController
     }
     
     /// Take control!
@@ -42,17 +46,25 @@ class PostAlbumCoordinator: Coordinator {
         // setup photos collection view
         guard let collectionView = viewController.collectionView else { return }
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.isScrollEnabled = false
-        let dataSource = PostAlbumDataSource()
+        //  -> custom flow layout that top-align photos
+        let flowLayout = PostAlbumCollectionViewFlowLayout()
+        //      > Using `flowLayout.estimatedItemSize` instead of `itemSize`
+        //      > would enable dynamic cell sizing. However, this causes lagging
+        //      > animations when refreshing the cell photo. Using static size
+        //      > instead.
+        //flowLayout.estimatedItemSize = CGSize(width: 190, height: 228)
+        flowLayout.itemSize = CGSize(width: 190, height: 228)
+        flowLayout.minimumLineSpacing = 0
+        flowLayout.minimumInteritemSpacing = 0
+        collectionView.collectionViewLayout = flowLayout
+
+        //  -> data source
+        let dataSource = PostAlbumDataSource(photoController: photoController)
         self.albumViewDataSource = dataSource
         collectionView.dataSource = dataSource
         collectionView.prefetchDataSource = dataSource
-        collectionView.delegate = dataSource
-        // custom flow layout that top-align photos
-        let flowLayout = PostAlbumCollectionViewFlowLayout()
-        flowLayout.estimatedItemSize = CGSize(width: 1, height: 1) // enable dynamic cell sizing
-        collectionView.collectionViewLayout = flowLayout
-        
+        collectionView.isPrefetchingEnabled = true
+
         // add photos collection view to view hierarchy
         cell.contentView.addSubview(collectionView)
         let views: [String: Any] = ["photos": collectionView]
@@ -71,7 +83,6 @@ extension PostAlbumCoordinator: PostAlbumTableViewCellDelegate {
     func didSetModel(_ model: PostAlbumTableViewCell.Model?) {
         // update collection view
         albumViewDataSource?.model = model
-        albumViewController?.view.isHidden = (model == nil)
         
         // layout collection view on table's view cell
         guard let collectionView = albumViewController?.collectionView else { return }
@@ -80,18 +91,18 @@ extension PostAlbumCoordinator: PostAlbumTableViewCellDelegate {
         //  -> load collection view photos
         collectionView.reloadData()
         //  -> trigger collection view layout on this runloop
-        collectionView.setNeedsLayout()
-        collectionView.layoutIfNeeded()
+        //collectionView.setNeedsLayout()
+        //collectionView.layoutIfNeeded()
     }
     
     func contentViewSizeFitting(_ targetSize: CGSize) -> CGSize {
         guard let collectionView = albumViewController?.collectionView else { return .zero }
-        
+
         // autolayout is enabled on collection view's cells (with `.estimatedItemSize`)
         //  => force collection view relayout with the given width
         collectionView.frame = CGRect(x: 0, y: 0, width: targetSize.width, height: 1)
-        collectionView.layoutIfNeeded()
-        
+        //collectionView.layoutIfNeeded()
+
         var collectionViewSize = collectionView.collectionViewLayout.collectionViewContentSize
         collectionViewSize.height += 40 // add bottom padding
         return collectionViewSize

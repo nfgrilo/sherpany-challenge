@@ -16,8 +16,14 @@ class PostAlbumCollectionViewCell: UICollectionViewCell {
     /// Photo.
     @IBOutlet weak var photo: UIImageView!
     
+    /// Loading indicator.
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    
     /// Cell width constraint.
-    var widthConstraint: NSLayoutConstraint?
+    var photoWidthConstraint: NSLayoutConstraint?
+    
+    /// Cell height constraint.
+    var photoHeightConstraint: NSLayoutConstraint?
     
     /// View-model.
     var model: Model? {
@@ -25,27 +31,47 @@ class PostAlbumCollectionViewCell: UICollectionViewCell {
             guard let model = model else {
                 return
             }
+            let isLoading = model.photo == nil
             
             // update UI
             title.text = model.title
             photo.image = model.photo
+            photo.isHidden = isLoading
+            if !isLoading && activityIndicator.isAnimating {
+                activityIndicator.stopAnimating()
+                photo.isHidden = false
+            }
             
-            // force width to image width + leading & trailing space
-            widthConstraint?.constant = 20 + model.photo.size.width + 20
-            widthConstraint?.isActive = true
+            // update photo size constraints.
+            // this will also limit the total cell width.
+            photoWidthConstraint?.constant = model.photo?.size.width ?? 150
+            photoWidthConstraint?.priority = .defaultHigh
+            photoWidthConstraint?.isActive = true
+            photoHeightConstraint?.constant = model.photo?.size.height ?? 150
+            photoHeightConstraint?.priority = .defaultHigh
+            photoHeightConstraint?.isActive = true
         }
     }
     
-    /// IB initialization.
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
+    override func awakeFromNib() {
+        super.awakeFromNib()
         setup()
     }
 
     /// Set up cell.
     private func setup() {
+        // use autolayout
         contentView.translatesAutoresizingMaskIntoConstraints = false
-        widthConstraint = contentView.widthAnchor.constraint(equalToConstant: 1)
+        photoWidthConstraint = photo.widthAnchor.constraint(equalToConstant: 0)
+        photoHeightConstraint = photo.heightAnchor.constraint(equalToConstant: 0)
+        
+        // base UI setup
+        photo.isHidden = true
+        activityIndicator.isHidden = false
+        activityIndicator.hidesWhenStopped = true
+        DispatchQueue.main.async { [weak self] in
+            self?.activityIndicator.startAnimating()
+        }
     }
     
 }
@@ -55,9 +81,9 @@ class PostAlbumCollectionViewCell: UICollectionViewCell {
 extension PostAlbumCollectionViewCell {
     struct Model {
         let title: String
-        let photo: UIImage
+        let photo: UIImage?
         
-        init(title: String?, photo: UIImage) {
+        init(title: String?, photo: UIImage?) {
             self.title = title ?? "(untitled photo)"
             self.photo = photo
         }

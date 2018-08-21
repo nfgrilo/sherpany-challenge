@@ -24,6 +24,9 @@ class PostDetailsCoordinator: Coordinator {
     /// Model controller.
     private let modelController: ModelController
     
+    /// Photo controller.
+    private let photoController: PhotoController
+    
     /// Posts data source.
     private var dataSource: PostDetailsDataSource?
     
@@ -90,9 +93,10 @@ class PostDetailsCoordinator: Coordinator {
     /// Creates a coordinator.
     ///
     /// - Parameter navigationController: The root view controller "BOSSed" by this coordinator.
-    init(navigationController: UINavigationController, modelController: ModelController) {
+    init(navigationController: UINavigationController, modelController: ModelController, photoController: PhotoController) {
         self.navigationController = navigationController
         self.modelController = modelController
+        self.photoController = photoController
     }
     
     /// Take control!
@@ -131,7 +135,7 @@ class PostDetailsCoordinator: Coordinator {
             albumCoordinator = coordinator
         }
         else {
-            albumCoordinator = PostAlbumCoordinator(cell: cell, modelController: modelController)
+            albumCoordinator = PostAlbumCoordinator(cell: cell, modelController: modelController, photoController: photoController)
             albumCoordinator.start()
             childCoordinators[cell] = albumCoordinator
         }

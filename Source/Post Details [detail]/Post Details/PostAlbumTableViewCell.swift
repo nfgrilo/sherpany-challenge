@@ -41,7 +41,7 @@ extension PostAlbumTableViewCell {
         }
         
         init(photos: [Photo]) {
-            self.photosUrl = photos.compactMap { $0.url }
+            self.photosUrl = photos.compactMap { $0.thumbnailUrl }
             self.titles = photos.compactMap { $0.title }
         }
     }
