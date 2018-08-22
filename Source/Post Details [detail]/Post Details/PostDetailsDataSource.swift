@@ -13,6 +13,31 @@ class PostDetailsDataSource: NSObject {
     /// Weak reference to parent coordinator.
     weak var coordinator: PostDetailsCoordinator?
     
+    /// Photo controller.
+    private let photoController: PhotoController
+    
+    /// Initializes the data source.
+    ///
+    /// - Parameter photoController: The shared photo controller.
+    init(photoController: PhotoController) {
+        // photo controller
+        self.photoController = photoController
+        
+        super.init()
+        
+        // setup dispatch source
+        let source = DispatchSource.makeUserDataAddSource(queue: DispatchQueue.main)
+        source.setEventHandler { [weak self] in
+            self?.refreshPendingCollectionViewItems()
+        }
+        source.activate()
+        collectionViewUpdateSource = source
+    }
+    
+    deinit {
+        collectionViewUpdateSource?.cancel()
+    }
+    
     /// Model (lightweight, immutable, thread-safe model based of managed objects).
     var post: Post? {
         didSet {
@@ -47,114 +72,169 @@ class PostDetailsDataSource: NSObject {
         var isCollapsed: Bool
     }
     
-    /// Album title header view identifier.
-    private let albumTitleHeaderViewIdentifier = "AlbumTitleHeaderViewId"
+    /// Post details cell identifier.
+    private let postDetailsCellIdentifier = "PostDetailsCellId" // unused?
     
     /// Post details cell identifier.
-    private let postDetailsCellIdentifier = "PostDetailsCellId"
+    private let postAlbumsCellIdentifier = "PostAlbumsCellId" // unused?
     
-    /// Post details cell identifier.
-    private let postAlbumsCellIdentifier = "PostAlbumsCellId"
+    /// Photo cell identifier.
+    private let photoCellIdentifier = "PhotoCellId"
+    
+    /// Weak reference to collection view.
+    private weak var collectionView: UICollectionView?
+    
+    /// Dispatch source for updating collection view.
+    private var collectionViewUpdateSource: DispatchSourceUserDataAdd?
+    
+    /// Items in queue to be reloaded.
+    private var collectionViewItemsToUpdate: [IndexPath] = []
+    
+    /// Refresh collection view items needing refresh.
+    private func refreshPendingCollectionViewItems() {
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        collectionView?.reloadItems(at: collectionViewItemsToUpdate)
+        collectionView?.setNeedsLayout()
+        collectionView?.layoutIfNeeded()
+        CATransaction.commit()
+        collectionViewItemsToUpdate.removeAll()
+    }
+    
+    /// Coalesce collection view item updates.
+    ///
+    /// - Parameter indexPaths: Index paths of items needing refresh.
+    public func appendPendingCollectionViewItems(_ indexPaths: [IndexPath]) {
+        collectionViewItemsToUpdate.append(contentsOf: indexPaths)
+        collectionViewUpdateSource?.add(data: 1)
+    }
     
 }
 
-// MARK: - Table data source
-extension PostDetailsDataSource: UITableViewDataSource {
+// MARK: - Collection view data source
+extension PostDetailsDataSource: UICollectionViewDataSource {
     
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1 /* title & body */
-            + (albumSections?.count ?? 0) /* user albums */
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return albumSections?.count ?? 0
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // title & body -> 1
-        guard section > 0 else { return 1 }
-        let albumSectionIndex = section - 1
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        guard let albums = post?.user?.albums, section < albums.count,
+            let sections = self.albumSections, section < sections.count else {
+            return 0
+        }
         
-        // album -> depend on collapsed state
-        guard let sections = self.albumSections, albumSectionIndex >= 0 && albumSectionIndex < sections.count else { return 0 }
-        return sections[albumSectionIndex].isCollapsed ? 0 : 1
+        // section is collpased?
+        return sections[section].isCollapsed ? 0 : albums[section].photos.count
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         // create cell
-        let cellIdentifier = indexPath.section == 0 ? postDetailsCellIdentifier : postAlbumsCellIdentifier
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
-        
-        // non-nil post!
-        guard let post = self.post else { return cell }
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: photoCellIdentifier, for: indexPath)
         
         // set model
-        if let postCell = cell as? PostDetailsTableViewCell {
-            //  -> post details (title & body)
-            postCell.model = PostDetailsTableViewCell.Model(post: post)
+        guard let photoCell = cell as? PostAlbumCollectionViewCell,
+            let photo = photo(for: indexPath) else {
+            return cell
         }
-        else if let albumsCell = cell as? PostAlbumTableViewCell {
-            //  -> albums
-            // let coordinator handle the album setup
-            coordinator?.setupAlbumCell(albumsCell)
-            // set cell's model
-            guard let albums = post.user?.albums else {
-                albumsCell.model = nil
-                return cell
-            }
-            let albumSectionIndex = indexPath.section - 1
-            if albumSectionIndex >= 0 && albumSectionIndex < albums.count {
-                albumsCell.model = PostAlbumTableViewCell.Model(photos: albums[albumSectionIndex].photos)
+        let title = photo.title
+        let imageUrl = photo.thumbnailUrl
+        let image = photoController.photo(for: imageUrl)
+        photoCell.model = PostAlbumCollectionViewCell.Model(title: title, photo: image)
+        
+        // no photo yet? -> fetch
+        if image == nil, let imageUrl = imageUrl {
+            photoController.fetchPhotos(from: [imageUrl]) { [weak self] _, image in
+                // update cell's model (without animation)
+                photoCell.model = PostAlbumCollectionViewCell.Model(title: title, photo: image)
+                self?.appendPendingCollectionViewItems([indexPath])
             }
         }
         
         return cell
     }
     
-}
-
-// MARK: - Table delegate
-extension PostDetailsDataSource: UITableViewDelegate {
-    
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        // title & body -> (none)
-        guard section > 0 else { return nil }
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        guard kind == UICollectionElementKindSectionHeader else {
+            return UICollectionReusableView()
+        }
         
-        // albums
-        guard let sections = self.albumSections else { return nil }
-        let albumSectionIndex = section - 1
-        guard albumSectionIndex >= 0 && albumSectionIndex < sections.count else { return nil }
-        
-        // album title (header view) // Requirement #10: ✅ (album title)
-        let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: albumTitleHeaderViewIdentifier) as? PostAlbumTableViewHeaderView ?? PostAlbumTableViewHeaderView(reuseIdentifier: albumTitleHeaderViewIdentifier)
-        headerView.configure(with: sections[albumSectionIndex].title,
-                             isCollapsed: sections[albumSectionIndex].isCollapsed,
-                             section: section,
-                             tableView: tableView,
-                             delegate: self)
+        // create header
+        let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: PostAlbumHeaderView.viewIdentifier, for: indexPath)
+        if let view = headerView as? PostAlbumHeaderView, let sections = self.albumSections {
+            view.configure(with: sections[indexPath.section].title,
+                           isCollapsed: sections[indexPath.section].isCollapsed,
+                           section: indexPath.section,
+                           collectionView: collectionView,
+                           delegate: self)
+        }
         
         return headerView
     }
     
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        // title & body -> (none)
-        guard section > 0 else { return 0 }
-
-        // album titles
-        return PostAlbumTableViewHeaderView.headerHeight
+    /// Get the photo associated with the given index path.
+    ///
+    /// - Parameter indexPath: The post index path.
+    /// - Returns: A photo.
+    func photo(for indexPath: IndexPath) -> Photo? {
+        guard let albums = post?.user?.albums,
+            indexPath.section < albums.count,
+            indexPath.row < albums[indexPath.section].photos.count else {
+                return nil
+        }
+        return albums[indexPath.section].photos[indexPath.row]
     }
+    
 }
 
-// MARK: - PostAlbumTableViewHeaderView delegate
-extension PostDetailsDataSource: PostAlbumTableViewHeaderViewDelegate {
+
+// MARK: - Prefetching data source
+extension PostDetailsDataSource: UICollectionViewDataSourcePrefetching {
+
+    func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+        // asynchronously fetch photos
+        let urls = indexPaths.compactMap { photo(for: $0)?.thumbnailUrl }
+        photoController.fetchPhotos(from: urls)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
+        // slow down any current photo requests
+        let urls = indexPaths.compactMap { photo(for: $0)?.thumbnailUrl }
+        photoController.slowdownPhotoFetches(urls: urls)
+    }
     
-    func tableView(tableView: UITableView?, headerTapped: PostAlbumTableViewHeaderView, section: Int?) {
+}
+
+
+// MARK: - Collection view flow layout delegate
+extension PostDetailsDataSource: UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return CGSize(width: 100, height: PostAlbumHeaderView.headerHeight)
+    }
+    
+}
+
+
+// MARK: - Collection view delegate
+extension PostDetailsDataSource: UICollectionViewDelegate {
+    
+}
+
+
+// MARK: - PostAlbumHeaderViewDelegate delegate
+extension PostDetailsDataSource: PostAlbumHeaderViewDelegate {
+    
+    func tableView(collectionView: UICollectionView?, headerTapped: PostAlbumHeaderView, section: Int?) {
         guard let section = section else { return }
-        let albumSectionIndex = section - 1
         
         // toggle collapsed state
-        let currentIsCollapsed = albumSections?[albumSectionIndex].isCollapsed ?? true
-        albumSections?[albumSectionIndex].isCollapsed = !currentIsCollapsed
+        let currentIsCollapsed = albumSections?[section].isCollapsed ?? true
+        albumSections?[section].isCollapsed = !currentIsCollapsed
         headerTapped.isCollapsed = !currentIsCollapsed
         
-        // update table view header
-        tableView?.reloadSections(IndexSet.init(integer: section), with: .automatic)
+        // reload section
+        collectionView?.reloadSections(IndexSet.init(integer: section))
     }
     
 }

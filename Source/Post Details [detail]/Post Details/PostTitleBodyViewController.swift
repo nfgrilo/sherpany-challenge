@@ -1,15 +1,15 @@
 //
-//  PostDetailsTableViewCell.swift
+//  PostTitleBodyViewController.swift
 //  Sherpany Posts
 //
-//  Created by Nuno Grilo on 16/08/2018.
+//  Created by Nuno Grilo on 22/08/2018.
 //  Copyright © 2018 NunoGrilo.com. All rights reserved.
 //
 
 import UIKit
 
-class PostDetailsTableViewCell: UITableViewCell {
-    
+class PostTitleBodyViewController: UIViewController, Storyboarded {
+ 
     /// Post title label.
     @IBOutlet weak var postTitle: UILabel!
     
@@ -35,11 +35,11 @@ class PostDetailsTableViewCell: UITableViewCell {
             relatedAlbums.text = model.hasAlbums ? "Author's Favorite Albums" : "No Favorite Albums"
         }
     }
+    
 }
 
-
 /// Posts Details table view cell view-model.
-extension PostDetailsTableViewCell {
+extension PostTitleBodyViewController {
     struct Model {
         let title: String
         let body: String

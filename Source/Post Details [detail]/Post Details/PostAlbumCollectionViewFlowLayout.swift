@@ -39,9 +39,9 @@ class PostAlbumCollectionViewFlowLayout: UICollectionViewFlowLayout {
         return attrs
     }
     
-    override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
-        return true
-    }
+//    override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
+//        return true
+//    }
     
     private func layout(_ inlineItems: [UICollectionViewLayoutAttributes]) {
         guard inlineItems.count > 0 else { return }

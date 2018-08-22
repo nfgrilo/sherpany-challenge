@@ -10,163 +10,345 @@ import UIKit
 
 class PhotoController {
     
-    /// Serial queue for queueing requests, locking access to `fetchImage`.
-    private let serviceQueue = DispatchQueue(label: "PhotoController Serial Queue")
+    /// Alias for task completion closure.
+    typealias TaskCompletion = (URL?, UIImage?) -> Void
     
-    /// Concurrent queue for network requests.
-    private let networkQueue = DispatchQueue(label: "PhotoController Concurrent Queue", qos: .background, attributes: .concurrent)
+    /// A photo network fetch object.
+    class Task: Hashable {
+        let url: URL
+        var completions: [TaskCompletion] = []
+        var workItem: DispatchWorkItem?
+        var dataTask: URLSessionDataTask?
+        private(set) var isCancelled: Bool
+        
+        init(url: URL, completions: [TaskCompletion]) {
+            self.url = url
+            self.completions = completions
+            self.isCancelled = false
+        }
+        
+        /// Cancel the task.
+        func cancel() {
+            dataTask?.cancel()
+            workItem?.cancel()
+            completions.removeAll()
+            isCancelled = true
+        }
+        
+        static func == (lhs: PhotoController.Task, rhs: PhotoController.Task) -> Bool {
+            return lhs.url == rhs.url
+        }
+
+        var hashValue: Int {
+            return url.hashValue
+        }
+    }
     
-    /// Image memory cache holding already fetched images.
-    private let cache: NSCache<NSString,UIImage> = NSCache()
+    /// Queue of tasks (LIFO).
+    private var tasks: [Task] = []
     
-    /// Alias for task copmletion closure.
-    typealias TaskCompletion = (UIImage?) -> Void
-    
-    /// Completion closures to be called when a photo with specified id has been fetched.
-    private var completionClosures: [URL: [TaskCompletion]] = [:]
-    
-    /// Dispatch work items fetching associated url.
-    private var workItems: [URL: DispatchWorkItem] = [:]
+    /// (Strong refernce to) Tasks being executed (LIFO).
+    private var executingTasks: [Task] = []
     
     
     /// Initialize the controller.
     init() {
-        // cache 100 photos at most
-        cache.countLimit = 100
+        // limit number of cached photos
+        cache.countLimit = 1000
         
         // clean up cache on low memory
         NotificationCenter.default.addObserver(self, selector: #selector(cleanCache), name: .UIApplicationDidReceiveMemoryWarning, object: nil)
     }
     
     
-    // MARK: - Photo
+    // MARK: - Photos
     
     /// Gets a photo from cache.
+    /// If `nil` need to call `fetchPhoto(from:completion:)`.
     ///
     /// - Parameter url: The photo URL.
     /// - Returns: Returns the cache image, if any.
-    func photo(for url: URL) -> UIImage? {
+    func photo(for url: URL?) -> UIImage? {
+        guard let url = url else { return nil }
         return cache.object(forKey: url.absoluteString as NSString)
     }
     
-    /// Fetch a photo from the network.
+    /// Image memory cache holding already fetched images.
+    private let cache: NSCache<NSString,UIImage> = NSCache()
+    
+    /// Wipes all the image cache.
+    @objc func cleanCache() {
+        print("⚠️ Cleaning photo cache...")
+        cache.removeAllObjects()
+    }
+    
+    /// Fetch and cache photos from the network.
     ///
     /// - Parameters:
-    ///   - url: The photo URL.
+    ///   - urls: The photo URLs.
     ///   - completion: The closure to be called when complete.
-    func fetchPhoto(from url: URL, completion: TaskCompletion? = nil) {
-        serviceQueue.sync { [weak self] in
-            // add to completion closures for this url
-            if let completion = completion {
-                self?.addToCompletionClosure(url: url, completion: completion)
-            }
-            
-            // if image is already cached, return it
+    func fetchPhotos(from urls: [URL], completion: TaskCompletion? = nil) {
+        var newTasks: [Task] = []
+        for url in urls {
+            // photo already cached?
             if let cachedPhoto = photo(for: url) {
-                self?.notifyCompletionClosures(for: url, with: cachedPhoto)
-                return
+                completion?(url, cachedPhoto)
+                continue
             }
             
-            // otherwise, fetch image & notify "observers"
-            let workItem = DispatchWorkItem() {
-                self?.networkFetch(url: url) { image in
-                    // call completions
-                    self?.serviceQueue.sync {
-                        self?.notifyCompletionClosures(for: url, with: image)
+            // get/create task
+            guard let task = self.task(for: url, createIfInexistent: true, addCompletion: completion) else {
+                completion?(url, nil)
+                continue
+            }
+            if task.workItem == nil {
+                // define task work item (fetch image & notify "observers")
+                task.workItem = DispatchWorkItem() { [weak self, weak task] in
+                    self?.networkFetch(task) { _, image in
+                        self?.finishTask(task, image: image)
                     }
                 }
             }
-            workItems[url] = workItem
-            networkQueue.async(execute: workItem)
+            
+            newTasks.append(task)
+        }
+        
+        // queue tasks
+        enqueueTasks(newTasks)
+    }
+    
+    /// Lower priority for a network request.
+    ///
+    /// - Parameter urls: The urls being fetched to slow down.
+    func slowdownPhotoFetches(urls: [URL]) {
+        // lower task priority task
+        lowerTaskPriority(for: urls)
+    }
+    
+    /// Cancel all pending or ongoing network requests.
+    func cancelAllPhotoFetchs() {
+        cancelAllTasks()
+    }
+    
+    
+    // MARK: - Tasks
+    
+    private func task(for url: URL, createIfInexistent: Bool = false, addCompletion completion: TaskCompletion? = nil) -> Task? {
+        var task: Task?
+        
+        // search for existing task
+        for existingTask in tasks.reversed() {
+            if url == existingTask.url {
+                task = existingTask
+                break
+            }
+        }
+        
+        // set task completions
+        var completions: [TaskCompletion] = task?.completions ?? []
+        if let completion = completion {
+            completions.append(completion)
+            task?.completions = completions
+        }
+        
+        // create new task (?)
+        if task == nil && createIfInexistent {
+            task = Task(url: url, completions: completions)
+        }
+        
+        return task
+    }
+    
+    /// Enqueue tasks.
+    /// Task will run asynchronously and the number of simultaneous tasks is limited.
+    ///
+    /// - Parameter tasks: The tasks to queue.
+    private func enqueueTasks(_ tasks: [Task]) {
+        // run atomically, to lock access to  `tasks`
+        serviceQueue.async { [weak self] in
+            // queue tasks
+            for task in tasks {
+                if let existingIndex = self?.tasks.index(of: task) {
+                    // increase priority by removing and (re)appending
+                    self?.tasks.remove(at: existingIndex)
+                }
+            }
+            self?.tasks.append(contentsOf: tasks)
+            
+            // execute next task
+            if self?.executingTasks.count ?? 0 < PhotoController.maxConcurrentDownloads {
+                self?.executeNextTask()
+            }
         }
     }
     
-    /// Cancel an ongoing network request.
-    ///
-    /// - Parameter url: The url being fetched to cancel.
-    func cancelPhotoFetch(url: URL) {
-        // cancel ongoing photo fetch
-        let workItem = workItems[url]
-        workItem?.cancel()
-        workItems.removeValue(forKey: url)
-        
-        // clean completion closures
-        completionClosures.removeValue(forKey: url)
+    /// Dequeues and executes next task.
+    private func executeNextTask() {
+        dequeueTask { [weak self] task in
+            guard let task = task else { return }
+            self?.networkQueue.async {
+                task.workItem?.perform()
+            }
+        }
     }
     
+    /// Dequeue most recently queued task.
+    ///
+    /// - Parameter completion: The dequeued task.
+    private func dequeueTask(completion: @escaping (Task?) -> ()) {
+        // run atomically, to lock access to  `tasks`
+        serviceQueue.async { [weak self] in
+            guard let tasks = self?.tasks  else {
+                completion(nil)
+                return
+            }
+
+            // get last non-cancelled task
+            while !tasks.isEmpty {
+                // pick up task in middle
+                let index = tasks.count / 2
+                
+                if let task = index < tasks.count ? tasks[index] : tasks.last, !task.isCancelled {
+                    // add strong ref to `executingTasks`
+                    self?.executingTasks.append(task)
+                    
+                    // remove from `tasks`
+                    if let taskIndex = tasks.index(of: task) {
+                        self?.tasks.remove(at: taskIndex)
+                    }
+
+                    // call completion with task
+                    completion(task)
+                    return
+                }
+            }
+
+            completion(nil)
+        }
+    }
     
-    // MARK: - Network
+    /// Lower task priority for the given urls.
+    ///
+    /// - Parameter urls: The tasks urls.
+    private func lowerTaskPriority(for urls: [URL]) {
+        // run atomically, to lock access to  `tasks`
+        serviceQueue.async { [weak self] in
+            for url in urls {
+                // get task
+                guard let task = self?.task(for: url) else { continue }
+
+                // move to the end of queue (1st position)
+                if let existingIndex = self?.tasks.index(of: task) {
+                    self?.tasks.remove(at: existingIndex)
+                }
+                self?.tasks.insert(task, at: 0)
+            }
+        }
+    }
+    
+    /// Cancel all tasks.
+    private func cancelAllTasks() {
+        // run atomically, to lock access to  `tasks`
+        serviceQueue.async { [weak self] in
+            // cancel all tasks
+            self?.tasks.forEach { $0.cancel() }
+            self?.executingTasks.removeAll()
+
+            // remove all from queue
+            self?.tasks.removeAll()
+        }
+    }
+    
+    /// Finish task and notify observers (registered completion closures) of a fetched image from the network.
+    ///
+    /// - Parameters:
+    ///   - task: The task.
+    ///   - image: The fetched image.
+    private func finishTask(_ task: Task?, image: UIImage?) {
+        guard let task = task else { return }
+        
+        // cache photo
+        if let photo = image {
+            cache.setObject(photo, forKey: task.url.absoluteString as NSString)
+        }
+        
+        // task
+        guard !task.isCancelled else {
+            return
+        }
+        
+        // notify
+        DispatchQueue.main.async {
+            task.completions.forEach { $0(task.url, image) }
+        }
+        
+        // clean
+        // run atomically, to lock access to `tasks`
+        serviceQueue.async { [weak self] in
+            if let existingIndex = self?.tasks.index(of: task) {
+                self?.tasks.remove(at: existingIndex)
+            }
+            if let existingIndex = self?.executingTasks.index(of: task) {
+                self?.executingTasks.remove(at: existingIndex)
+            }
+
+            print("Finished task \(task.url) (#tasks: \(self?.tasks.count ?? -1), #executing: \(self?.executingTasks.count ?? -1)")
+        }
+        
+        // execute next task
+        executeNextTask()
+    }
+    
+    /// Serial queue for queueing photo requests.
+    private let serviceQueue = DispatchQueue(label: "PhotoController Serial Queue")
+    
+    /// Concurrent queue for network requests.
+    private let networkQueue = DispatchQueue(label: "PhotoController Network Queue", qos: .background, attributes: .concurrent)
+    
+    
+    // MARK: - Network access
     
     /// Fetch an image from the network.
     ///
     /// - Parameters:
-    ///   - url: The image url
+    ///   - task: The task.
     ///   - completion: The completion closure to be called when complete.
-    private func networkFetch(url: URL, completion: TaskCompletion? = nil) {
-        // make sure task was not cancelled
-        guard let workItem = workItems[url], !workItem.isCancelled else {
-            completion?(nil)
+    private func networkFetch(_ task: Task?, completion: TaskCompletion? = nil) {
+        guard let task = task else {
+            completion?(nil, nil)
             return
         }
         
-        // fetch image
-        let configuration = URLSessionConfiguration.ephemeral
+        // make sure task was not cancelled
+        guard !task.isCancelled else {
+            completion?(task.url, nil)
+            return
+        }
+        
+        // if image is already cached, notify all and return
+        if let cachedPhoto = photo(for: task.url) {
+            completion?(task.url, cachedPhoto)
+            return
+        }
+        
+        // setup network data task
+        let configuration = URLSessionConfiguration.ephemeral //.default
+        configuration.httpMaximumConnectionsPerHost = PhotoController.maxConcurrentDownloads
         let session = URLSession(configuration: configuration)
-        let task = session.dataTask(with: url, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) -> Void in
+        let dataTask = session.dataTask(with: task.url, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) -> Void in
             guard let data = data else {
-                completion?(nil)
+                completion?(task.url, nil)
                 return
             }
-            completion?(UIImage(data: data))
+            completion?(task.url, UIImage(data: data))
         })
-        task.resume()
-    }
-    
-    
-    // MARK: - Completion closures
-    
-    /// Add a completion closure for a given URL.
-    ///
-    /// - Parameters:
-    ///   - url: The image url.
-    ///   - completion: The completion closure to be called when fetch request for the URL completes.
-    private func addToCompletionClosure(url: URL, completion: @escaping TaskCompletion) {
-        // add to completion closure list for that url
-        var completions = completionClosures[url] ?? []
-        completions.append(completion)
-        completionClosures[url] = completions
-    }
-    
-    /// Notify observers (registered copmletion closures) of a fetched image from the network.
-    ///
-    /// - Parameters:
-    ///   - url: The url the image was fetched from.
-    ///   - image: The fetched image.
-    private func notifyCompletionClosures(for url: URL, with image: UIImage?) {
-        // cache photo
-        if let photo = image {
-            cache.setObject(photo, forKey: url.absoluteString as NSString)
-        }
+        task.dataTask = dataTask
         
-        // notify
-        for closure in completionClosures[url] ?? [] {
-            closure(image)
-        }
-        
-        // clean completion closures array
-        completionClosures.removeValue(forKey: url)
-        
-        // clean work item
-        workItems.removeValue(forKey: url)
+        // fetch!
+        dataTask.resume()
     }
     
-    
-    // MARK: - Cache
-    
-    /// Wipes all the image cache.
-    @objc func cleanCache() {
-        print("Cleaning photo cache...")
-        cache.removeAllObjects()
-    }
+    /// Maximum concurrent downloads.
+    private static let maxConcurrentDownloads: Int = 9
     
 }

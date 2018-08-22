@@ -31,10 +31,12 @@ class PostAlbumCollectionViewCell: UICollectionViewCell {
             guard let model = model else {
                 return
             }
+            
             let isLoading = model.photo == nil
             
             // update UI
             title.text = model.title
+            photo.backgroundColor = isLoading ? UIColor(white: 0.98, alpha: 1) : .clear
             photo.image = model.photo
             photo.isHidden = isLoading
             if !isLoading && activityIndicator.isAnimating {
@@ -57,6 +59,11 @@ class PostAlbumCollectionViewCell: UICollectionViewCell {
         super.awakeFromNib()
         setup()
     }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        showActivityIndicator()
+    }
 
     /// Set up cell.
     private func setup() {
@@ -65,13 +72,22 @@ class PostAlbumCollectionViewCell: UICollectionViewCell {
         photoWidthConstraint = photo.widthAnchor.constraint(equalToConstant: 0)
         photoHeightConstraint = photo.heightAnchor.constraint(equalToConstant: 0)
         
-        // base UI setup
+        // setup photo
+        photo.layer.masksToBounds = true
+        photo.layer.cornerRadius = 8
+        
+        // activity indicator
+        showActivityIndicator()
+    }
+    
+    /// Show the activity indicator.
+    private func showActivityIndicator() {
+        guard model?.photo == nil else { return }
+        
         photo.isHidden = true
         activityIndicator.isHidden = false
+        activityIndicator.startAnimating()
         activityIndicator.hidesWhenStopped = true
-        DispatchQueue.main.async { [weak self] in
-            self?.activityIndicator.startAnimating()
-        }
     }
     
 }

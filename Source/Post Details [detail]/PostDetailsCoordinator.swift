@@ -10,7 +10,7 @@ import UIKit
 
 class PostDetailsCoordinator: Coordinator {
     /// Child coordinators.
-    var childCoordinators: [UITableViewCell: PostAlbumCoordinator] = [:]
+    var childCoordinators: [Coordinator] = []
     
     /// The navigation view controller currently being used to present view controllers.
     var navigationController: UINavigationController
@@ -61,23 +61,34 @@ class PostDetailsCoordinator: Coordinator {
                 guard let viewController = postDetailsViewController else {
                     break
                 }
-                // -> present post details VC
+                // post changed?
                 let postChanged = post.id != (dataSource?.post?.id ?? Int64(NSNotFound))
+                if postChanged {
+                    // cancel current photo network request
+                    photoController.cancelAllPhotoFetchs()
+                }
+                // -> present post details VC
                 dataSource?.post = post
                 DispatchQueue.main.async { [weak self] in
+                    guard let collectionView = viewController.collectionView else { return }
                     // remember scrolling offset
-                    let previousScrollOffset = viewController.tableView.contentOffset
-                    // reload post data
-                    self?.postDetailsViewController?.tableView.reloadData()
-                    self?.postDetailsViewController?.tableView.layoutIfNeeded()
+                    let previousScrollOffset = collectionView.contentOffset
+                    // reload post data & layout
+                    collectionView.reloadData()
+                    collectionView.setNeedsLayout()
+                    collectionView.layoutIfNeeded()
                     // handle scroll offset
                     if postChanged {
-                        // scroll to top (if post changed)
-                        viewController.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+                        // scroll to top if post changed
+                        var offset = CGPoint(x: -collectionView.contentInset.left, y: -collectionView.contentInset.top)
+                        if #available(iOS 11.0, *) {
+                            offset = CGPoint(x: -collectionView.adjustedContentInset.left, y: -collectionView.adjustedContentInset.top)
+                        }
+                        collectionView.setContentOffset(offset, animated: false)
                     }
                     else {
-                        // restore scrolling
-                        viewController.tableView.contentOffset = previousScrollOffset
+                        // restore previous scrolling offset
+                        collectionView.contentOffset = previousScrollOffset
                     }
                     // switch view controllers
                     if self?.navigationController.topViewController != viewController {
@@ -101,47 +112,40 @@ class PostDetailsCoordinator: Coordinator {
     
     /// Take control!
     func start() {
+        // no-post details VC
+        guard let noPostDetailsViewController = NoPostDetailsViewController.instantiate() else { return }
+        self.noPostDetailsViewController = noPostDetailsViewController
+        noPostDetailsViewController.title = "Challenge Accepted!" // Requirement #1: ✅
+        
         // post details VC
         guard let postDetailsViewController = PostDetailsViewController.instantiate() else { return }
         self.postDetailsViewController = postDetailsViewController
         postDetailsViewController.coordinator = self
         postDetailsViewController.title = "Challenge Accepted!" // Requirement #1: ✅
         
-        // no-post details VC
-        guard let noPostDetailsViewController = NoPostDetailsViewController.instantiate() else { return }
-        self.noPostDetailsViewController = noPostDetailsViewController
-        noPostDetailsViewController.title = "Challenge Accepted!" // Requirement #1: ✅
-        
-        // table view data source & delegate (post details)
-        let dataSource = PostDetailsDataSource()
+        // post details vc: collection view data source & delegate
+        //  -> layout
+        let flowLayout = PostAlbumCollectionViewFlowLayout()
+        //      > Using `flowLayout.estimatedItemSize` instead of `itemSize`
+        //      > would enable dynamic cell sizing. However, this causes lagging
+        //      > animations when refreshing the cell photo. Using static size
+        //      > instead.
+//        flowLayout.estimatedItemSize = CGSize(width: 190, height: 228)
+        flowLayout.itemSize = CGSize(width: 190, height: 228)
+        flowLayout.minimumLineSpacing = 0
+        flowLayout.minimumInteritemSpacing = 0
+        flowLayout.sectionHeadersPinToVisibleBounds = true // Bonus Point #2: ✅
+        postDetailsViewController.collectionView?.collectionViewLayout = flowLayout
+        //  -> data source
+        let dataSource = PostDetailsDataSource(photoController: photoController)
         self.dataSource = dataSource
         dataSource.coordinator = self
-        postDetailsViewController.tableView.dataSource = dataSource
-        postDetailsViewController.tableView.delegate = dataSource
+        postDetailsViewController.collectionView?.dataSource = dataSource
+        postDetailsViewController.collectionView?.delegate = dataSource
+        postDetailsViewController.collectionView?.prefetchDataSource = dataSource
         
         // present it
         navigationController.pushViewController(noPostDetailsViewController, animated: false)
-    }
-    
-    /// Setup a new/existing cell to show the photos collection.
-    ///
-    /// - Parameters:
-    ///   - cell: The cell that will show the photos collection.
-    ///   - album: The `Album` model to setup the cell.
-    func setupAlbumCell(_ cell: PostAlbumTableViewCell) {
-        // create or reuse coordinator
-        let albumCoordinator: PostAlbumCoordinator!
-        if let coordinator = childCoordinators[cell] {
-            albumCoordinator = coordinator
-        }
-        else {
-            albumCoordinator = PostAlbumCoordinator(cell: cell, modelController: modelController, photoController: photoController)
-            albumCoordinator.start()
-            childCoordinators[cell] = albumCoordinator
-        }
-        
-        // setup cell delegate
-        cell.delegate = albumCoordinator
     }
     
 }

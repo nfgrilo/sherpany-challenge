@@ -8,21 +8,24 @@
 
 import UIKit
 
-class PostDetailsViewController: UITableViewController, Storyboarded {
+class PostDetailsViewController: UICollectionViewController, Storyboarded {
     
     /// Weak reference to parent coordinator.
     weak var coordinator: PostDetailsCoordinator?
-    
-    
-    // MARK: - Table view setup
-    
-    override func viewDidLoad() {
-        // dynamic row heights based on auto layout
-        tableView.rowHeight = UITableViewAutomaticDimension
-        
-        // required in order to use autolayout for cells
-        tableView.estimatedRowHeight = 100
-    }
 
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+//        if let vc = PostTitleBodyViewController.instantiate(), let subView = vc.view {
+//            subView.translatesAutoresizingMaskIntoConstraints = false
+//            subView.frame.origin = .zero
+//            collectionView?.addSubview(subView)
+//            addChildViewController(vc)
+//            vc.didMove(toParentViewController: self)
+//        }
+//        
+//        collectionView?.contentInset.top = 200
+    }
+    
 }
 
