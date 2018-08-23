@@ -30,6 +30,60 @@ class PostDetailsCoordinator: Coordinator {
     /// Posts data source.
     private var dataSource: PostDetailsDataSource?
     
+    
+    // MARK: - Coordinator setup
+    
+    /// Creates a coordinator.
+    ///
+    /// - Parameter navigationController: The root view controller "BOSSed" by this coordinator.
+    init(navigationController: UINavigationController, modelController: ModelController, photoController: PhotoController) {
+        self.navigationController = navigationController
+        self.modelController = modelController
+        self.photoController = photoController
+    }
+    
+    /// Take control!
+    func start() {
+        // no-post details VC
+        guard let noPostDetailsViewController = NoPostDetailsViewController.instantiate() else { return }
+        self.noPostDetailsViewController = noPostDetailsViewController
+        noPostDetailsViewController.title = "Challenge Accepted!" // Requirement #1: ✅
+        
+        // post details VC
+        guard let postDetailsViewController = PostDetailsViewController.instantiate() else { return }
+        self.postDetailsViewController = postDetailsViewController
+        postDetailsViewController.coordinator = self
+        postDetailsViewController.title = "Challenge Accepted!" // Requirement #1: ✅
+        
+        // post details vc: collection view data source & delegate
+        //  -> layout
+        let flowLayout = PostAlbumCollectionViewFlowLayout()
+        //      > Using `flowLayout.estimatedItemSize` instead of `itemSize`
+        //      > would enable dynamic cell sizing. However, this causes lagging
+        //      > animations when refreshing the collection view item.
+        //      > Using static size instead.
+        //flowLayout.estimatedItemSize = CGSize(width: 190, height: 228)
+        flowLayout.itemSize = CGSize(width: 190, height: 228)
+        flowLayout.minimumLineSpacing = 0
+        flowLayout.minimumInteritemSpacing = 0
+        flowLayout.sectionHeadersPinToVisibleBounds = true // Bonus Point #2: ✅
+        postDetailsViewController.collectionView?.collectionViewLayout = flowLayout
+        //  -> data source
+        let dataSource = PostDetailsDataSource(photoController: photoController)
+        self.dataSource = dataSource
+        dataSource.coordinator = self
+        dataSource.collectionView = postDetailsViewController.collectionView
+        postDetailsViewController.collectionView?.dataSource = dataSource
+        postDetailsViewController.collectionView?.delegate = dataSource
+        postDetailsViewController.collectionView?.prefetchDataSource = dataSource
+        
+        // present it
+        navigationController.pushViewController(noPostDetailsViewController, animated: false)
+    }
+    
+    
+    // MARK: - State (post selection)
+    
     /// Post details coordinator states.
     ///
     /// - noSelection: No post selected.
@@ -64,32 +118,14 @@ class PostDetailsCoordinator: Coordinator {
                 // post changed?
                 let postChanged = post.id != (dataSource?.post?.id ?? Int64(NSNotFound))
                 if postChanged {
-                    // cancel current photo network request
+                    // cancel current photo network requests
                     photoController.cancelAllPhotoFetchs()
                 }
                 // -> present post details VC
                 dataSource?.post = post
                 DispatchQueue.main.async { [weak self] in
-                    guard let collectionView = viewController.collectionView else { return }
-                    // remember scrolling offset
-                    let previousScrollOffset = collectionView.contentOffset
-                    // reload post data & layout
-                    collectionView.reloadData()
-                    collectionView.setNeedsLayout()
-                    collectionView.layoutIfNeeded()
-                    // handle scroll offset
-                    if postChanged {
-                        // scroll to top if post changed
-                        var offset = CGPoint(x: -collectionView.contentInset.left, y: -collectionView.contentInset.top)
-                        if #available(iOS 11.0, *) {
-                            offset = CGPoint(x: -collectionView.adjustedContentInset.left, y: -collectionView.adjustedContentInset.top)
-                        }
-                        collectionView.setContentOffset(offset, animated: false)
-                    }
-                    else {
-                        // restore previous scrolling offset
-                        collectionView.contentOffset = previousScrollOffset
-                    }
+                    // reload data
+                    viewController.reloadData(restoreScrolling: !postChanged)
                     // switch view controllers
                     if self?.navigationController.topViewController != viewController {
                         self?.navigationController.viewControllers = [viewController]
@@ -98,55 +134,6 @@ class PostDetailsCoordinator: Coordinator {
             }
             
         }
-    }
-    
-    
-    /// Creates a coordinator.
-    ///
-    /// - Parameter navigationController: The root view controller "BOSSed" by this coordinator.
-    init(navigationController: UINavigationController, modelController: ModelController, photoController: PhotoController) {
-        self.navigationController = navigationController
-        self.modelController = modelController
-        self.photoController = photoController
-    }
-    
-    /// Take control!
-    func start() {
-        // no-post details VC
-        guard let noPostDetailsViewController = NoPostDetailsViewController.instantiate() else { return }
-        self.noPostDetailsViewController = noPostDetailsViewController
-        noPostDetailsViewController.title = "Challenge Accepted!" // Requirement #1: ✅
-        
-        // post details VC
-        guard let postDetailsViewController = PostDetailsViewController.instantiate() else { return }
-        self.postDetailsViewController = postDetailsViewController
-        postDetailsViewController.coordinator = self
-        postDetailsViewController.title = "Challenge Accepted!" // Requirement #1: ✅
-        
-        // post details vc: collection view data source & delegate
-        //  -> layout
-        let flowLayout = PostAlbumCollectionViewFlowLayout()
-        //      > Using `flowLayout.estimatedItemSize` instead of `itemSize`
-        //      > would enable dynamic cell sizing. However, this causes lagging
-        //      > animations when refreshing the cell photo. Using static size
-        //      > instead.
-//        flowLayout.estimatedItemSize = CGSize(width: 190, height: 228)
-        flowLayout.itemSize = CGSize(width: 190, height: 228)
-        flowLayout.minimumLineSpacing = 0
-        flowLayout.minimumInteritemSpacing = 0
-        flowLayout.sectionHeadersPinToVisibleBounds = true // Bonus Point #2: ✅
-        postDetailsViewController.collectionView?.collectionViewLayout = flowLayout
-        //  -> data source
-        let dataSource = PostDetailsDataSource(photoController: photoController)
-        self.dataSource = dataSource
-        dataSource.coordinator = self
-        dataSource.collectionView = postDetailsViewController.collectionView
-        postDetailsViewController.collectionView?.dataSource = dataSource
-        postDetailsViewController.collectionView?.delegate = dataSource
-        postDetailsViewController.collectionView?.prefetchDataSource = dataSource
-        
-        // present it
-        navigationController.pushViewController(noPostDetailsViewController, animated: false)
     }
     
 }

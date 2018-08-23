@@ -181,7 +181,7 @@ extension PostDetailsDataSource: UICollectionViewDataSource {
         return headerView
     }
     
-    /// Get the photo associated with the given index path.
+    /// Get the photo (model object `Photo`) associated with the given index path.
     ///
     /// - Parameter indexPath: The post index path.
     /// - Returns: A photo.
