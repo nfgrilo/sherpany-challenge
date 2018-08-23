@@ -140,6 +140,7 @@ class PostDetailsCoordinator: Coordinator {
         let dataSource = PostDetailsDataSource(photoController: photoController)
         self.dataSource = dataSource
         dataSource.coordinator = self
+        dataSource.collectionView = postDetailsViewController.collectionView
         postDetailsViewController.collectionView?.dataSource = dataSource
         postDetailsViewController.collectionView?.delegate = dataSource
         postDetailsViewController.collectionView?.prefetchDataSource = dataSource

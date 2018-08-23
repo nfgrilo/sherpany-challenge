@@ -28,7 +28,7 @@ class PostDetailsDataSource: NSObject {
         // setup dispatch source
         let source = DispatchSource.makeUserDataAddSource(queue: DispatchQueue.main)
         source.setEventHandler { [weak self] in
-            self?.refreshPendingCollectionViewItems()
+            self?.coalescedCollectionViewItems()
         }
         source.activate()
         collectionViewUpdateSource = source
@@ -82,30 +82,37 @@ class PostDetailsDataSource: NSObject {
     private let photoCellIdentifier = "PhotoCellId"
     
     /// Weak reference to collection view.
-    private weak var collectionView: UICollectionView?
+    weak var collectionView: UICollectionView?
+    
+    
+    // MARK: - Coalesced collection view item updates
     
     /// Dispatch source for updating collection view.
     private var collectionViewUpdateSource: DispatchSourceUserDataAdd?
     
-    /// Items in queue to be reloaded.
-    private var collectionViewItemsToUpdate: [IndexPath] = []
-    
     /// Refresh collection view items needing refresh.
-    private func refreshPendingCollectionViewItems() {
+    private func coalescedCollectionViewItems() {
+        // find cells whose model has no photo yet
+        var indexPaths: [IndexPath] = []
+        if let visibleCells = collectionView?.visibleCells {
+            for cell in visibleCells {
+                if let cell = cell as? PostAlbumCollectionViewCell,
+                    cell.model?.photo == nil,
+                    let cellIndexPath = collectionView?.indexPath(for: cell) {
+                    indexPaths.append(cellIndexPath)
+                }
+            }
+        }
+        
+        // reload those items (without animation)
         CATransaction.begin()
         CATransaction.setDisableActions(true)
-        collectionView?.reloadItems(at: collectionViewItemsToUpdate)
-        collectionView?.setNeedsLayout()
-        collectionView?.layoutIfNeeded()
+        collectionView?.reloadItems(at: indexPaths)
         CATransaction.commit()
-        collectionViewItemsToUpdate.removeAll()
     }
     
-    /// Coalesce collection view item updates.
-    ///
-    /// - Parameter indexPaths: Index paths of items needing refresh.
-    public func appendPendingCollectionViewItems(_ indexPaths: [IndexPath]) {
-        collectionViewItemsToUpdate.append(contentsOf: indexPaths)
+    /// Coalesced collection view item updates.
+    public func refreshCollectionViewItems() {
         collectionViewUpdateSource?.add(data: 1)
     }
     
@@ -145,9 +152,11 @@ extension PostDetailsDataSource: UICollectionViewDataSource {
         // no photo yet? -> fetch
         if image == nil, let imageUrl = imageUrl {
             photoController.fetchPhotos(from: [imageUrl]) { [weak self] _, image in
-                // update cell's model (without animation)
+                guard photoCell.model?.photo == nil else { return }
+                
+                // queue a cell's model refresh
                 photoCell.model = PostAlbumCollectionViewCell.Model(title: title, photo: image)
-                self?.appendPendingCollectionViewItems([indexPath])
+                self?.refreshCollectionViewItems()
             }
         }
         
