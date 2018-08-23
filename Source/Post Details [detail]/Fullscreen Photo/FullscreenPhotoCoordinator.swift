@@ -65,9 +65,7 @@ class FullscreenPhotoCoordinator: Coordinator {
                 }
                 
                 // fetch photo & update
-                print("Fetching full sized image \(photoUrl)")
                 photoController.fetchPhotos(from: [photoUrl]) { [weak self] url, image in
-                    print("FETCHED full sized image \(photoUrl)")
                     self?.viewController?.model = FullscreenPhotoViewController.Model(photo: image, isThumbnail: false)
                 }
             }
