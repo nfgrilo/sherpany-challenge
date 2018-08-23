@@ -44,17 +44,24 @@ class PhotoController {
         }
     }
     
-    /// Queue of tasks (LIFO).
+    /// Queue of waiting tasks.
+    ///
+    /// Reads are made synchronously on the concurrent `tasksQueue` queue.
+    /// Writes are made without concurrency (asynchronously with barrier).
     private var tasks: [Task] = []
     
-    /// (Strong refernce to) Tasks being executed (LIFO).
+    /// Tasks being executed.
+    ///
+    /// Keep a strong ref otherwise task would be derreferenced before finishing.
+    /// Reads are made synchronously on the concurrent `tasksQueue` queue.
+    /// Writes are made without concurrency (asynchronously with barrier).
     private var executingTasks: [Task] = []
     
     
     /// Initialize the controller.
     init() {
         // limit number of cached photos
-        cache.countLimit = 1000
+        cache.countLimit = 500
         
         // clean up cache on low memory
         NotificationCenter.default.addObserver(self, selector: #selector(cleanCache), name: .UIApplicationDidReceiveMemoryWarning, object: nil)
@@ -133,39 +140,56 @@ class PhotoController {
     
     // MARK: - Tasks
     
-    private func task(for url: URL, createIfInexistent: Bool = false, addCompletion completion: TaskCompletion? = nil) -> Task? {
+    /// Gets an existing queued task for the given url, creating one if appropriate,
+    /// and appending a completion closure to that task (bound to `url`).
+    ///
+    /// - Parameters:
+    ///   - url: The task url.
+    ///   - createIfInexistent: Create a new task if not queued.
+    ///   - taskCompletion: A completion closure to be added to the list of this url task.
+    /// - Returns: A task associated with the given url.
+    private func task(for url: URL,
+                      createIfInexistent: Bool = false,
+                      addCompletion taskCompletion: TaskCompletion? = nil) -> Task? {
         var task: Task?
         
-        // search for existing task
-        for existingTask in tasks.reversed() {
-            if url == existingTask.url {
-                task = existingTask
-                break
+        // `tasks` reads are made synchronously on a concurrent queue
+        tasksQueue.sync { [weak self] in
+            
+            // search for existing task
+            for existingTask in self?.tasks ?? [] {
+                if url == existingTask.url {
+                    task = existingTask
+                    break
+                }
             }
-        }
-        
-        // set task completions
-        var completions: [TaskCompletion] = task?.completions ?? []
-        if let completion = completion {
-            completions.append(completion)
-            task?.completions = completions
-        }
-        
-        // create new task (?)
-        if task == nil && createIfInexistent {
-            task = Task(url: url, completions: completions)
+            
+            // set task completions
+            var completions: [TaskCompletion] = task?.completions ?? []
+            if let taskCompletion = taskCompletion {
+                completions.append(taskCompletion)
+                task?.completions = completions
+            }
+            
+            // create new task (?)
+            if task == nil && createIfInexistent {
+                task = Task(url: url, completions: completions)
+            }
+            
         }
         
         return task
     }
     
     /// Enqueue tasks.
-    /// Task will run asynchronously and the number of simultaneous tasks is limited.
     ///
     /// - Parameter tasks: The tasks to queue.
     private func enqueueTasks(_ tasks: [Task]) {
-        // run atomically, to lock access to  `tasks`
-        serviceQueue.async { [weak self] in
+        let dispatchGroup = DispatchGroup()
+        
+        // `tasks` writes are made without concurrency (async with barrier)
+        dispatchGroup.enter()
+        tasksQueue.async(flags: .barrier) { [weak self] in
             // queue tasks
             for task in tasks {
                 if let existingIndex = self?.tasks.index(of: task) {
@@ -175,8 +199,13 @@ class PhotoController {
             }
             self?.tasks.append(contentsOf: tasks)
             
-            // execute next task
-            if self?.executingTasks.count ?? 0 < PhotoController.maxConcurrentDownloads {
+            dispatchGroup.leave()
+        }
+        
+        // execute next task when complete
+        dispatchGroup.notify(queue: .global(qos: .background)) { [weak self] in
+            let executingTaskCount = self?.executingTasks.count ?? 0
+            if executingTaskCount < PhotoController.maxConcurrentDownloads {
                 self?.executeNextTask()
             }
         }
@@ -186,6 +215,8 @@ class PhotoController {
     private func executeNextTask() {
         dequeueTask { [weak self] task in
             guard let task = task else { return }
+            
+            // perform task on network queue
             self?.networkQueue.async {
                 task.workItem?.perform()
             }
@@ -196,16 +227,20 @@ class PhotoController {
     ///
     /// - Parameter completion: The dequeued task.
     private func dequeueTask(completion: @escaping (Task?) -> ()) {
-        // run atomically, to lock access to  `tasks`
-        serviceQueue.async { [weak self] in
+        // `tasks` writes are made without concurrency (async with barrier)
+        tasksQueue.async(flags: .barrier) { [weak self] in
             guard let tasks = self?.tasks  else {
                 completion(nil)
                 return
             }
-
+            
             // get last non-cancelled task
             while !tasks.isEmpty {
                 // pick up task in middle
+                //  > PS: this works great with prefetching because, when prefetching,
+                //  > cells are requested above and/or below visible cells, so
+                //  > dequeueing from middle will potentially give priority to
+                //  > tasks whose cells are already visible on screen.
                 let index = tasks.count / 2
                 
                 if let task = index < tasks.count ? tasks[index] : tasks.last, !task.isCancelled {
@@ -216,44 +251,48 @@ class PhotoController {
                     if let taskIndex = tasks.index(of: task) {
                         self?.tasks.remove(at: taskIndex)
                     }
-
+                    
                     // call completion with task
                     completion(task)
                     return
                 }
             }
-
+            
             completion(nil)
         }
     }
     
     /// Lower task priority for the given urls.
     ///
+    ///
     /// - Parameter urls: The tasks urls.
     private func lowerTaskPriority(for urls: [URL]) {
-        // run atomically, to lock access to  `tasks`
-        serviceQueue.async { [weak self] in
+        // `tasks` writes are made without concurrency (async with barrier)
+        tasksQueue.async(flags: .barrier) { [weak self] in
+            guard let tasks = self?.tasks else { return }
+            
             for url in urls {
                 // get task
-                guard let task = self?.task(for: url) else { continue }
-
-                // move to the end of queue (1st position)
-                if let existingIndex = self?.tasks.index(of: task) {
+                guard let task = (tasks.first { $0.url == url }) else { continue }
+                
+                // move to task to end of list
+                //  > PS: this works because tasks are dequeued from the middle
+                if let existingIndex = tasks.index(of: task) {
                     self?.tasks.remove(at: existingIndex)
                 }
-                self?.tasks.insert(task, at: 0)
+                self?.tasks.append(task)
             }
         }
     }
     
     /// Cancel all tasks.
     private func cancelAllTasks() {
-        // run atomically, to lock access to  `tasks`
-        serviceQueue.async { [weak self] in
+        // `tasks` writes are made without concurrency (async with barrier)
+        tasksQueue.async(flags: .barrier) { [weak self] in
             // cancel all tasks
             self?.tasks.forEach { $0.cancel() }
             self?.executingTasks.removeAll()
-
+            
             // remove all from queue
             self?.tasks.removeAll()
         }
@@ -283,27 +322,28 @@ class PhotoController {
         }
         
         // clean
-        // run atomically, to lock access to `tasks`
-        serviceQueue.async { [weak self] in
+        // `tasks` writes are made without concurrency (async with barrier)
+        tasksQueue.async(flags: .barrier) { [weak self] in
             if let existingIndex = self?.tasks.index(of: task) {
                 self?.tasks.remove(at: existingIndex)
             }
             if let existingIndex = self?.executingTasks.index(of: task) {
                 self?.executingTasks.remove(at: existingIndex)
             }
-
-            print("Finished task \(task.url) (#tasks: \(self?.tasks.count ?? -1), #executing: \(self?.executingTasks.count ?? -1)")
         }
         
         // execute next task
         executeNextTask()
     }
     
-    /// Serial queue for queueing photo requests.
-    private let serviceQueue = DispatchQueue(label: "PhotoController Serial Queue")
+    /// Concurrent queue for queueing photo task requests.
+    ///
+    /// Reads should be made synchronously on the concurrent queue.
+    /// Writes should made without concurrency (asynchronously with barrier).
+    private let tasksQueue = DispatchQueue(label: "PhotoController Tasks Access", qos: .background, attributes: .concurrent)
     
     /// Concurrent queue for network requests.
-    private let networkQueue = DispatchQueue(label: "PhotoController Network Queue", qos: .background, attributes: .concurrent)
+    private let networkQueue = DispatchQueue(label: "PhotoController Network Access", qos: .background, attributes: .concurrent)
     
     
     // MARK: - Network access
@@ -332,7 +372,10 @@ class PhotoController {
         }
         
         // setup network data task
-        let configuration = URLSessionConfiguration.ephemeral //.default
+        //  > PS: `URLSessionConfiguration.default` should be used instead to take
+        //  > advantage of disk caching of photos, etc. However, for the code challenge
+        //  > purpose, I intentionally left this `.ephemeral` (no disk cache - memory only).
+        let configuration = URLSessionConfiguration.ephemeral
         configuration.httpMaximumConnectionsPerHost = PhotoController.maxConcurrentDownloads
         let session = URLSession(configuration: configuration)
         let dataTask = session.dataTask(with: task.url, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) -> Void in
