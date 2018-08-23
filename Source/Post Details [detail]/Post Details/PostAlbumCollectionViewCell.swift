@@ -10,6 +10,9 @@ import UIKit
 
 class PostAlbumCollectionViewCell: UICollectionViewCell {
     
+    /// Reusable view identifier.
+    static let viewIdentifier = "PostAlbumCollectionViewCell"
+    
     /// Photo title.
     @IBOutlet weak var title: UILabel!
     

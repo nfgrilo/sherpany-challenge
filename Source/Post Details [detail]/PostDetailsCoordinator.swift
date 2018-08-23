@@ -76,6 +76,8 @@ class PostDetailsCoordinator: Coordinator {
         postDetailsViewController.collectionView?.dataSource = dataSource
         postDetailsViewController.collectionView?.delegate = dataSource
         postDetailsViewController.collectionView?.prefetchDataSource = dataSource
+        //  -> post details supplementary view
+        postDetailsViewController.collectionView?.register(PostDetailsHeaderView.classForCoder(), forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: PostDetailsHeaderView.viewIdentifier)
         
         // present it
         navigationController.pushViewController(noPostDetailsViewController, animated: false)

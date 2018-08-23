@@ -8,6 +8,9 @@
 
 import UIKit
 
+// Requirement #11: ✅ (pre-fetching & caching)
+
+/// Fetch photos from the network.
 class PhotoController {
     
     /// Alias for task completion closure.

@@ -68,53 +68,6 @@
             </objects>
             <point key="canvasLocation" x="463" y="-692"/>
         </scene>
-        <!--Post Title Body View Controller-->
-        <scene sceneID="q6P-rt-b2f">
-            <objects>
-                <viewController storyboardIdentifier="PostTitleBodyViewController" id="jc9-cD-zPv" customClass="PostTitleBodyViewController" customModule="Sherpany_Posts" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" opaque="NO" contentMode="scaleToFill" id="2y5-ky-Kfh">
-                        <rect key="frame" x="0.0" y="0.0" width="1024" height="200"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="Post Body" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s0O-4d-Bar">
-                                <rect key="frame" x="20" y="74.5" width="217" height="20.5"/>
-                                <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                <color key="textColor" name="Post Body"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Author's Favorite Albums" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3p1-19-aFG">
-                                <rect key="frame" x="20" y="135" width="217" height="57"/>
-                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
-                                <color key="textColor" name="Albums"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="Post Title" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nKd-dy-VAD">
-                                <rect key="frame" x="20" y="35" width="984" height="31.5"/>
-                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
-                                <color key="textColor" name="Post Title"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <constraints>
-                            <constraint firstItem="s0O-4d-Bar" firstAttribute="top" secondItem="nKd-dy-VAD" secondAttribute="bottom" constant="8" symbolic="YES" id="HIx-67-KY0"/>
-                            <constraint firstItem="3p1-19-aFG" firstAttribute="trailing" secondItem="s0O-4d-Bar" secondAttribute="trailing" id="Las-Tv-x0Q"/>
-                            <constraint firstItem="3p1-19-aFG" firstAttribute="leading" secondItem="s0O-4d-Bar" secondAttribute="leading" id="Shu-0y-oHL"/>
-                            <constraint firstItem="68W-h0-XhP" firstAttribute="bottom" secondItem="3p1-19-aFG" secondAttribute="bottom" constant="8" id="VU2-Sq-ed9"/>
-                            <constraint firstItem="3p1-19-aFG" firstAttribute="top" secondItem="s0O-4d-Bar" secondAttribute="bottom" constant="40" id="aeF-yC-oV3"/>
-                            <constraint firstItem="68W-h0-XhP" firstAttribute="trailing" secondItem="nKd-dy-VAD" secondAttribute="trailing" constant="20" id="dmz-dg-RD1"/>
-                            <constraint firstItem="nKd-dy-VAD" firstAttribute="leading" secondItem="68W-h0-XhP" secondAttribute="leading" constant="20" id="i0W-V6-6XZ"/>
-                            <constraint firstItem="nKd-dy-VAD" firstAttribute="top" secondItem="68W-h0-XhP" secondAttribute="top" constant="15" id="qf9-06-qiV"/>
-                            <constraint firstItem="nKd-dy-VAD" firstAttribute="leading" secondItem="s0O-4d-Bar" secondAttribute="leading" id="z9f-ov-25A"/>
-                        </constraints>
-                        <viewLayoutGuide key="safeArea" id="68W-h0-XhP"/>
-                    </view>
-                    <size key="freeformSize" width="1024" height="200"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="gto-B5-e3b" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="884" y="-914"/>
-        </scene>
         <!--Post Details View Controller-->
         <scene sceneID="Z4C-rl-ChD">
             <objects>
@@ -130,7 +83,7 @@
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PhotoCellId" id="R69-Bx-zIN" customClass="PostAlbumCollectionViewCell" customModule="Sherpany_Posts" customModuleProvider="target">
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PostAlbumCollectionViewCell" id="R69-Bx-zIN" userLabel="Album Photo Cell" customClass="PostAlbumCollectionViewCell" customModule="Sherpany_Posts" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="50" width="190" height="230"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
@@ -170,7 +123,7 @@
                                 </connections>
                             </collectionViewCell>
                         </cells>
-                        <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="PostAlbumHeaderView" id="iWL-cm-fMp" customClass="PostAlbumHeaderView" customModule="Sherpany_Posts" customModuleProvider="target">
+                        <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="PostAlbumHeaderView" id="iWL-cm-fMp" userLabel="Post Album Header" customClass="PostAlbumHeaderView" customModule="Sherpany_Posts" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="0.0" width="1024" height="50"/>
                             <autoresizingMask key="autoresizingMask"/>
                             <subviews>
@@ -187,7 +140,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="+" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cbA-8x-UEd">
-                                                <rect key="frame" x="1001" y="13" width="13" height="24"/>
+                                                <rect key="frame" x="991" y="13" width="13" height="24"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleTitle3"/>
                                                 <color key="textColor" name="Album Title"/>
                                                 <nil key="highlightedColor"/>
@@ -195,7 +148,7 @@
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
-                                            <constraint firstAttribute="trailing" secondItem="cbA-8x-UEd" secondAttribute="trailing" priority="500" constant="10" id="Fxq-80-pp2"/>
+                                            <constraint firstAttribute="trailing" secondItem="cbA-8x-UEd" secondAttribute="trailing" priority="500" constant="20" id="Fxq-80-pp2"/>
                                             <constraint firstItem="2h6-fA-PSn" firstAttribute="centerY" secondItem="cbA-8x-UEd" secondAttribute="centerY" id="Rai-Dk-BXl"/>
                                             <constraint firstAttribute="bottom" secondItem="2h6-fA-PSn" secondAttribute="bottom" priority="500" constant="10" id="UWL-A6-BjV"/>
                                             <constraint firstItem="cbA-8x-UEd" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="2h6-fA-PSn" secondAttribute="trailing" constant="20" id="Uit-bV-Dti"/>
@@ -226,7 +179,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bV9-9h-ycl" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="884" y="-476"/>
+            <point key="canvasLocation" x="877" y="-692"/>
         </scene>
         <!--No Post Details View Controller-->
         <scene sceneID="CuX-ri-eQ2">
@@ -274,27 +227,18 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="br8-sY-HF8" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="884" y="-1383"/>
+            <point key="canvasLocation" x="877" y="-1373"/>
         </scene>
     </scenes>
     <resources>
         <namedColor name="Album Title">
             <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
-        <namedColor name="Albums">
-            <color red="0.15000000599999999" green="0.15000000599999999" blue="0.15000000599999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
         <namedColor name="Post Author">
             <color red="0.30000001192092896" green="0.30000001192092896" blue="0.30000001192092896" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Post Body">
             <color red="0.25" green="0.25" blue="0.25" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="Post Body">
-            <color red="0.25" green="0.25" blue="0.25" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="Post Title">
-            <color red="0.10000000149011612" green="0.10000000149011612" blue="0.10000000149011612" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Post Title">
             <color red="0.1000000015" green="0.1000000015" blue="0.1000000015" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

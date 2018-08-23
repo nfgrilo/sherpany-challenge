@@ -12,20 +12,6 @@ class PostDetailsViewController: UICollectionViewController, Storyboarded {
     
     /// Weak reference to parent coordinator.
     weak var coordinator: PostDetailsCoordinator?
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-//        if let vc = PostTitleBodyViewController.instantiate(), let subView = vc.view {
-//            subView.translatesAutoresizingMaskIntoConstraints = false
-//            subView.frame.origin = .zero
-//            collectionView?.addSubview(subView)
-//            addChildViewController(vc)
-//            vc.didMove(toParentViewController: self)
-//        }
-//
-//        collectionView?.contentInset.top = 200
-    }
     
     /// Reloads collection view data & optionally restore scrolling offset.
     ///
@@ -54,6 +40,15 @@ class PostDetailsViewController: UICollectionViewController, Storyboarded {
                 offset = CGPoint(x: -collectionView.adjustedContentInset.left, y: -collectionView.adjustedContentInset.top)
             }
             collectionView.setContentOffset(offset, animated: false)
+        }
+    }
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        
+        /// re-layout when device changes orientation
+        if let flowLayout = collectionView?.collectionViewLayout as? UICollectionViewFlowLayout {
+            flowLayout.invalidateLayout()
         }
     }
     

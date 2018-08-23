@@ -8,6 +8,8 @@
 
 import UIKit
 
+// Requirement #10: ✅ (related albums)
+
 class PostDetailsDataSource: NSObject {
     
     /// Weak reference to parent coordinator.
@@ -25,10 +27,10 @@ class PostDetailsDataSource: NSObject {
         
         super.init()
         
-        // setup dispatch source
+        // setup dispatch source (to coalesce collection view updates)
         let source = DispatchSource.makeUserDataAddSource(queue: DispatchQueue.main)
         source.setEventHandler { [weak self] in
-            self?.coalescedCollectionViewItems()
+            self?.refreshCollectionViewItems()
         }
         source.activate()
         collectionViewUpdateSource = source
@@ -72,15 +74,6 @@ class PostDetailsDataSource: NSObject {
         var isCollapsed: Bool
     }
     
-    /// Post details cell identifier.
-    private let postDetailsCellIdentifier = "PostDetailsCellId" // unused?
-    
-    /// Post details cell identifier.
-    private let postAlbumsCellIdentifier = "PostAlbumsCellId" // unused?
-    
-    /// Photo cell identifier.
-    private let photoCellIdentifier = "PhotoCellId"
-    
     /// Weak reference to collection view.
     weak var collectionView: UICollectionView?
     
@@ -91,7 +84,7 @@ class PostDetailsDataSource: NSObject {
     private var collectionViewUpdateSource: DispatchSourceUserDataAdd?
     
     /// Refresh collection view items needing refresh.
-    private func coalescedCollectionViewItems() {
+    private func refreshCollectionViewItems() {
         // find cells whose model has no photo yet
         var indexPaths: [IndexPath] = []
         if let visibleCells = collectionView?.visibleCells {
@@ -112,7 +105,7 @@ class PostDetailsDataSource: NSObject {
     }
     
     /// Coalesced collection view item updates.
-    public func refreshCollectionViewItems() {
+    public func coalescedCollectionViewItems() {
         collectionViewUpdateSource?.add(data: 1)
     }
     
@@ -122,22 +115,30 @@ class PostDetailsDataSource: NSObject {
 extension PostDetailsDataSource: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return albumSections?.count ?? 0
+        return 1                                /* post details */
+               + (albumSections?.count ?? 0)    /* albums */
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        guard let albums = post?.user?.albums, section < albums.count,
-            let sections = self.albumSections, section < sections.count else {
+        // post details
+        guard section > 0 else {
+            return 0
+        }
+        
+        // albums
+        let albumIndex = self.albumIndex(for: section)
+        guard let albums = post?.user?.albums, albumIndex < albums.count,
+            let sections = self.albumSections, albumIndex < sections.count else {
             return 0
         }
         
         // section is collpased?
-        return sections[section].isCollapsed ? 0 : albums[section].photos.count
+        return sections[albumIndex].isCollapsed ? 0 : albums[albumIndex].photos.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         // create cell
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: photoCellIdentifier, for: indexPath)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PostAlbumCollectionViewCell.viewIdentifier, for: indexPath)
         
         // set model
         guard let photoCell = cell as? PostAlbumCollectionViewCell,
@@ -156,7 +157,7 @@ extension PostDetailsDataSource: UICollectionViewDataSource {
                 
                 // queue a cell's model refresh
                 photoCell.model = PostAlbumCollectionViewCell.Model(title: title, photo: image)
-                self?.refreshCollectionViewItems()
+                self?.coalescedCollectionViewItems()
             }
         }
         
@@ -169,15 +170,24 @@ extension PostDetailsDataSource: UICollectionViewDataSource {
         }
         
         // create header
-        let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: PostAlbumHeaderView.viewIdentifier, for: indexPath)
-        if let view = headerView as? PostAlbumHeaderView, let sections = self.albumSections {
-            view.configure(with: sections[indexPath.section].title,
-                           isCollapsed: sections[indexPath.section].isCollapsed,
+        let viewIdentifier = indexPath.section == 0 ? PostDetailsHeaderView.viewIdentifier : PostAlbumHeaderView.viewIdentifier
+        let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: viewIdentifier, for: indexPath)
+
+        // a) post details
+        if let view = headerView as? PostDetailsHeaderView, let post = self.post {
+            view.model = PostDetailsHeaderView.Model(post: post)
+        }
+
+        // b) album title
+        else if let view = headerView as? PostAlbumHeaderView, let albumSections = self.albumSections {
+            let albumIndex = self.albumIndex(for: indexPath.section)
+            view.configure(with: albumSections[albumIndex].title,
+                           isCollapsed: albumSections[albumIndex].isCollapsed,
                            section: indexPath.section,
                            collectionView: collectionView,
                            delegate: self)
         }
-        
+
         return headerView
     }
     
@@ -194,10 +204,19 @@ extension PostDetailsDataSource: UICollectionViewDataSource {
         return albums[indexPath.section].photos[indexPath.row]
     }
     
+    /// Get the album index from a section index.
+    ///
+    /// - Parameter section: The section index.
+    /// - Returns: The corresponding album index.
+    func albumIndex(for section: Int) -> Int {
+        return section - 1
+    }
+    
 }
 
 
 // MARK: - Prefetching data source
+// Requirement #11: ✅ (pre-fetching protocol)
 extension PostDetailsDataSource: UICollectionViewDataSourcePrefetching {
 
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
@@ -219,7 +238,39 @@ extension PostDetailsDataSource: UICollectionViewDataSourcePrefetching {
 extension PostDetailsDataSource: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: 100, height: PostAlbumHeaderView.headerHeight)
+        if section == 0 {
+            // post details
+            if let postDetailsView = postDetailsView(from: collectionView) {
+                // calculate fitting height after laying out with model data
+                if let post = self.post {
+                    postDetailsView.model = PostDetailsHeaderView.Model(post: post)
+                }
+                return postDetailsView.systemLayoutSizeFitting(collectionView.bounds.size,
+                                                               withHorizontalFittingPriority: .required,
+                                                               verticalFittingPriority: .defaultLow)
+            }
+            return CGSize(width: collectionView.frame.width, height: 250)
+        }
+            
+        else {
+            // album title
+            return CGSize(width: collectionView.frame.width, height: PostAlbumHeaderView.headerHeight)
+        }
+    }
+    
+    /// Get the post details view (supplementary view) on screen, or dequeue one if needed.
+    ///
+    /// - Returns: The post details view.
+    private func postDetailsView(from collectionView: UICollectionView) -> PostDetailsHeaderView? {
+        // check if is on screen
+        if let view = (collectionView.visibleSupplementaryViews(ofKind: UICollectionElementKindSectionHeader).first { $0 is PostDetailsHeaderView}) as? PostDetailsHeaderView {
+            return view
+        }
+        else {
+            // otherwise dequeue one
+            let view = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionElementKindSectionHeader, withReuseIdentifier: PostDetailsHeaderView.viewIdentifier, for: IndexPath(row: 0, section: 0)) as? PostDetailsHeaderView
+            return view
+        }
     }
     
 }
@@ -236,14 +287,15 @@ extension PostDetailsDataSource: PostAlbumHeaderViewDelegate {
     
     func tableView(collectionView: UICollectionView?, headerTapped: PostAlbumHeaderView, section: Int?) {
         guard let section = section else { return }
+        let albumIndex = self.albumIndex(for: section)
         
         // toggle collapsed state
-        let currentIsCollapsed = albumSections?[section].isCollapsed ?? true
-        albumSections?[section].isCollapsed = !currentIsCollapsed
+        let currentIsCollapsed = albumSections?[albumIndex].isCollapsed ?? true
+        albumSections?[albumIndex].isCollapsed = !currentIsCollapsed
         headerTapped.isCollapsed = !currentIsCollapsed
         
         // reload section
-        collectionView?.reloadSections(IndexSet.init(integer: section))
+        collectionView?.reloadSections(IndexSet(integer: section))
     }
     
 }
