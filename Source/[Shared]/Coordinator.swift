@@ -23,6 +23,7 @@ protocol BaseCoordinator {
 }
 
 
+/// Base class to be subclassed by other coordinators.
 class Coordinator: NSObject, BaseCoordinator {
     
     func start() {}

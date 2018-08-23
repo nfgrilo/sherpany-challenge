@@ -99,10 +99,40 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		280B2CEE212F274D0023D497 /* Flow (Coordinators) */ = {
+			isa = PBXGroup;
+			children = (
+				28111F4C2122445300CA324F /* MainCoordinator.swift */,
+				28111F502122507A00CA324F /* PostsCoordinator.swift */,
+				28111F54212255C300CA324F /* PostDetailsCoordinator.swift */,
+				2827CCD9212F0A1C008023EB /* FullscreenPhotoCoordinator.swift */,
+			);
+			path = "Flow (Coordinators)";
+			sourceTree = "<group>";
+		};
+		280B2CEF212F277A0023D497 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				28111F4E2122505700CA324F /* Post List [master] */,
+				28111F4F2122506100CA324F /* Post Details [detail] */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		280B2CF0212F27940023D497 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				28ECB138212348C700764592 /* ModelController.swift */,
+				28FC07B0212590AE00C6EE7B /* ModelControllerDelegate.swift */,
+				28D6F214212BFDB600CD6090 /* PhotoController.swift */,
+				28ECB12C2123211300764592 /* Rest API */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
 		28111F4E2122505700CA324F /* Post List [master] */ = {
 			isa = PBXGroup;
 			children = (
-				28111F502122507A00CA324F /* PostsCoordinator.swift */,
 				28111F522122529F00CA324F /* PostsViewController.swift */,
 				28111F56212258E600CA324F /* PostsDataSource.swift */,
 				28FC07B42125ADA600C6EE7B /* PostSelectedDelegate.swift */,
@@ -114,7 +144,6 @@
 		28111F4F2122506100CA324F /* Post Details [detail] */ = {
 			isa = PBXGroup;
 			children = (
-				28111F54212255C300CA324F /* PostDetailsCoordinator.swift */,
 				28FC07C42126D62F00C6EE7B /* No Post */,
 				28FC07C32126D62600C6EE7B /* Post Details */,
 				2827CCD8212F09EF008023EB /* Fullscreen Photo */,
@@ -125,18 +154,9 @@
 		2827CCD8212F09EF008023EB /* Fullscreen Photo */ = {
 			isa = PBXGroup;
 			children = (
-				2827CCD9212F0A1C008023EB /* FullscreenPhotoCoordinator.swift */,
 				2827CCDB212F0A91008023EB /* FullscreenPhotoViewController.swift */,
 			);
 			path = "Fullscreen Photo";
-			sourceTree = "<group>";
-		};
-		2827CCDD212F125C008023EB /* Photos */ = {
-			isa = PBXGroup;
-			children = (
-				28D6F214212BFDB600CD6090 /* PhotoController.swift */,
-			);
-			path = Photos;
 			sourceTree = "<group>";
 		};
 		286DE1DC212241C900F2ED03 /* [Shared] */ = {
@@ -169,12 +189,10 @@
 			isa = PBXGroup;
 			children = (
 				28DD3B262121EDF200B05A4B /* AppDelegate.swift */,
-				28111F4C2122445300CA324F /* MainCoordinator.swift */,
-				28111F4E2122505700CA324F /* Post List [master] */,
-				28111F4F2122506100CA324F /* Post Details [detail] */,
+				280B2CEE212F274D0023D497 /* Flow (Coordinators) */,
+				280B2CEF212F277A0023D497 /* UI */,
+				280B2CF0212F27940023D497 /* Controllers */,
 				28ECB137212348B300764592 /* Model */,
-				2827CCDD212F125C008023EB /* Photos */,
-				28ECB12C2123211300764592 /* Rest API */,
 				286DE1DC212241C900F2ED03 /* [Shared] */,
 				28DD3B2F2121EDF200B05A4B /* Main.storyboard */,
 				28DD3B342121EDF300B05A4B /* LaunchScreen.storyboard */,
@@ -200,8 +218,6 @@
 		28ECB137212348B300764592 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				28ECB138212348C700764592 /* ModelController.swift */,
-				28FC07B0212590AE00C6EE7B /* ModelControllerDelegate.swift */,
 				28ECB13D2123509C00764592 /* Post.swift */,
 				28ECB13F2123595300764592 /* User.swift */,
 				28ECB1412123595B00764592 /* Album.swift */,
