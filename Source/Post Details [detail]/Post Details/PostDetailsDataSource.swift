@@ -148,7 +148,8 @@ extension PostDetailsDataSource: UICollectionViewDataSource {
         let title = photo.title
         let imageUrl = photo.thumbnailUrl
         let image = photoController.photo(for: imageUrl)
-        photoCell.model = PostAlbumCollectionViewCell.Model(title: title, photo: image)
+        photoCell.model = PostAlbumCollectionViewCell.Model(identifier: photo.id, title: title, photo: image)
+        photoCell.delegate = self
         
         // no photo yet? -> fetch
         if image == nil, let imageUrl = imageUrl {
@@ -156,7 +157,7 @@ extension PostDetailsDataSource: UICollectionViewDataSource {
                 guard photoCell.model?.photo == nil else { return }
                 
                 // queue a cell's model refresh
-                photoCell.model = PostAlbumCollectionViewCell.Model(title: title, photo: image)
+                photoCell.model = PostAlbumCollectionViewCell.Model(identifier: photo.id, title: title, photo: image)
                 self?.coalescedCollectionViewItems()
             }
         }
@@ -278,7 +279,12 @@ extension PostDetailsDataSource: UICollectionViewDelegateFlowLayout {
 
 // MARK: - Collection view delegate
 extension PostDetailsDataSource: UICollectionViewDelegate {
-    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        coalescedCollectionViewItems()
+    }
+    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        coalescedCollectionViewItems()
+    }
 }
 
 
@@ -296,6 +302,18 @@ extension PostDetailsDataSource: PostAlbumHeaderViewDelegate {
         
         // reload section
         collectionView?.reloadSections(IndexSet(integer: section))
+    }
+    
+}
+
+
+// MARK: - PostAlbumCollectionViewCellDelegate delegate
+extension PostDetailsDataSource: PostAlbumCollectionViewCellDelegate {
+    
+    func photoTapped(on cell: PostAlbumCollectionViewCell) {
+        if let photoId = cell.model?.identifier {
+            coordinator?.showFullscreenPhoto(with: photoId)
+        }
     }
     
 }

@@ -11,8 +11,6 @@ import UIKit
 // Requirement #7: ✅ (display table with all posts...)
 
 class PostsCoordinator: Coordinator {
-    /// Child coordinators.
-    var childCoordinators: [Coordinator] = []
     
     /// The navigation view controller currently being used to present view controllers.
     var navigationController: UINavigationController
@@ -45,7 +43,7 @@ class PostsCoordinator: Coordinator {
     
     
     /// Take control!
-    func start() {
+    override func start() {
         // create & setup vc
         guard let viewController = PostsViewController.instantiate() else { return }
         self.viewController = viewController

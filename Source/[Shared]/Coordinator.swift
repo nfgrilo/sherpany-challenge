@@ -12,9 +12,34 @@ import UIKit
 ///
 /// This is inspired on the great Coordinator pattern by Soroush Khanlou.
 /// More info at http://khanlou.com/2015/10/coordinators-redux/
-protocol Coordinator {
+protocol BaseCoordinator {
+    
+    /// Child coordinators.
+    var childCoordinators: [Coordinator] { get set }
     
     /// Make the coordinator take control.
     func start()
+    
+}
+
+
+class Coordinator: NSObject, BaseCoordinator {
+    
+    func start() {}
+    
+    
+    // MARK: - Child coordinators
+    
+    internal var childCoordinators: [Coordinator] = []
+    
+    public func addChild(_ coordinator: Coordinator) {
+        childCoordinators.append(coordinator)
+    }
+    
+    public func removeChild(_ coordinator: Coordinator?) {
+        if let coordinator = coordinator, let index = childCoordinators.index(of: coordinator) {
+            childCoordinators.remove(at: index)
+        }
+    }
     
 }

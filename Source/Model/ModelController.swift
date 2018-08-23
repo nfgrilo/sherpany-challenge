@@ -121,6 +121,36 @@ class ModelController {
     }
     
     
+    // MARK: - Photos
+    
+    /// Gets the photo with the specified id
+    ///
+    /// - Parameters:
+    ///   - id: The photo id.
+    ///   - completion: Completion closure called when complete.
+    func photo(with id: Int64, completion: @escaping (Photo?) -> Void) {
+        persistentContainer.performBackgroundTask { context in
+            // setup fetch request
+            let fetchRequest: NSFetchRequest<ManagedPhoto> = ManagedPhoto.fetchRequest()
+            fetchRequest.predicate = NSPredicate(format: "id == %i", id)
+            fetchRequest.fetchLimit = 1
+            
+            // get post
+            var photo: Photo?
+            do {
+                if let managedPhoto = try context.fetch(fetchRequest).first {
+                    photo = Photo(managedPhoto: managedPhoto)
+                }
+            } catch {
+                print("Failed to delete photo with error: \(error)")
+            }
+            
+            // call completion
+            completion(photo)
+        }
+    }
+    
+    
     // MARK: - Rest API interaction
     
     /// Refreshes all data.

@@ -9,8 +9,6 @@
 import UIKit
 
 class PostDetailsCoordinator: Coordinator {
-    /// Child coordinators.
-    var childCoordinators: [Coordinator] = []
     
     /// The navigation view controller currently being used to present view controllers.
     var navigationController: UINavigationController
@@ -30,6 +28,12 @@ class PostDetailsCoordinator: Coordinator {
     /// Posts data source.
     private var dataSource: PostDetailsDataSource?
     
+    /// Map of child view controllers to coordinators.
+    ///
+    /// This is needed when poping (returning from) child view controllers, so
+    /// that the coordinator can be deallocated (by removing it from `childCoordinators`).
+    private var viewControllersToChildCoordinators: [UIViewController: Coordinator] = [:]
+    
     
     // MARK: - Coordinator setup
     
@@ -43,7 +47,7 @@ class PostDetailsCoordinator: Coordinator {
     }
     
     /// Take control!
-    func start() {
+    override func start() {
         // no-post details VC
         guard let noPostDetailsViewController = NoPostDetailsViewController.instantiate() else { return }
         self.noPostDetailsViewController = noPostDetailsViewController
@@ -80,6 +84,7 @@ class PostDetailsCoordinator: Coordinator {
         postDetailsViewController.collectionView?.register(PostDetailsHeaderView.classForCoder(), forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: PostDetailsHeaderView.viewIdentifier)
         
         // present it
+        navigationController.delegate = self
         navigationController.pushViewController(noPostDetailsViewController, animated: false)
     }
     
@@ -128,8 +133,17 @@ class PostDetailsCoordinator: Coordinator {
                 DispatchQueue.main.async { [weak self] in
                     // reload data
                     viewController.reloadData(restoreScrolling: !postChanged)
+                    
                     // switch view controllers
-                    if self?.navigationController.topViewController != viewController {
+                    guard let topViewController = self?.navigationController.topViewController else { return }
+                    let isShowingFullscreenPhoto = topViewController is FullscreenPhotoViewController
+                    let isShowingPostDetails = topViewController == viewController
+                    
+                    if postChanged && isShowingFullscreenPhoto {
+                        // post changed & a full screen photo was being viewed -> manually pop it
+                        self?.navigationController.popViewController(animated: false)
+                    }
+                    if postChanged && !isShowingPostDetails {
                         self?.navigationController.viewControllers = [viewController]
                     }
                 }
@@ -138,11 +152,32 @@ class PostDetailsCoordinator: Coordinator {
         }
     }
     
+    func showFullscreenPhoto(with id: Int64) {
+        modelController.photo(with: id) { [weak self] photo in
+            guard let navigationController = self?.navigationController else { return }
+            
+            if let photo = photo, let photoController = self?.photoController {
+                // setup coordinator
+                let coordinator = FullscreenPhotoCoordinator(navigationController: navigationController, photoController: photoController, photo: photo)
+                
+                // keep child coordinator reference
+                self?.addChild(coordinator)
+                
+                // let coordinator take control
+                coordinator.start()
+                
+                // map this VC to this coordinator
+                if let vc = coordinator.viewController {
+                    self?.viewControllersToChildCoordinators[vc] = coordinator
+                }
+            }
+        }
+    }
+    
 }
 
 
 // MARK: - Post selection delegate
-
 extension PostDetailsCoordinator: PostSelectedDelegate {
     
     // Requirement #9: ✅ (display the post details)
@@ -160,6 +195,24 @@ extension PostDetailsCoordinator: PostSelectedDelegate {
                 return
             }
             self?.state = .selected(post)
+        }
+    }
+    
+}
+
+// MARK: Navigation controller delegate
+extension PostDetailsCoordinator: UINavigationControllerDelegate {
+    
+    func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
+        // ensure the view controller is popping
+        guard let fromViewController = navigationController.transitionCoordinator?.viewController(forKey: .from),
+            !navigationController.viewControllers.contains(fromViewController) else {
+            return
+        }
+        
+        // remove child coordinator
+        if let coordinator = viewControllersToChildCoordinators[fromViewController] {
+            removeChild(coordinator)
         }
     }
     

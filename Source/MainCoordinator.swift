@@ -9,8 +9,6 @@
 import UIKit
 
 class MainCoordinator: Coordinator {
-    /// Child coordinators.
-    var childCoordinators: [Coordinator] = []
     
     /// The app window.
     private let window: UIWindow
@@ -37,17 +35,17 @@ class MainCoordinator: Coordinator {
     }
     
     /// Take control!
-    func start() {
+    override func start() {
         // childs: coordinators + VCs
         //  -> master
         let masterNavigationController = UINavigationController()
         let masterCoordinator = PostsCoordinator(navigationController: masterNavigationController, modelController: modelController)
-        childCoordinators.append(masterCoordinator)
+        addChild(masterCoordinator)
         masterCoordinator.start()
         //  -> detail
         let detailNavigationController = UINavigationController()
         let detailsCoordinator = PostDetailsCoordinator(navigationController: detailNavigationController, modelController: modelController, photoController: photoController)
-        childCoordinators.append(detailsCoordinator)
+        addChild(detailsCoordinator)
         detailsCoordinator.start()
         masterCoordinator.postSelectedDelegate = detailsCoordinator
         

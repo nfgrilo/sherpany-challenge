@@ -12,6 +12,8 @@
 		28111F532122529F00CA324F /* PostsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28111F522122529F00CA324F /* PostsViewController.swift */; };
 		28111F55212255C300CA324F /* PostDetailsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28111F54212255C300CA324F /* PostDetailsCoordinator.swift */; };
 		28111F57212258E600CA324F /* PostsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28111F56212258E600CA324F /* PostsDataSource.swift */; };
+		2827CCDA212F0A1C008023EB /* FullscreenPhotoCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2827CCD9212F0A1C008023EB /* FullscreenPhotoCoordinator.swift */; };
+		2827CCDC212F0A91008023EB /* FullscreenPhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2827CCDB212F0A91008023EB /* FullscreenPhotoViewController.swift */; };
 		286DE1DE212241E600F2ED03 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286DE1DD212241E600F2ED03 /* Coordinator.swift */; };
 		286DE1E02122424600F2ED03 /* Storyboarded.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286DE1DF2122424600F2ED03 /* Storyboarded.swift */; };
 		28902E06212C7D2C008C0C9F /* PostAlbumHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28902E05212C7D2C008C0C9F /* PostAlbumHeaderView.swift */; };
@@ -50,6 +52,8 @@
 		28111F522122529F00CA324F /* PostsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostsViewController.swift; sourceTree = "<group>"; };
 		28111F54212255C300CA324F /* PostDetailsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailsCoordinator.swift; sourceTree = "<group>"; };
 		28111F56212258E600CA324F /* PostsDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostsDataSource.swift; sourceTree = "<group>"; };
+		2827CCD9212F0A1C008023EB /* FullscreenPhotoCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenPhotoCoordinator.swift; sourceTree = "<group>"; };
+		2827CCDB212F0A91008023EB /* FullscreenPhotoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenPhotoViewController.swift; sourceTree = "<group>"; };
 		286DE1DD212241E600F2ED03 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		286DE1DF2122424600F2ED03 /* Storyboarded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storyboarded.swift; sourceTree = "<group>"; };
 		28902E05212C7D2C008C0C9F /* PostAlbumHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostAlbumHeaderView.swift; sourceTree = "<group>"; };
@@ -113,8 +117,26 @@
 				28111F54212255C300CA324F /* PostDetailsCoordinator.swift */,
 				28FC07C42126D62F00C6EE7B /* No Post */,
 				28FC07C32126D62600C6EE7B /* Post Details */,
+				2827CCD8212F09EF008023EB /* Fullscreen Photo */,
 			);
 			path = "Post Details [detail]";
+			sourceTree = "<group>";
+		};
+		2827CCD8212F09EF008023EB /* Fullscreen Photo */ = {
+			isa = PBXGroup;
+			children = (
+				2827CCD9212F0A1C008023EB /* FullscreenPhotoCoordinator.swift */,
+				2827CCDB212F0A91008023EB /* FullscreenPhotoViewController.swift */,
+			);
+			path = "Fullscreen Photo";
+			sourceTree = "<group>";
+		};
+		2827CCDD212F125C008023EB /* Photos */ = {
+			isa = PBXGroup;
+			children = (
+				28D6F214212BFDB600CD6090 /* PhotoController.swift */,
+			);
+			path = Photos;
 			sourceTree = "<group>";
 		};
 		286DE1DC212241C900F2ED03 /* [Shared] */ = {
@@ -151,6 +173,7 @@
 				28111F4E2122505700CA324F /* Post List [master] */,
 				28111F4F2122506100CA324F /* Post Details [detail] */,
 				28ECB137212348B300764592 /* Model */,
+				2827CCDD212F125C008023EB /* Photos */,
 				28ECB12C2123211300764592 /* Rest API */,
 				286DE1DC212241C900F2ED03 /* [Shared] */,
 				28DD3B2F2121EDF200B05A4B /* Main.storyboard */,
@@ -179,7 +202,6 @@
 			children = (
 				28ECB138212348C700764592 /* ModelController.swift */,
 				28FC07B0212590AE00C6EE7B /* ModelControllerDelegate.swift */,
-				28D6F214212BFDB600CD6090 /* PhotoController.swift */,
 				28ECB13D2123509C00764592 /* Post.swift */,
 				28ECB13F2123595300764592 /* User.swift */,
 				28ECB1412123595B00764592 /* Album.swift */,
@@ -315,6 +337,7 @@
 				286DE1DE212241E600F2ED03 /* Coordinator.swift in Sources */,
 				28FC07C12126CD7700C6EE7B /* NoPostDetailsViewController.swift in Sources */,
 				28ECB12E2123215400764592 /* APIController.swift in Sources */,
+				2827CCDC212F0A91008023EB /* FullscreenPhotoViewController.swift in Sources */,
 				28ECB139212348C700764592 /* ModelController.swift in Sources */,
 				28ECB134212324EB00764592 /* APIResource.swift in Sources */,
 				28111F532122529F00CA324F /* PostsViewController.swift in Sources */,
@@ -339,6 +362,7 @@
 				28ECB1422123595B00764592 /* Album.swift in Sources */,
 				28FC07B32125995700C6EE7B /* NSPointerArray.swift in Sources */,
 				28902E09212DCEAE008C0C9F /* PostDetailsHeaderView.swift in Sources */,
+				2827CCDA212F0A1C008023EB /* FullscreenPhotoCoordinator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

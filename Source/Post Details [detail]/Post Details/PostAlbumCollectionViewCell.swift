@@ -8,6 +8,11 @@
 
 import UIKit
 
+protocol PostAlbumCollectionViewCellDelegate {
+    /// Called when user taps on photo.
+    func photoTapped(on cell: PostAlbumCollectionViewCell)
+}
+
 class PostAlbumCollectionViewCell: UICollectionViewCell {
     
     /// Reusable view identifier.
@@ -27,6 +32,9 @@ class PostAlbumCollectionViewCell: UICollectionViewCell {
     
     /// Cell height constraint.
     var photoHeightConstraint: NSLayoutConstraint?
+    
+    /// The delegate to be informed when the photo is tapped.
+    var delegate: PostAlbumCollectionViewCellDelegate?
     
     /// View-model.
     var model: Model? {
@@ -81,6 +89,9 @@ class PostAlbumCollectionViewCell: UICollectionViewCell {
         
         // activity indicator
         showActivityIndicator()
+        
+        // add tap gesture
+        addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(photoTapped(_:))))
     }
     
     /// Show the activity indicator.
@@ -93,16 +104,25 @@ class PostAlbumCollectionViewCell: UICollectionViewCell {
         activityIndicator.hidesWhenStopped = true
     }
     
+    /// Called when user taps header.
+    ///
+    /// - Parameter gestureRecognizer: The associated gesture recognizer.
+    @objc func photoTapped(_ gestureRecognizer: UITapGestureRecognizer) {
+        delegate?.photoTapped(on: self)
+    }
+    
 }
 
 
 /// Posts Album collection view cell view-model.
 extension PostAlbumCollectionViewCell {
     struct Model {
+        let identifier: Int64
         let title: String
         let photo: UIImage?
         
-        init(title: String?, photo: UIImage?) {
+        init(identifier: Int64, title: String?, photo: UIImage?) {
+            self.identifier = identifier
             self.title = title ?? "(untitled photo)"
             self.photo = photo
         }

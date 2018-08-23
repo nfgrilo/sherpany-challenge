@@ -181,6 +181,41 @@
             </objects>
             <point key="canvasLocation" x="877" y="-692"/>
         </scene>
+        <!--Fullscreen Photo View Controller-->
+        <scene sceneID="xEY-n3-lOA">
+            <objects>
+                <viewController storyboardIdentifier="FullscreenPhotoViewController" id="TeX-Gu-tMM" customClass="FullscreenPhotoViewController" customModule="Sherpany_Posts" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="KjK-gj-bcJ">
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="jzZ-Q5-4Gg">
+                                <rect key="frame" x="20" y="40" width="984" height="708"/>
+                            </imageView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="Kf2-D2-JH6">
+                                <rect key="frame" x="494" y="375" width="37" height="37"/>
+                            </activityIndicatorView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="Kf2-D2-JH6" firstAttribute="centerY" secondItem="jzZ-Q5-4Gg" secondAttribute="centerY" id="AGY-Vd-br6"/>
+                            <constraint firstItem="jzZ-Q5-4Gg" firstAttribute="top" secondItem="Ep3-as-42M" secondAttribute="top" constant="20" id="FAQ-Fr-EZh"/>
+                            <constraint firstItem="jzZ-Q5-4Gg" firstAttribute="leading" secondItem="Ep3-as-42M" secondAttribute="leading" constant="20" id="GKj-CP-q8k"/>
+                            <constraint firstItem="Kf2-D2-JH6" firstAttribute="centerX" secondItem="jzZ-Q5-4Gg" secondAttribute="centerX" id="rdv-JO-9Vo"/>
+                            <constraint firstItem="Ep3-as-42M" firstAttribute="bottom" secondItem="jzZ-Q5-4Gg" secondAttribute="bottom" constant="20" id="s8t-4O-7xq"/>
+                            <constraint firstItem="Ep3-as-42M" firstAttribute="trailing" secondItem="jzZ-Q5-4Gg" secondAttribute="trailing" constant="20" id="w3k-Tv-rUG"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="Ep3-as-42M"/>
+                    </view>
+                    <connections>
+                        <outlet property="activityIndicator" destination="Kf2-D2-JH6" id="OsP-op-tUs"/>
+                        <outlet property="photo" destination="jzZ-Q5-4Gg" id="KOC-KW-aCt"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Rz5-6H-LSZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1505" y="-692"/>
+        </scene>
         <!--No Post Details View Controller-->
         <scene sceneID="CuX-ri-eQ2">
             <objects>
