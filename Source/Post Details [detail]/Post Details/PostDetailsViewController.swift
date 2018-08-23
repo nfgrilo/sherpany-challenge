@@ -23,10 +23,7 @@ class PostDetailsViewController: UICollectionViewController, Storyboarded {
         let previousScrollOffset = collectionView.contentOffset
         
         // reload post data
-        CATransaction.begin()
-        CATransaction.setDisableActions(true)
         collectionView.reloadData()
-        CATransaction.commit()
         
         // handle scroll offset
         if restoreScrolling {
