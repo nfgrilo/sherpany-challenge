@@ -70,7 +70,7 @@ class PostDetailsCoordinator: Coordinator {
         flowLayout.itemSize = CGSize(width: 190, height: 228)
         flowLayout.minimumLineSpacing = 0
         flowLayout.minimumInteritemSpacing = 0
-        flowLayout.sectionHeadersPinToVisibleBounds = true // Bonus Point #2: ✅
+        flowLayout.sectionHeadersPinToVisibleBounds = true // Bonus #2: ✅ (stick headers to the top)
         postDetailsViewController.collectionView?.collectionViewLayout = flowLayout
         //  -> data source
         let dataSource = PostDetailsDataSource(photoController: photoController)

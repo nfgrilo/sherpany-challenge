@@ -13,19 +13,36 @@ class PostsViewController: UIViewController, Storyboarded {
     /// Weak reference to parent coordinator.
     weak var coordinator: PostsCoordinator?
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        setupTableView()
+        setupLoadingView()
+    }
+    
     
     // MARK: - Table view
     
     /// The table view.
     @IBOutlet weak var tableView: UITableView!
     
-    override func viewDidLoad() {
+    /// Configure table view.
+    private func setupTableView() {
         // dynamic row heights based on auto layout
         tableView.rowHeight = UITableViewAutomaticDimension
         
         // height estimate helps improving performance on row height calculation
         tableView.estimatedRowHeight = 84
-        
+    }
+    
+    
+    // MARK: - Loading view
+    
+    /// The (hideable) loading view.
+    @IBOutlet weak var loadingView: UIVisualEffectView!
+    
+    /// Configure table view.
+    private func setupLoadingView() {
         // add a top line
         loadingView.clipsToBounds = true
         let topBorder = CALayer()
@@ -34,12 +51,6 @@ class PostsViewController: UIViewController, Storyboarded {
         topBorder.frame = CGRect(x: 0, y: topBorder.borderWidth, width: loadingView.frame.width, height: topBorder.borderWidth)
         loadingView.layer.addSublayer(topBorder)
     }
-    
-    
-    // MARK: - Loading view
-    
-    /// The (hideable) loading view.
-    @IBOutlet weak var loadingView: UIVisualEffectView!
     
     /// The loading view bottom constraint.
     @IBOutlet weak var loadingViewBottomConstraint: NSLayoutConstraint!

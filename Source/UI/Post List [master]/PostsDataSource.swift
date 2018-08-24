@@ -13,14 +13,20 @@ class PostsDataSource: NSObject {
     /// Weak reference to parent coordinator.
     weak var coordinator: PostsCoordinator?
     
+    /// Search controller.
+    var searchController: UISearchController?
+    
+    /// Weak reference to table view.
+    weak var tableView: UITableView?
+    
     /// Model controller.
     private let modelController: ModelController
     
     /// Model (lightweight, immutable, thread-safe model based of managed objects).
     private var model: [Post] = []
     
-    /// Cell identifier.
-    private let cellIdentifier = "PostCellId"
+    /// Filtered model, after filtering model with search results.
+    private var filteredModel: [Post] = []
     
     /// Initialize data source.
     ///
@@ -32,7 +38,7 @@ class PostsDataSource: NSObject {
 }
 
 
-// MARK: Table view data source
+// MARK: - Table view data source
 extension PostsDataSource: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -40,12 +46,12 @@ extension PostsDataSource: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return model.count
+        return postsCount()
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // create cell
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: PostTableViewCell.viewIdentifier, for: indexPath)
         
         // set model
         if let postCell = cell as? PostTableViewCell, let post = self.post(at: indexPath) {
@@ -58,7 +64,7 @@ extension PostsDataSource: UITableViewDataSource {
 }
 
 
-// MARK: Table view delegate
+// MARK: - Table view delegate
 extension PostsDataSource: UITableViewDelegate {
     
     // MARK: Post selection
@@ -73,6 +79,9 @@ extension PostsDataSource: UITableViewDelegate {
     // Requirement #8: ✅
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        // don't allow deletes if searching!
+        guard !isSearching() else { return nil }
+        
         // delete action
         let delete = UITableViewRowAction(style: .destructive, title: "Delete") { [weak self] (action, indexPath) in
             // inform coordinator that selected post has been deleted from table view
@@ -84,18 +93,89 @@ extension PostsDataSource: UITableViewDelegate {
 }
 
 
-// MARK: Model related
+// MARK: - Searching
+extension PostsDataSource: UISearchResultsUpdating {
+    
+    func updateSearchResults(for searchController: UISearchController) {
+        filterModel(with: searchController.searchBar.text)
+    }
+    
+    /// Check if user is currently searching.
+    ///
+    /// - Returns: Whether a search is being made.
+    func isSearching() -> Bool {
+        return (searchController?.isActive ?? false) && !isSearchBarEmpty()
+    }
+    
+    /// Check if search bar contains any text.
+    ///
+    /// - Returns: Whether search bar has text.
+    private func isSearchBarEmpty() -> Bool {
+        guard let searchController = self.searchController else { return true }
+        return searchController.searchBar.text?.isEmpty ?? true
+    }
+    
+    /// Filter current model with search text.
+    ///
+    /// - Parameter searchText: The text to search for.
+    private func filterModel(with searchText: String?) {
+        // reset filtered results to all results if no search text
+        guard let searchText = searchText?.lowercased() else {
+            filteredModel = model
+            return
+        }
+        
+        // filter post (title & author email) by specified search text
+        filteredModel = model.filter {
+            guard let postTitle = $0.title?.lowercased(),
+                  let postAuthorEmail = $0.user?.email?.lowercased()else {
+                    return false
+            }
+            return postTitle.contains(searchText)
+                || postAuthorEmail.contains(searchText)
+        }
+        
+        // reload posts
+        DispatchQueue.main.async { [weak self] in
+            self?.tableView?.reloadData()
+        }
+    }
+}
+
+
+// MARK: - Model related
 extension PostsDataSource {
+    
+    /// Gets the active model.
+    ///
+    /// If searching, the returned model will be filtered.
+    ///
+    /// - Returns: The active model.
+    func activeModel() -> [Post] {
+        return isSearching() ? filteredModel : model
+    }
+    
+    /// Get total posts.
+    ///
+    /// - Returns: The total number of posts.
+    func postsCount() -> Int {
+        return activeModel().count
+    }
     
     /// Get a post by index path.
     ///
     /// - Parameter indexPath: Table's index path
     /// - Returns: The corresponding `Post` object, if any.
     func post(at indexPath: IndexPath) -> Post? {
-        guard indexPath.row < model.count else {
+        // choose model dependeing on whether there is a search going on
+        let currentModel = activeModel()
+        
+        // make sure `indexPath` is within bounds
+        guard indexPath.row < currentModel.count else {
             return nil
         }
-        return model[indexPath.row]
+        
+        return currentModel[indexPath.row]
     }
     
     /// Get the table view index path for a given Post id.
@@ -103,11 +183,16 @@ extension PostsDataSource {
     /// - Parameter postId: The post id to be looked up.
     /// - Returns: The corresponding index path.
     func indexPath(for postId: Int64) -> IndexPath? {
-        for row in 0..<model.count {
-            if model[row].id == postId {
+        // choose model dependeing on whether there is a search going on
+        let currentModel = activeModel()
+        
+        // find model item
+        for row in 0..<currentModel.count {
+            if currentModel[row].id == postId {
                 return IndexPath(row: row, section: 0)
             }
         }
+        
         return nil
     }
     

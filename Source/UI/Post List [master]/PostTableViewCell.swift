@@ -11,6 +11,9 @@ import UIKit
 /// Posts table view cell.
 class PostTableViewCell: UITableViewCell {
     
+    /// Reusable view identifier.
+    static let viewIdentifier = "PostTableViewCell"
+    
     /// Post title label.
     @IBOutlet weak var postTitle: UILabel!
     

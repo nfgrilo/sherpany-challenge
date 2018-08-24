@@ -23,6 +23,9 @@ class PostsCoordinator: Coordinator {
     /// A strong reference is already made when vc is presented (added to vc hierarchy).
     private weak var viewController: PostsViewController?
     
+    /// The posts search controller.
+    private var searchController: UISearchController?
+    
     /// Model controller.
     private let modelController: ModelController
     
@@ -44,22 +47,34 @@ class PostsCoordinator: Coordinator {
     
     /// Take control!
     override func start() {
+        // model controller delegate
+        modelController.addDelegate(self)
+        
         // create & setup vc
         guard let viewController = PostsViewController.instantiate() else { return }
         self.viewController = viewController
         viewController.coordinator = self
+        viewController.loadViewIfNeeded()
         
         // table view data source
         let dataSource = PostsDataSource(modelController: modelController)
         self.dataSource = dataSource
         dataSource.coordinator = self
-        let _ = viewController.view // force view loading
+        dataSource.tableView = viewController.tableView
         viewController.tableView.dataSource = dataSource
         viewController.tableView.delegate = dataSource
         dataSource.refreshPostList(in: viewController.tableView)
         
-        // model controller delegate
-        modelController.addDelegate(self)
+        // setup search
+        // Bonus #3: ✅ (include search bar)
+        let searchController = UISearchController(searchResultsController: nil)
+        self.searchController = searchController
+        dataSource.searchController = searchController
+        searchController.searchResultsUpdater = dataSource
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = "Search Posts"
+        viewController.navigationItem.searchController = searchController
+        viewController.definesPresentationContext = true
         
         // present it
         navigationController.pushViewController(viewController, animated: false)
@@ -115,16 +130,27 @@ extension PostsCoordinator: ModelControllerDelegate {
         
         // refresh data source
         dataSource?.refreshPostList(in: tableView) { [weak self] in
-            // re-select post (if any was previously selected)
-            // ps: this closure runs on main thread
-            if let previousSelectedPostId = self?.selectedPost?.id,
-                let newSelection = self?.dataSource?.indexPath(for: previousSelectedPostId) {
-                // select and call appropriate table view controller delegate methods
-                // so notifications are sent to observers
-                let _ = tableView.delegate?.tableView?(tableView, willSelectRowAt: newSelection)
-                tableView.selectRow(at: newSelection, animated: false, scrollPosition: .none)
-                tableView.delegate?.tableView?(tableView, didSelectRowAt: newSelection)
+            // 1. if the user was searching, update and restore search results
+            if self?.dataSource?.isSearching() ?? false, let searchController = self?.searchController {
+                self?.dataSource?.updateSearchResults(for: searchController)
             }
+            
+            // 2. select previous post
+            //    The call to `updateSearchResults(for:)` will invoke `reloadData()`
+            //    so selection can only be restored on the next runloop (after data reload).
+            DispatchQueue.main.async {
+                // re-select post (if any was previously selected)
+                // ps: this closure runs on main thread
+                if let previousSelectedPostId = self?.selectedPost?.id,
+                    let newSelection = self?.dataSource?.indexPath(for: previousSelectedPostId) {
+                    // select and call appropriate table view controller delegate methods
+                    // so notifications are sent to observers
+                    let _ = tableView.delegate?.tableView?(tableView, willSelectRowAt: newSelection)
+                    tableView.selectRow(at: newSelection, animated: false, scrollPosition: .none)
+                    tableView.delegate?.tableView?(tableView, didSelectRowAt: newSelection)
+                }
+            }
+            
         }
     }
 }

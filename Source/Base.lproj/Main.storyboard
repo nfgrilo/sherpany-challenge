@@ -144,7 +144,7 @@
                                 <color key="separatorColor" name="Separator"/>
                                 <inset key="separatorInset" minX="10" minY="0.0" maxX="10" maxY="0.0"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="PostCellId" rowHeight="84" id="WCw-Qf-5nD" customClass="PostTableViewCell" customModule="Sherpany_Posts" customModuleProvider="target">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="PostTableViewCell" rowHeight="84" id="WCw-Qf-5nD" customClass="PostTableViewCell" customModule="Sherpany_Posts" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="300" height="84"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="WCw-Qf-5nD" id="37f-cq-3Eg">

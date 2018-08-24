@@ -133,6 +133,7 @@ extension PostDetailsDataSource: UICollectionViewDataSource {
         }
         
         // section is collpased?
+        // Bonus #1: ✅ (expand/collapse albums)
         return sections[albumIndex].isCollapsed ? 0 : albums[albumIndex].photos.count
     }
     

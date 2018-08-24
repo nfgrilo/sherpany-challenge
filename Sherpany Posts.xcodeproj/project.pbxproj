@@ -99,7 +99,7 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		280B2CEE212F274D0023D497 /* Flow (Coordinators) */ = {
+		280B2CEE212F274D0023D497 /* Coordinators */ = {
 			isa = PBXGroup;
 			children = (
 				28111F4C2122445300CA324F /* MainCoordinator.swift */,
@@ -107,7 +107,7 @@
 				28111F54212255C300CA324F /* PostDetailsCoordinator.swift */,
 				2827CCD9212F0A1C008023EB /* FullscreenPhotoCoordinator.swift */,
 			);
-			path = "Flow (Coordinators)";
+			path = Coordinators;
 			sourceTree = "<group>";
 		};
 		280B2CEF212F277A0023D497 /* UI */ = {
@@ -189,7 +189,7 @@
 			isa = PBXGroup;
 			children = (
 				28DD3B262121EDF200B05A4B /* AppDelegate.swift */,
-				280B2CEE212F274D0023D497 /* Flow (Coordinators) */,
+				280B2CEE212F274D0023D497 /* Coordinators */,
 				280B2CEF212F277A0023D497 /* UI */,
 				280B2CF0212F27940023D497 /* Controllers */,
 				28ECB137212348B300764592 /* Model */,
