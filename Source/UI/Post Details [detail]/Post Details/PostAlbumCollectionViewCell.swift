@@ -18,6 +18,9 @@ class PostAlbumCollectionViewCell: UICollectionViewCell {
     /// Reusable view identifier.
     static let viewIdentifier = "PostAlbumCollectionViewCell"
     
+    /// Default thumbnail size (definitive size will be copmuted when model is set).
+    static let defaultThumbnailSize = CGSize(width: 150, height: 150)
+    
     /// Photo title.
     @IBOutlet weak var title: UILabel!
     
@@ -45,22 +48,26 @@ class PostAlbumCollectionViewCell: UICollectionViewCell {
             
             let isLoading = model.photo == nil
             
-            // update UI
+            // update photo & title
             title.text = model.title
-            photo.backgroundColor = isLoading ? UIColor(white: 0.98, alpha: 1) : .clear
             photo.image = model.photo
-            photo.isHidden = isLoading
-            if !isLoading && activityIndicator.isAnimating {
+            
+            // show/hide activity indicator
+            if !isLoading {
                 activityIndicator.stopAnimating()
-                photo.isHidden = false
+                photo.setNeedsDisplay()
+            }
+            else {
+                activityIndicator.isHidden = false
+                activityIndicator.startAnimating()
             }
             
             // update photo size constraints.
             // this will also limit the total cell width.
-            photoWidthConstraint?.constant = model.photo?.size.width ?? 150
+            photoWidthConstraint?.constant = model.photo?.size.width ?? PostAlbumCollectionViewCell.defaultThumbnailSize.width
             photoWidthConstraint?.priority = .defaultHigh
             photoWidthConstraint?.isActive = true
-            photoHeightConstraint?.constant = model.photo?.size.height ?? 150
+            photoHeightConstraint?.constant = model.photo?.size.height ?? PostAlbumCollectionViewCell.defaultThumbnailSize.height
             photoHeightConstraint?.priority = .defaultHigh
             photoHeightConstraint?.isActive = true
         }
@@ -70,38 +77,16 @@ class PostAlbumCollectionViewCell: UICollectionViewCell {
         super.awakeFromNib()
         setup()
     }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        showActivityIndicator()
-    }
 
     /// Set up cell.
     private func setup() {
         // use autolayout
         contentView.translatesAutoresizingMaskIntoConstraints = false
-        photoWidthConstraint = photo.widthAnchor.constraint(equalToConstant: 0)
-        photoHeightConstraint = photo.heightAnchor.constraint(equalToConstant: 0)
-        
-        // setup photo
-        photo.layer.masksToBounds = true
-        photo.layer.cornerRadius = 8
-        
-        // activity indicator
-        showActivityIndicator()
+        photoWidthConstraint = photo.widthAnchor.constraint(equalToConstant: PostAlbumCollectionViewCell.defaultThumbnailSize.width)
+        photoHeightConstraint = photo.heightAnchor.constraint(equalToConstant: PostAlbumCollectionViewCell.defaultThumbnailSize.height)
         
         // add tap gesture
         addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(photoTapped(_:))))
-    }
-    
-    /// Show the activity indicator.
-    private func showActivityIndicator() {
-        guard model?.photo == nil else { return }
-        
-        photo.isHidden = true
-        activityIndicator.isHidden = false
-        activityIndicator.startAnimating()
-        activityIndicator.hidesWhenStopped = true
     }
     
     /// Called when user taps header.
