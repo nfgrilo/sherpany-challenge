@@ -53,6 +53,7 @@ class PostAlbumCollectionViewCell: UICollectionViewCell {
             photo.image = model.photo
             
             // show/hide activity indicator
+            // Requirement #12: ✅ (UI feedback)
             if !isLoading {
                 activityIndicator.stopAnimating()
                 photo.setNeedsDisplay()

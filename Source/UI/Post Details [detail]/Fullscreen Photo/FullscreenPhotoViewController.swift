@@ -36,6 +36,7 @@ class FullscreenPhotoViewController: UIViewController, Storyboarded {
             photo.image = model.photo
             
             // hide activity indicator if full image loaded
+            // Requirement #12: ✅ (UI feedback)
             if !model.isThumbnail {
                 activityIndicator.stopAnimating()
             }

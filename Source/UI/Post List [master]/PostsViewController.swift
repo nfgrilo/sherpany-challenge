@@ -46,6 +46,8 @@ class PostsViewController: UIViewController, Storyboarded {
     
     /// Show/hide the loading view.
     ///
+    /// Requirement #12: ✅ (UI feedback)
+    ///
     /// - Parameter show: Whether to show or hide it.
     func showLoadingView(_ show: Bool) {
         // view height

@@ -8,6 +8,8 @@
 
 import UIKit
 
+// Requirement #12: ✅ (UI feedback)
+
 class NoPostDetailsViewController: UIViewController, Storyboarded {
     
 }
