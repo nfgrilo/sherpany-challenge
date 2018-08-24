@@ -46,6 +46,12 @@ extension PostsDataSource: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if !isSearchBarEmpty() {
+            coordinator?.setSearchFeedback("Filtering \(filteredModel.count) of \(model.count) Posts")
+        }
+        else {
+            coordinator?.setSearchFeedback(nil)
+        }
         return postsCount()
     }
     

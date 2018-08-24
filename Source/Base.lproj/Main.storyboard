@@ -183,6 +183,39 @@
                                 </prototypes>
                                 <sections/>
                             </tableView>
+                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MS2-WD-M51" userLabel="Search Feedback">
+                                <rect key="frame" x="0.0" y="672" width="300" height="46"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="kBD-Ld-NEx">
+                                    <rect key="frame" x="0.0" y="0.0" width="300" height="46"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XQK-9p-MvA">
+                                            <rect key="frame" x="66.5" y="0.0" width="166.5" height="46"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Filtering X of Y posts" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ygL-q7-RQy">
+                                                    <rect key="frame" x="20" y="15" width="126.5" height="16"/>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
+                                                    <color key="textColor" name="Post Body"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="ygL-q7-RQy" secondAttribute="trailing" constant="20" id="4Bk-kf-Ort"/>
+                                                <constraint firstItem="ygL-q7-RQy" firstAttribute="leading" secondItem="XQK-9p-MvA" secondAttribute="leading" constant="20" id="5iQ-4o-5Dn"/>
+                                                <constraint firstAttribute="bottom" secondItem="ygL-q7-RQy" secondAttribute="bottom" constant="15" id="XzU-Gt-hEu"/>
+                                                <constraint firstItem="ygL-q7-RQy" firstAttribute="top" secondItem="XQK-9p-MvA" secondAttribute="top" constant="15" id="qeP-BD-yJF"/>
+                                            </constraints>
+                                        </view>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="bottom" secondItem="XQK-9p-MvA" secondAttribute="bottom" id="J69-tK-LGf"/>
+                                        <constraint firstItem="XQK-9p-MvA" firstAttribute="top" secondItem="kBD-Ld-NEx" secondAttribute="top" id="WEK-ls-yjJ"/>
+                                        <constraint firstItem="XQK-9p-MvA" firstAttribute="centerX" secondItem="kBD-Ld-NEx" secondAttribute="centerX" id="c7f-4B-4ni"/>
+                                    </constraints>
+                                </view>
+                                <blurEffect style="regular"/>
+                            </visualEffectView>
                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0dS-fF-WnX">
                                 <rect key="frame" x="0.0" y="718" width="300" height="50"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="JPm-1i-1hp">
@@ -227,9 +260,12 @@
                             <constraint firstItem="r7i-6Z-zg0" firstAttribute="bottom" secondItem="pE1-rn-jOE" secondAttribute="bottom" id="4hp-jS-M69"/>
                             <constraint firstItem="r7i-6Z-zg0" firstAttribute="top" secondItem="MgS-o0-Mln" secondAttribute="top" id="7Lk-59-F8l"/>
                             <constraint firstItem="pE1-rn-jOE" firstAttribute="trailing" secondItem="0dS-fF-WnX" secondAttribute="trailing" id="7ot-HY-dBX"/>
+                            <constraint firstItem="pE1-rn-jOE" firstAttribute="trailing" secondItem="MS2-WD-M51" secondAttribute="trailing" id="EGi-99-5O1"/>
+                            <constraint firstItem="0dS-fF-WnX" firstAttribute="top" secondItem="MS2-WD-M51" secondAttribute="bottom" id="K1s-WH-ETb"/>
                             <constraint firstItem="pE1-rn-jOE" firstAttribute="bottom" secondItem="0dS-fF-WnX" secondAttribute="bottom" id="Y3D-dV-Hfs"/>
                             <constraint firstItem="r7i-6Z-zg0" firstAttribute="trailing" secondItem="pE1-rn-jOE" secondAttribute="trailing" id="kLQ-Od-AlO"/>
                             <constraint firstItem="0dS-fF-WnX" firstAttribute="leading" secondItem="pE1-rn-jOE" secondAttribute="leading" id="pMh-xk-Cya"/>
+                            <constraint firstItem="MS2-WD-M51" firstAttribute="leading" secondItem="pE1-rn-jOE" secondAttribute="leading" id="q8L-v4-MKR"/>
                             <constraint firstItem="r7i-6Z-zg0" firstAttribute="leading" secondItem="pE1-rn-jOE" secondAttribute="leading" id="z1M-cL-cnr"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="pE1-rn-jOE"/>
@@ -238,6 +274,9 @@
                     <connections>
                         <outlet property="loadingView" destination="0dS-fF-WnX" id="hGV-8U-0FY"/>
                         <outlet property="loadingViewBottomConstraint" destination="Y3D-dV-Hfs" id="NFd-Mp-8gA"/>
+                        <outlet property="searchFeedbackLabel" destination="ygL-q7-RQy" id="Yt9-LZ-O7l"/>
+                        <outlet property="searchFeedbackView" destination="MS2-WD-M51" id="8D2-cX-ghq"/>
+                        <outlet property="searchFeedbackViewBottomConstraint" destination="K1s-WH-ETb" id="Jvn-Lb-YHo"/>
                         <outlet property="tableView" destination="r7i-6Z-zg0" id="PoR-JF-IP0"/>
                     </connections>
                 </viewController>
@@ -338,6 +377,9 @@
         </namedColor>
         <namedColor name="Post Author">
             <color red="0.30000001192092896" green="0.30000001192092896" blue="0.30000001192092896" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Post Body">
+            <color red="0.25" green="0.25" blue="0.25" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Post Body">
             <color red="0.25" green="0.25" blue="0.25" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

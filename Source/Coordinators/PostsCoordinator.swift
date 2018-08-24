@@ -104,6 +104,13 @@ class PostsCoordinator: Coordinator {
         // inform post selection delegate that selected post has been changed
         postSelectedDelegate?.postSelected(postId: nil)
     }
+    
+    /// Show search feedback to the user.
+    ///
+    /// - Parameter text: Text to display.
+    func setSearchFeedback(_ text: String?) {
+        viewController?.setSearchFeedbackView(with: text)
+    }
 }
 
 
