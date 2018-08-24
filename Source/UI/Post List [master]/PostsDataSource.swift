@@ -46,12 +46,10 @@ extension PostsDataSource: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if !isSearchBarEmpty() {
-            coordinator?.setSearchFeedback("Filtering \(filteredModel.count) of \(model.count) Posts")
-        }
-        else {
-            coordinator?.setSearchFeedback(nil)
-        }
+        // search feedback
+        updateSearchFeedback()
+        
+        // total posts (all or filtered)
         return postsCount()
     }
     
@@ -104,6 +102,23 @@ extension PostsDataSource: UISearchResultsUpdating {
     
     func updateSearchResults(for searchController: UISearchController) {
         filterModel(with: searchController.searchBar.text)
+    }
+    
+    /// Update the UI search feedback text.
+    func updateSearchFeedback() {
+        var searchFeedback: String?
+        if !isSearchBarEmpty() {
+            if filteredModel.count == 0 {
+                searchFeedback = "No Search Results"
+            }
+            else {
+                searchFeedback = "Filtering \(filteredModel.count) of \(model.count) Posts"
+            }
+        }
+        else {
+            searchFeedback = nil
+        }
+        coordinator?.setSearchFeedback(searchFeedback)
     }
     
     /// Check if user is currently searching.
