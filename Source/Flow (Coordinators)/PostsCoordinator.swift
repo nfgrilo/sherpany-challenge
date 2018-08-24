@@ -95,7 +95,17 @@ extension PostsCoordinator: ModelControllerDelegate {
         // do nothing - already handled
     }
     
+    func dataWillRefresh() {
+        // show loading indicator
+        DispatchQueue.main.async { [weak self] in
+        }
+    }
+    
     func dataDidRefresh() {
+        // hide loading indicator
+        DispatchQueue.main.async { [weak self] in
+        }
+        
         guard let tableView = viewController?.tableView else { return  }
         
         // refresh data source

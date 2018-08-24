@@ -11,6 +11,10 @@ import Foundation
 /// `ModelController` delegate protocol.
 protocol ModelControllerDelegate: class {
     
+    
+    /// Called whenever data is about to be updated from REST API & merged into Core Data.
+    func dataWillRefresh()
+    
     /// Called whenever data is updated from REST API & merged into Core Data.
     func dataDidRefresh()
     

@@ -160,6 +160,9 @@ class ModelController {
     func refreshDataOnline() {
         // 1. fetch all data at once (Requirement #3)
         print("Fetching data from REST API...")
+        notifyDelegates() { delegate in
+            delegate.dataWillRefresh()
+        }
         apiController.fetchAllData { [weak self] result in
             // this closure is executed on a background thread (background QOS)
             
