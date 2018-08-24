@@ -8,7 +8,10 @@
 
 import UIKit
 
-class PostsDataSource: NSObject, UITableViewDataSource {
+class PostsDataSource: NSObject {
+    
+    /// Weak reference to parent coordinator.
+    weak var coordinator: PostsCoordinator?
     
     /// Model controller.
     private let modelController: ModelController
@@ -26,8 +29,11 @@ class PostsDataSource: NSObject, UITableViewDataSource {
         self.modelController = modelController
     }
     
-    
-    // MARK: - Table data source
+}
+
+
+// MARK: Table view data source
+extension PostsDataSource: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -49,8 +55,37 @@ class PostsDataSource: NSObject, UITableViewDataSource {
         return cell
     }
     
+}
+
+
+// MARK: Table view delegate
+extension PostsDataSource: UITableViewDelegate {
     
-    // MARK: - Model related
+    // MARK: Post selection
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // inform post selection delegate that selected post has been changed
+        coordinator?.postSelected(in: tableView, at: indexPath)
+    }
+    
+    
+    // MARK: Swipe to delete
+    // Requirement #8: ✅
+    
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        // delete action
+        let delete = UITableViewRowAction(style: .destructive, title: "Delete") { [weak self] (action, indexPath) in
+            // inform coordinator that selected post has been deleted from table view
+            self?.coordinator?.postDeleted(in: tableView, at: indexPath)
+        }
+        
+        return [delete]
+    }
+}
+
+
+// MARK: Model related
+extension PostsDataSource {
     
     /// Get a post by index path.
     ///

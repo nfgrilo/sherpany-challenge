@@ -52,7 +52,10 @@ class PostsCoordinator: Coordinator {
         // table view data source
         let dataSource = PostsDataSource(modelController: modelController)
         self.dataSource = dataSource
+        dataSource.coordinator = self
+        let _ = viewController.view // force view loading
         viewController.tableView.dataSource = dataSource
+        viewController.tableView.delegate = dataSource
         dataSource.refreshPostList(in: viewController.tableView)
         
         // model controller delegate
@@ -98,12 +101,14 @@ extension PostsCoordinator: ModelControllerDelegate {
     func dataWillRefresh() {
         // show loading indicator
         DispatchQueue.main.async { [weak self] in
+            self?.viewController?.showLoadingView(true)
         }
     }
     
     func dataDidRefresh() {
         // hide loading indicator
         DispatchQueue.main.async { [weak self] in
+            self?.viewController?.showLoadingView(false)
         }
         
         guard let tableView = viewController?.tableView else { return  }
