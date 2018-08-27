@@ -24,7 +24,7 @@ extension Album {
     init(managedAlbum: ManagedAlbum) {
         // attributes
         id = managedAlbum.id
-        title = managedAlbum.title ?? ""
+        title = managedAlbum.title?.firstLetterCapitalized ?? ""
         
         // relationship: ManagedAlbum -> 1:N -> ManagedPhoto
         var photoList: [Photo] = []

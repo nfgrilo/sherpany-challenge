@@ -27,8 +27,8 @@ extension Post {
     init(managedPost: ManagedPost, fetchUserAlbums: Bool = false) {
         // attributes
         id = managedPost.id
-        title = managedPost.title
-        body = managedPost.body
+        title = managedPost.title?.firstLetterCapitalized
+        body = managedPost.body?.firstLetterCapitalized
         
         // relationship: ManagedPost -> N:1 -> ManagedUser
         if let managedUser = managedPost.user {

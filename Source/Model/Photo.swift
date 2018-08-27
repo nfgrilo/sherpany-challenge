@@ -24,7 +24,7 @@ extension Photo {
     init(managedPhoto: ManagedPhoto) {
         // attributes
         id = managedPhoto.id
-        title = managedPhoto.title
+        title = managedPhoto.title?.firstLetterCapitalized
         url = managedPhoto.url
         thumbnailUrl = managedPhoto.thumbnailUrl
     }
