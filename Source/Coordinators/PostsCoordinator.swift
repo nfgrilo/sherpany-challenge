@@ -55,6 +55,8 @@ class PostsCoordinator: Coordinator {
         self.viewController = viewController
         viewController.coordinator = self
         viewController.loadViewIfNeeded()
+        viewController.title = "Posts"
+        navigationController.navigationBar.prefersLargeTitles = true
         
         // table view data source
         let dataSource = PostsDataSource(modelController: modelController)
@@ -78,7 +80,6 @@ class PostsCoordinator: Coordinator {
         
         // present it
         navigationController.pushViewController(viewController, animated: false)
-        navigationController.topViewController?.title = nil
     }
     
     /// Called from table view controller when a post has been selected.
