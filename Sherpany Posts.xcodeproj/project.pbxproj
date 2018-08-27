@@ -18,6 +18,7 @@
 		286DE1E02122424600F2ED03 /* Storyboarded.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286DE1DF2122424600F2ED03 /* Storyboarded.swift */; };
 		28902E06212C7D2C008C0C9F /* PostAlbumHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28902E05212C7D2C008C0C9F /* PostAlbumHeaderView.swift */; };
 		28902E09212DCEAE008C0C9F /* PostDetailsHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28902E08212DCEAE008C0C9F /* PostDetailsHeaderView.swift */; };
+		28CBC2CD2131571B0045A337 /* PostUIFeedbackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28CBC2CC2131571B0045A337 /* PostUIFeedbackViewController.swift */; };
 		28D6F2092127050400CD6090 /* PostAlbumCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28D6F2082127050400CD6090 /* PostAlbumCollectionViewCell.swift */; };
 		28D6F20D2127427000CD6090 /* PostAlbumCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28D6F20C2127427000CD6090 /* PostAlbumCollectionViewFlowLayout.swift */; };
 		28D6F215212BFDB600CD6090 /* PhotoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28D6F214212BFDB600CD6090 /* PhotoController.swift */; };
@@ -58,6 +59,7 @@
 		286DE1DF2122424600F2ED03 /* Storyboarded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storyboarded.swift; sourceTree = "<group>"; };
 		28902E05212C7D2C008C0C9F /* PostAlbumHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostAlbumHeaderView.swift; sourceTree = "<group>"; };
 		28902E08212DCEAE008C0C9F /* PostDetailsHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailsHeaderView.swift; sourceTree = "<group>"; };
+		28CBC2CC2131571B0045A337 /* PostUIFeedbackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostUIFeedbackViewController.swift; sourceTree = "<group>"; };
 		28D6F2082127050400CD6090 /* PostAlbumCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostAlbumCollectionViewCell.swift; sourceTree = "<group>"; };
 		28D6F20C2127427000CD6090 /* PostAlbumCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostAlbumCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
 		28D6F214212BFDB600CD6090 /* PhotoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoController.swift; sourceTree = "<group>"; };
@@ -115,6 +117,9 @@
 			children = (
 				28111F4E2122505700CA324F /* Post List [master] */,
 				28111F4F2122506100CA324F /* Post Details [detail] */,
+				28EBF09F2131565400BA49C3 /* --- */,
+				2827CCD8212F09EF008023EB /* Fullscreen Photo */,
+				28CBC2CB213156C80045A337 /* Post UI Feedback */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -146,7 +151,6 @@
 			children = (
 				28FC07C42126D62F00C6EE7B /* No Post */,
 				28FC07C32126D62600C6EE7B /* Post Details */,
-				2827CCD8212F09EF008023EB /* Fullscreen Photo */,
 			);
 			path = "Post Details [detail]";
 			sourceTree = "<group>";
@@ -167,6 +171,14 @@
 				28ECB13A21234A1A00764592 /* Extensions */,
 			);
 			path = "[Shared]";
+			sourceTree = "<group>";
+		};
+		28CBC2CB213156C80045A337 /* Post UI Feedback */ = {
+			isa = PBXGroup;
+			children = (
+				28CBC2CC2131571B0045A337 /* PostUIFeedbackViewController.swift */,
+			);
+			path = "Post UI Feedback";
 			sourceTree = "<group>";
 		};
 		28DD3B1A2121EDF200B05A4B = {
@@ -201,6 +213,13 @@
 				28DD3B372121EDF300B05A4B /* Info.plist */,
 			);
 			path = Source;
+			sourceTree = "<group>";
+		};
+		28EBF09F2131565400BA49C3 /* --- */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "---";
 			sourceTree = "<group>";
 		};
 		28ECB12C2123211300764592 /* Rest API */ = {
@@ -365,6 +384,7 @@
 				28FC07AD21257A6E00C6EE7B /* PostTableViewCell.swift in Sources */,
 				28FC07B52125ADA600C6EE7B /* PostSelectedDelegate.swift in Sources */,
 				286DE1E02122424600F2ED03 /* Storyboarded.swift in Sources */,
+				28CBC2CD2131571B0045A337 /* PostUIFeedbackViewController.swift in Sources */,
 				28111F57212258E600CA324F /* PostsDataSource.swift in Sources */,
 				28111F512122507A00CA324F /* PostsCoordinator.swift in Sources */,
 				28111F4D2122445300CA324F /* MainCoordinator.swift in Sources */,

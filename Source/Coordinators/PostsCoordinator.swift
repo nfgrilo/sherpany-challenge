@@ -123,14 +123,14 @@ extension PostsCoordinator: ModelControllerDelegate {
     func dataWillRefresh() {
         // show loading indicator
         DispatchQueue.main.async { [weak self] in
-            self?.viewController?.showLoadingView(true)
+            self?.viewController?.showProgressView(true)
         }
     }
     
     func dataDidRefresh() {
         // hide loading indicator
         DispatchQueue.main.async { [weak self] in
-            self?.viewController?.showLoadingView(false)
+            self?.viewController?.showProgressView(false)
         }
         
         guard let tableView = viewController?.tableView else { return  }
