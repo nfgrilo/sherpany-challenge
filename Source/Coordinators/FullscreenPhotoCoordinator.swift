@@ -53,12 +53,12 @@ class FullscreenPhotoCoordinator: Coordinator {
             // set photo
             if let bigImage = photoController.photo(for: photo.url) {
                 // full image
-                viewController.model = FullscreenPhotoViewController.Model(photo: bigImage, isThumbnail: false)
+                viewController.model = FullscreenPhotoViewController.Model(image: bigImage, isThumbnail: false, title: photo.title)
             }
             else {
                 if let thumbnail = photoController.photo(for: photo.thumbnailUrl) {
                     // thumbnail
-                    viewController.model = FullscreenPhotoViewController.Model(photo: thumbnail, isThumbnail: true)
+                    viewController.model = FullscreenPhotoViewController.Model(image: thumbnail, isThumbnail: true, title: photo.title)
                 }
                 else {
                     viewController.activityIndicator.color = .darkGray
@@ -66,7 +66,7 @@ class FullscreenPhotoCoordinator: Coordinator {
                 
                 // fetch photo & update
                 photoController.fetchPhotos(from: [photoUrl]) { [weak self] url, image in
-                    self?.viewController?.model = FullscreenPhotoViewController.Model(photo: image, isThumbnail: false)
+                    self?.viewController?.model = FullscreenPhotoViewController.Model(image: image, isThumbnail: false, title: photo.title)
                 }
             }
         

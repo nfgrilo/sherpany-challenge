@@ -40,6 +40,11 @@ class FullscreenPhotoViewController: UIViewController, Storyboarded {
             if !model.isThumbnail {
                 activityIndicator.stopAnimating()
             }
+            
+            /// navigation title
+            if let imageTitle = model.title {
+                title = imageTitle
+            }
         }
     }
     
@@ -69,10 +74,12 @@ extension FullscreenPhotoViewController {
     struct Model {
         let photo: UIImage?
         let isThumbnail: Bool
+        let title: String?
         
-        init(photo: UIImage?, isThumbnail: Bool = false) {
-            self.photo = photo
+        init(image: UIImage?, isThumbnail: Bool = false, title: String? = nil) {
+            self.photo = image
             self.isThumbnail = isThumbnail
+            self.title = title
         }
     }
 }
