@@ -395,6 +395,6 @@ class PhotoController {
     }
     
     /// Maximum concurrent downloads.
-    private static let maxConcurrentDownloads: Int = 9
+    private static let maxConcurrentDownloads: Int = 10
     
 }
