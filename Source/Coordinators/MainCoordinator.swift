@@ -57,6 +57,11 @@ class MainCoordinator: Coordinator {
         splitViewController.minimumPrimaryColumnWidth = 300
         splitViewController.maximumPrimaryColumnWidth = splitViewController.minimumPrimaryColumnWidth
         
+        // setup navigation bar
+        //  -> hide text on back buttons (only showing "<")
+        UIBarButtonItem.appearance().setTitleTextAttributes([ .foregroundColor: UIColor.clear ], for: .normal)
+        UIBarButtonItem.appearance().setTitleTextAttributes([ .foregroundColor : UIColor.clear ], for: .highlighted)
+        
         // show
         window.rootViewController = splitViewController
         window.makeKeyAndVisible()
