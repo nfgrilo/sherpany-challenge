@@ -19,14 +19,14 @@ class PostDetailsHeaderView: UICollectionReusableView {
             guard let model = model else {
                 postTitle.text = ""
                 postBody.text = ""
-                relatedAlbums.text = ""
+                postAlbums.text = ""
                 return
             }
 
             // update UI
             postTitle.text = model.title
             postBody.text = model.body
-            relatedAlbums.text = model.hasAlbums ? "Author's Favorite Albums" : "No Favorite Albums"
+            postAlbums.text = model.hasAlbums ? "Albums" : "No Albums"
         }
     }
 
@@ -40,25 +40,29 @@ class PostDetailsHeaderView: UICollectionReusableView {
         setup()
     }
     
+    /// View setup.
     private func setup() {
+        // color
+        backgroundColor = UIColor(named: "Post Details") ?? .clear
+        
         // add views
         addSubview(postTitle)
         addSubview(postBody)
-        addSubview(relatedAlbums)
+        addSubview(postAlbumsView)
 
         // layout
         let views: [String: Any] = ["title": postTitle,
                                     "body": postBody,
-                                    "albumsTitle": relatedAlbums]
+                                    "albums": postAlbumsView]
         let options: NSLayoutFormatOptions = []
         let metrics: [String: Any] = ["top": viewInsets.top,
                                       "left": viewInsets.left,
                                       "bottom": viewInsets.bottom,
                                       "right": viewInsets.right]
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-top-[title]-10-[body]-40@750-[albumsTitle]-bottom-|", options: options, metrics: metrics, views: views))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-top-[title]-10-[body]-40@750-[albums]|", options: options, metrics: metrics, views: views))
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-left-[title]-right@750-|", options: options, metrics: metrics, views: views))
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-left-[body]-right@750-|", options: options, metrics: metrics, views: views))
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-left-[albumsTitle]-right@750-|", options: options, metrics: metrics, views: views))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[albums]-0@750-|", options: options, metrics: metrics, views: views))
     }
     
     /// View margins.
@@ -84,8 +88,8 @@ class PostDetailsHeaderView: UICollectionReusableView {
         return label
     }()
 
-    /// Related albums label.
-    lazy var relatedAlbums: UILabel = {
+    /// Albums label.
+    lazy var postAlbums: UILabel = {
         let label = UILabel(frame: .zero)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.preferredFont(forTextStyle: .title2)
@@ -93,6 +97,24 @@ class PostDetailsHeaderView: UICollectionReusableView {
         label.numberOfLines = 1
         return label
     }()
+    
+    /// Albums View.
+    lazy var postAlbumsView: UIView = {
+        let view = UILabel(frame: .zero)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor(named: "Albums Background") ?? .darkText
+        view.addSubview(postAlbums)
+        // layout
+        let views: [String: Any] = ["label": postAlbums]
+        let metrics: [String: Any] = ["top": viewInsets.top,
+                                      "left": viewInsets.left,
+                                      "bottom": viewInsets.bottom,
+                                      "right": viewInsets.right]
+        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-left-[label]-right-|", options: [], metrics: metrics, views: views))
+        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-top-[label]-bottom-|", options: [], metrics: metrics, views: views))
+        return view
+    }()
+    
     
     override func systemLayoutSizeFitting(_ targetSize: CGSize, withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority, verticalFittingPriority: UILayoutPriority) -> CGSize {
         

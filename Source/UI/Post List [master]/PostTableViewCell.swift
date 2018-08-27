@@ -20,6 +20,23 @@ class PostTableViewCell: UITableViewCell {
     /// Post author label.
     @IBOutlet weak var postAuthor: UILabel!
     
+    /// Is selected?
+    override var isSelected: Bool {
+        didSet {
+            // Title color
+            if let color = UIColor(named: "Post List Title"),
+                let selectedColor = UIColor(named: "Post List Selection Title") {
+                postTitle.textColor = !isSelected ? color : selectedColor
+            }
+            
+            // Author color
+            if let color = UIColor(named: "Post List Author"),
+                let selectedColor = UIColor(named: "Post List Selection Author") {
+                postAuthor.textColor = !isSelected ? color : selectedColor
+            }
+        }
+    }
+    
     /// View-model.
     var model: Model? {
         didSet {

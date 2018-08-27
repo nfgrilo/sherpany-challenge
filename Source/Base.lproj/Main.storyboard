@@ -18,7 +18,7 @@
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="MMd-YF-8Hc">
                         <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" name="Album Contents"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="rs3-xt-ufy">
                             <size key="itemSize" width="190" height="230"/>
                             <size key="headerReferenceSize" width="50" height="50"/>
@@ -35,7 +35,7 @@
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1HC-cJ-zf4">
                                             <rect key="frame" x="20" y="20" width="150" height="187.5"/>
-                                            <color key="backgroundColor" name="Photo Placeholder"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <userDefinedRuntimeAttributes>
                                                 <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -49,7 +49,7 @@
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Photo Title" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j98-i6-x4m">
                                             <rect key="frame" x="20" y="215.5" width="150" height="14.5"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                            <color key="textColor" name="Album Title"/>
+                                            <color key="textColor" name="Photo Title"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
@@ -116,6 +116,7 @@
                                 <constraint firstAttribute="trailing" secondItem="1E0-IM-Jir" secondAttribute="trailing" id="usY-ND-55K"/>
                             </constraints>
                             <connections>
+                                <outlet property="backgroundView" destination="Juh-XV-Ska" id="fEE-Jf-GlL"/>
                                 <outlet property="collapseLabel" destination="cbA-8x-UEd" id="fF9-OC-C4U"/>
                                 <outlet property="titleLabel" destination="2h6-fA-PSn" id="tzH-Gy-eSk"/>
                             </connections>
@@ -268,16 +269,17 @@
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Post Title" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x4k-Kk-6V8">
                                                     <rect key="frame" x="20" y="15" width="260" height="29.5"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleTitle3"/>
-                                                    <color key="textColor" name="Post Title"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" verticalCompressionResistancePriority="751" text="Author" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wWJ-Ib-iw8">
                                                     <rect key="frame" x="20" y="52.5" width="260" height="16"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
-                                                    <color key="textColor" name="Post Author"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
+                                            <color key="backgroundColor" name="Post List"/>
                                             <constraints>
                                                 <constraint firstItem="x4k-Kk-6V8" firstAttribute="top" secondItem="37f-cq-3Eg" secondAttribute="top" constant="15" id="75x-D6-LFk"/>
                                                 <constraint firstItem="wWJ-Ib-iw8" firstAttribute="leading" secondItem="x4k-Kk-6V8" secondAttribute="leading" id="FuG-FN-4Z3"/>
@@ -334,7 +336,7 @@
                                 <rect key="frame" x="494" y="375" width="37" height="37"/>
                             </activityIndicatorView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" name="Full Photo Background"/>
                         <constraints>
                             <constraint firstItem="Kf2-D2-JH6" firstAttribute="centerY" secondItem="jzZ-Q5-4Gg" secondAttribute="centerY" id="AGY-Vd-br6"/>
                             <constraint firstItem="jzZ-Q5-4Gg" firstAttribute="top" secondItem="Jkb-r0-3Ml" secondAttribute="bottom" constant="20" id="FAQ-Fr-EZh"/>
@@ -381,7 +383,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="ZQx-zQ-JHg" secondAttribute="trailing" id="7Tm-MN-QY3"/>
                                     <constraint firstItem="aNv-c9-LZM" firstAttribute="leading" secondItem="ZQx-zQ-JHg" secondAttribute="leading" id="BNB-TL-lMX"/>
@@ -393,7 +395,7 @@
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" name="Post Details"/>
                         <constraints>
                             <constraint firstItem="wtD-H5-XKi" firstAttribute="centerY" secondItem="dLf-IA-TAb" secondAttribute="centerY" id="DPA-nV-5GA"/>
                             <constraint firstItem="wtD-H5-XKi" firstAttribute="centerX" secondItem="dLf-IA-TAb" secondAttribute="centerX" id="Vfd-zU-Aof"/>
@@ -406,23 +408,32 @@
         </scene>
     </scenes>
     <resources>
+        <namedColor name="Album Contents">
+            <color red="0.25882352941176473" green="0.47843137254901963" blue="0.63137254901960782" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <namedColor name="Album Title">
             <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
-        <namedColor name="Photo Placeholder">
-            <color red="0.98000001907348633" green="0.98000001907348633" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        <namedColor name="Full Photo Background">
+            <color red="0.6470588235294118" green="0.74509803921568629" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
-        <namedColor name="Post Author">
-            <color red="0.30000001192092896" green="0.30000001192092896" blue="0.30000001192092896" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="Post Body">
-            <color red="0.25" green="0.25" blue="0.25" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        <namedColor name="Photo Title">
+            <color red="0.97647058823529409" green="0.97254901960784312" blue="0.91764705882352937" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Post Body">
             <color red="0.25" green="0.25" blue="0.25" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Post Body">
             <color red="0.25" green="0.25" blue="0.25" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Post Body">
+            <color red="0.25" green="0.25" blue="0.25" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Post Details">
+            <color red="0.97647058823529409" green="0.97254901960784312" blue="0.91764705882352937" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Post List">
+            <color red="0.98431372549019602" green="0.96470588235294119" blue="0.95294117647058818" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Post Title">
             <color red="0.1000000015" green="0.1000000015" blue="0.1000000015" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

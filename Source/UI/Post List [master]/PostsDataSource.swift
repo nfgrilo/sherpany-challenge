@@ -35,6 +35,12 @@ class PostsDataSource: NSObject {
         self.modelController = modelController
     }
     
+    lazy var selectionView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(named: "Post Selection") ?? .lightGray
+        return view
+    }()
+    
 }
 
 
@@ -58,8 +64,14 @@ extension PostsDataSource: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: PostTableViewCell.viewIdentifier, for: indexPath)
         
         // set model
-        if let postCell = cell as? PostTableViewCell, let post = self.post(at: indexPath) {
-            postCell.model = PostTableViewCell.Model(post: post)
+        if let postCell = cell as? PostTableViewCell {
+            if let post = self.post(at: indexPath) {
+                postCell.model = PostTableViewCell.Model(post: post)
+            }
+            
+            // selection
+            cell.selectedBackgroundView = selectionView
+            cell.isSelected = false
         }
         
         return cell
@@ -76,6 +88,13 @@ extension PostsDataSource: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // inform post selection delegate that selected post has been changed
         coordinator?.postSelected(in: tableView, at: indexPath)
+        
+        // inform cell to adapt colors
+        let selectedCell = tableView.cellForRow(at: indexPath) as? PostTableViewCell
+        selectedCell?.isSelected = true
+        for cell in tableView.visibleCells where cell != selectedCell {
+            cell.isSelected = false
+        }
     }
     
     

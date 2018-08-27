@@ -301,6 +301,16 @@ extension PostDetailsDataSource: PostAlbumHeaderViewDelegate {
         albumSections?[albumIndex].isCollapsed = !currentIsCollapsed
         headerTapped.isCollapsed = !currentIsCollapsed
         
+        // scroll to top if all albums collpased (adds subtle animation)
+        let allAlbumsCollpased = albumSections?.filter { !$0.isCollapsed }.isEmpty ?? true
+        if allAlbumsCollpased, let collectionView = collectionView {
+            var offset = CGPoint(x: -collectionView.contentInset.left, y: -collectionView.contentInset.top)
+            if #available(iOS 11.0, *) {
+                offset = CGPoint(x: -collectionView.adjustedContentInset.left, y: -collectionView.adjustedContentInset.top)
+            }
+            collectionView.setContentOffset(offset, animated: true)
+        }
+        
         // reload section
         collectionView?.reloadSections(IndexSet(integer: section))
     }

@@ -57,6 +57,8 @@ class PostsCoordinator: Coordinator {
         viewController.loadViewIfNeeded()
         viewController.title = "Posts"
         navigationController.navigationBar.prefersLargeTitles = true
+        navigationController.navigationBar.barTintColor = UIColor(named: "Navigation Bar") ?? .clear
+        navigationController.navigationBar.barStyle = .black
         
         // table view data source
         let dataSource = PostsDataSource(modelController: modelController)

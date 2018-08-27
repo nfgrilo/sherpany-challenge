@@ -52,12 +52,15 @@ class PostDetailsCoordinator: Coordinator {
         guard let noPostDetailsViewController = NoPostDetailsViewController.instantiate() else { return }
         self.noPostDetailsViewController = noPostDetailsViewController
         noPostDetailsViewController.title = "Challenge Accepted!" // Requirement #1: ✅
+        navigationController.navigationBar.barStyle = .black
         
         // post details VC
         guard let postDetailsViewController = PostDetailsViewController.instantiate() else { return }
         self.postDetailsViewController = postDetailsViewController
         postDetailsViewController.coordinator = self
         postDetailsViewController.title = "Challenge Accepted!" // Requirement #1: ✅
+        navigationController.navigationBar.barTintColor = UIColor(named: "Navigation Bar") ?? .clear
+        navigationController.navigationBar.barStyle = .black
         
         // post details vc: collection view data source & delegate
         //  -> layout

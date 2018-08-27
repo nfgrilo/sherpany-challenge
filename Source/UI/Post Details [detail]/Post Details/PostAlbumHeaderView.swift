@@ -34,6 +34,11 @@ class PostAlbumHeaderView: UICollectionReusableView {
     var isCollapsed: Bool = false {
         didSet {
             collapseLabel.text = isCollapsed ? "+" : "-"
+            
+            if let collapsedColor = UIColor(named: "Album Title Background"),
+                let expandedColor = UIColor(named: "Album Title Background Highlighted") {
+                backgroundView.backgroundColor = isCollapsed ? collapsedColor : expandedColor
+            }
         }
     }
     
@@ -54,6 +59,9 @@ class PostAlbumHeaderView: UICollectionReusableView {
     
     /// Label for collpasing/expanding.
     @IBOutlet weak var collapseLabel: UILabel!
+    
+    /// Background view.
+    @IBOutlet weak var backgroundView: UIView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
