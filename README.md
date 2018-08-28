@@ -1,12 +1,13 @@
-# Posts
-
 
 <p align="center" style="margin-top: 20px;">
-  <img src="https://github.com/nfgrilo/sherpany-challenge/raw/master/Source/Assets.xcassets/AppIcon.appiconset/Icon.png" width="128" height="128" alt="Posts" />
+  <img src="https://github.com/nfgrilo/sherpany-challenge/raw/master/Source/Assets.xcassets/AppIcon.appiconset/Icon.png" width="128" height="128" alt="Posts"/><br/>
+  <strong>Sherpany Code Challenge</strong><br/>by <a href="https://nunogrilo.com" target="_blank">Nuno Grilo</a>
 </p>
 
 
-**Sherpany Code Challenge** by [Nuno Grilo](https://nunogrilo.com)
+# Posts
+
+![iOS](https://img.shields.io/badge/iOS-11.0.%2B-green.svg?style=flat) ![iPad](https://img.shields.io/badge/device-iPad-blue.svg?style=flat) ![Swift](https://img.shields.io/badge/swift-4.1-orange.svg?style=flat)
 
 ## Table of Contents
 
