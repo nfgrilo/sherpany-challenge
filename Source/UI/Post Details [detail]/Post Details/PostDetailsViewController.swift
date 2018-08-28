@@ -44,6 +44,9 @@ class PostDetailsViewController: UICollectionViewController, Storyboarded {
         super.viewDidLoad()
         
         // refresh for Dynamic Type
+        // Bonus #6: ✅ (Dynamic Type support)
+        // All fonts are defined with Dynamic Type support; this refresh is the
+        // only "manual" refresh needed.
         NotificationCenter.default.addObserver(forName: NSNotification.Name.UIContentSizeCategoryDidChange, object: nil, queue: nil) { [weak self] _ in
             self?.reloadData(restoreScrolling: true)
         }
