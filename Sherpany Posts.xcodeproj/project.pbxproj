@@ -103,15 +103,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		280B2CEE212F274D0023D497 /* Coordinators */ = {
+		280B2CEE212F274D0023D497 /* Flow */ = {
 			isa = PBXGroup;
 			children = (
 				28111F4C2122445300CA324F /* MainCoordinator.swift */,
-				28111F502122507A00CA324F /* PostsCoordinator.swift */,
-				28111F54212255C300CA324F /* PostDetailsCoordinator.swift */,
-				2827CCD9212F0A1C008023EB /* FullscreenPhotoCoordinator.swift */,
+				2826D8A321354382000D815A /* Post List [master] */,
+				2826D8A421354391000D815A /* Post Details [detail] */,
 			);
-			path = Coordinators;
+			path = Flow;
 			sourceTree = "<group>";
 		};
 		280B2CEF212F277A0023D497 /* UI */ = {
@@ -119,9 +118,6 @@
 			children = (
 				28111F4E2122505700CA324F /* Post List [master] */,
 				28111F4F2122506100CA324F /* Post Details [detail] */,
-				28EBF09F2131565400BA49C3 /* --- */,
-				2827CCD8212F09EF008023EB /* Fullscreen Photo */,
-				28CBC2CB213156C80045A337 /* Post UI Feedback */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -132,7 +128,7 @@
 				28ECB138212348C700764592 /* ModelController.swift */,
 				28FC07B0212590AE00C6EE7B /* ModelControllerDelegate.swift */,
 				28D6F214212BFDB600CD6090 /* PhotoController.swift */,
-				28ECB12C2123211300764592 /* Rest API */,
+				28ECB12C2123211300764592 /* REST API */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -141,9 +137,9 @@
 			isa = PBXGroup;
 			children = (
 				28111F522122529F00CA324F /* PostsViewController.swift */,
-				28111F56212258E600CA324F /* PostsDataSource.swift */,
 				28FC07B42125ADA600C6EE7B /* PostSelectedDelegate.swift */,
 				28FC07AC21257A6E00C6EE7B /* PostTableViewCell.swift */,
+				28CBC2CB213156C80045A337 /* Post UI Feedback */,
 			);
 			path = "Post List [master]";
 			sourceTree = "<group>";
@@ -153,8 +149,36 @@
 			children = (
 				28FC07C42126D62F00C6EE7B /* No Post */,
 				28FC07C32126D62600C6EE7B /* Post Details */,
+				2827CCD8212F09EF008023EB /* Fullscreen Photo */,
 			);
 			path = "Post Details [detail]";
+			sourceTree = "<group>";
+		};
+		2826D8A321354382000D815A /* Post List [master] */ = {
+			isa = PBXGroup;
+			children = (
+				28111F502122507A00CA324F /* PostsCoordinator.swift */,
+				28111F56212258E600CA324F /* PostsDataSource.swift */,
+			);
+			path = "Post List [master]";
+			sourceTree = "<group>";
+		};
+		2826D8A421354391000D815A /* Post Details [detail] */ = {
+			isa = PBXGroup;
+			children = (
+				28111F54212255C300CA324F /* PostDetailsCoordinator.swift */,
+				28FC07BE2125E79400C6EE7B /* PostDetailsDataSource.swift */,
+				2826D8A521354407000D815A /* Fullscreen Photo */,
+			);
+			path = "Post Details [detail]";
+			sourceTree = "<group>";
+		};
+		2826D8A521354407000D815A /* Fullscreen Photo */ = {
+			isa = PBXGroup;
+			children = (
+				2827CCD9212F0A1C008023EB /* FullscreenPhotoCoordinator.swift */,
+			);
+			path = "Fullscreen Photo";
 			sourceTree = "<group>";
 		};
 		2827CCD8212F09EF008023EB /* Fullscreen Photo */ = {
@@ -203,7 +227,7 @@
 			isa = PBXGroup;
 			children = (
 				28DD3B262121EDF200B05A4B /* AppDelegate.swift */,
-				280B2CEE212F274D0023D497 /* Coordinators */,
+				280B2CEE212F274D0023D497 /* Flow */,
 				280B2CEF212F277A0023D497 /* UI */,
 				280B2CF0212F27940023D497 /* Controllers */,
 				28ECB137212348B300764592 /* Model */,
@@ -217,14 +241,7 @@
 			path = Source;
 			sourceTree = "<group>";
 		};
-		28EBF09F2131565400BA49C3 /* --- */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "---";
-			sourceTree = "<group>";
-		};
-		28ECB12C2123211300764592 /* Rest API */ = {
+		28ECB12C2123211300764592 /* REST API */ = {
 			isa = PBXGroup;
 			children = (
 				28ECB12D2123215400764592 /* APIController.swift */,
@@ -233,7 +250,7 @@
 				28ECB1312123220C00764592 /* APIResponse.swift */,
 				28ECB12F212321E500764592 /* APIError.swift */,
 			);
-			path = "Rest API";
+			path = "REST API";
 			sourceTree = "<group>";
 		};
 		28ECB137212348B300764592 /* Model */ = {
@@ -261,7 +278,6 @@
 			isa = PBXGroup;
 			children = (
 				28DD3B2D2121EDF200B05A4B /* PostDetailsViewController.swift */,
-				28FC07BE2125E79400C6EE7B /* PostDetailsDataSource.swift */,
 				28902E08212DCEAE008C0C9F /* PostDetailsHeaderView.swift */,
 				28902E05212C7D2C008C0C9F /* PostAlbumHeaderView.swift */,
 				28D6F2082127050400CD6090 /* PostAlbumCollectionViewCell.swift */,
