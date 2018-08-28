@@ -78,6 +78,15 @@ class PostAlbumCollectionViewCell: UICollectionViewCell {
         super.awakeFromNib()
         setup()
     }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        // remove gesture recognizer
+        if let gestureRecognizer = self.gestureRecognizer {
+            removeGestureRecognizer(gestureRecognizer)
+        }
+    }
 
     /// Set up cell.
     private func setup() {
@@ -87,8 +96,12 @@ class PostAlbumCollectionViewCell: UICollectionViewCell {
         photoHeightConstraint = photo.heightAnchor.constraint(equalToConstant: PostAlbumCollectionViewCell.defaultThumbnailSize.height)
         
         // add tap gesture
-        addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(photoTapped(_:))))
+        let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(photoTapped(_:)))
+        addGestureRecognizer(gestureRecognizer)
     }
+    
+    /// Tap gesture recognizer.
+    private var gestureRecognizer: UIGestureRecognizer?
     
     /// Called when user taps header.
     ///
