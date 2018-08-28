@@ -85,22 +85,21 @@ class PostDetailsDataSource: NSObject {
     
     /// Refresh collection view items needing refresh.
     private func refreshCollectionViewItems() {
-        // find cells whose model has no photo yet
-        var indexPaths: [IndexPath] = []
-        if let visibleCells = collectionView?.visibleCells {
-            for cell in visibleCells {
-                if let cell = cell as? PostAlbumCollectionViewCell,
-                    cell.model?.photo == nil,
-                    let cellIndexPath = collectionView?.indexPath(for: cell) {
-                    indexPaths.append(cellIndexPath)
-                }
+        guard let collectionView = self.collectionView else { return }
+        
+        // index path of visible cells without photo
+        let indexPaths: [IndexPath] = collectionView.visibleCells.compactMap { [weak collectionView] cell in
+            if let cell = cell as? PostAlbumCollectionViewCell,
+                cell.model?.photo == nil {
+                return collectionView?.indexPath(for: cell)
             }
+            return nil
         }
         
         // reload those items (without animation)
         CATransaction.begin()
         CATransaction.setDisableActions(true)
-        collectionView?.reloadItems(at: indexPaths)
+        collectionView.reloadItems(at: indexPaths)
         CATransaction.commit()
     }
     
@@ -155,10 +154,13 @@ extension PostDetailsDataSource: UICollectionViewDataSource {
         // no photo yet? -> fetch
         if image == nil, let imageUrl = imageUrl {
             photoController.fetchPhotos(from: [imageUrl]) { [weak self] _, image in
-                guard photoCell.model?.photo == nil else { return }
+                // ⚠️ find *current* cell for index path, as previously referenced
+                //    cell (outside closure) may have been already resused.
+                guard let currentCell = collectionView.cellForItem(at: indexPath) as? PostAlbumCollectionViewCell else { return }
+                guard currentCell.model?.photo == nil else { return }
                 
                 // queue a cell's model refresh
-                photoCell.model = PostAlbumCollectionViewCell.Model(identifier: photo.id, title: title, photo: image)
+                currentCell.model = PostAlbumCollectionViewCell.Model(identifier: photo.id, title: title, photo: image)
                 self?.coalescedCollectionViewItems()
             }
         }
