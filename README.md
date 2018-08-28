@@ -2,7 +2,7 @@
 
 
 <p align="center" style="margin-top: 20px;">
-  <img src="https://github.com/nfgrilo/sherpany-challenge/raw/master/Source/Assets.xcassts/AppIcon.appiconset/icon.png" width="256" height="256" alt="Posts" />
+  <img src="https://github.com/nfgrilo/sherpany-challenge/raw/master/Source/Assets.xcassets/AppIcon.appiconset/Icon.png" width="128" height="128" alt="Posts" />
 </p>
 
 
