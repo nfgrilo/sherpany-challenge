@@ -65,7 +65,7 @@ class FullscreenPhotoCoordinator: Coordinator {
                 }
                 
                 // fetch photo & update
-                photoController.fetchPhotos(from: [photoUrl]) { [weak self] url, image in
+                photoController.fetchPhotos(from: [photoUrl], priority: .high) { [weak self] url, image in
                     self?.viewController?.model = FullscreenPhotoViewController.Model(image: image, isThumbnail: false, title: photo.title)
                 }
             }

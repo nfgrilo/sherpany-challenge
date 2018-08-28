@@ -22,12 +22,12 @@ class PhotoController {
         var completions: [TaskCompletion] = []
         var workItem: DispatchWorkItem?
         var dataTask: URLSessionDataTask?
-        private(set) var isCancelled: Bool
+        var priority: Priority = .normal
+        private(set) var isCancelled: Bool = false
         
         init(url: URL, completions: [TaskCompletion]) {
             self.url = url
             self.completions = completions
-            self.isCancelled = false
         }
         
         /// Cancel the task.
@@ -44,6 +44,13 @@ class PhotoController {
 
         var hashValue: Int {
             return url.hashValue
+        }
+        
+        enum Priority: Int {
+            case veryLow = 0
+            case low
+            case normal
+            case high
         }
     }
     
@@ -97,7 +104,7 @@ class PhotoController {
     /// - Parameters:
     ///   - urls: The photo URLs.
     ///   - completion: The closure to be called when complete.
-    func fetchPhotos(from urls: [URL], completion: TaskCompletion? = nil) {
+    func fetchPhotos(from urls: [URL], priority: Task.Priority = .normal, completion: TaskCompletion? = nil) {
         var newTasks: [Task] = []
         for url in urls {
             // photo already cached?
@@ -111,8 +118,10 @@ class PhotoController {
                 completion?(url, nil)
                 continue
             }
+            //  -> update priority
+            task.priority = priority
+            //  -> define task work item (fetch image & notify "observers")
             if task.workItem == nil {
-                // define task work item (fetch image & notify "observers")
                 task.workItem = DispatchWorkItem() { [weak self, weak task] in
                     self?.networkFetch(task) { _, image in
                         self?.finishTask(task, image: image)
@@ -232,21 +241,17 @@ class PhotoController {
     private func dequeueTask(completion: @escaping (Task?) -> ()) {
         // `tasks` writes are made without concurrency (async with barrier)
         tasksQueue.async(flags: .barrier) { [weak self] in
-            guard let tasks = self?.tasks  else {
+            guard let tasks = self?.tasks else {
                 completion(nil)
                 return
             }
             
-            // get last non-cancelled task
-            while !tasks.isEmpty {
-                // pick up task in middle
-                //  > PS: this works great with prefetching because, when prefetching,
-                //  > cells are requested above and/or below visible cells, so
-                //  > dequeueing from middle will potentially give priority to
-                //  > tasks whose cells are already visible on screen.
-                let index = tasks.count / 2
-                
-                if let task = index < tasks.count ? tasks[index] : tasks.last, !task.isCancelled {
+            // sort by priority
+            let sortedTasks = tasks.sorted { $0.priority.rawValue < $1.priority.rawValue }
+
+            // get last (higher priority), non-cancelled task
+            while !sortedTasks.isEmpty {
+                if let task = sortedTasks.last, !task.isCancelled {
                     // add strong ref to `executingTasks`
                     self?.executingTasks.append(task)
                     
@@ -278,12 +283,10 @@ class PhotoController {
                 // get task
                 guard let task = (tasks.first { $0.url == url }) else { continue }
                 
-                // move to task to end of list
-                //  > PS: this works because tasks are dequeued from the middle
-                if let existingIndex = tasks.index(of: task) {
-                    self?.tasks.remove(at: existingIndex)
+                // lower task priority
+                if task.priority.rawValue > Task.Priority.veryLow.rawValue {
+                    task.priority = Task.Priority(rawValue: task.priority.rawValue - 1) ?? .veryLow
                 }
-                self?.tasks.append(task)
             }
         }
     }

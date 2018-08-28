@@ -153,7 +153,7 @@ extension PostDetailsDataSource: UICollectionViewDataSource {
         
         // no photo yet? -> fetch
         if image == nil, let imageUrl = imageUrl {
-            photoController.fetchPhotos(from: [imageUrl]) { [weak self] _, image in
+            photoController.fetchPhotos(from: [imageUrl], priority: .normal) { [weak self] _, image in
                 // ⚠️ find *current* cell for index path, as previously referenced
                 //    cell (outside closure) may have been already resused.
                 guard let currentCell = collectionView.cellForItem(at: indexPath) as? PostAlbumCollectionViewCell else { return }
@@ -224,9 +224,11 @@ extension PostDetailsDataSource: UICollectionViewDataSource {
 extension PostDetailsDataSource: UICollectionViewDataSourcePrefetching {
 
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
-        // asynchronously fetch photos
+        // photo thumbnail URLs
         let urls = indexPaths.compactMap { photo(for: $0)?.thumbnailUrl }
-        photoController.fetchPhotos(from: urls)
+        
+        // asynchronously fetch photos
+        photoController.fetchPhotos(from: urls, priority: .low)
     }
 
     func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
