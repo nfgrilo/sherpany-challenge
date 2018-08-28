@@ -6,7 +6,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -82,14 +81,14 @@
                                         <rect key="frame" x="0.0" y="0.0" width="1024" height="50"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2h6-fA-PSn">
-                                                <rect key="frame" x="20" y="10" width="38" height="30"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2h6-fA-PSn">
+                                                <rect key="frame" x="20" y="10" width="951.5" height="30"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleTitle3"/>
                                                 <color key="textColor" name="Album Title"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="+" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cbA-8x-UEd">
-                                                <rect key="frame" x="991" y="13" width="13" height="24"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="+" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cbA-8x-UEd">
+                                                <rect key="frame" x="991.5" y="13" width="12.5" height="24"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleTitle3"/>
                                                 <color key="textColor" name="Album Title"/>
                                                 <nil key="highlightedColor"/>
@@ -97,10 +96,10 @@
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
-                                            <constraint firstAttribute="trailing" secondItem="cbA-8x-UEd" secondAttribute="trailing" priority="500" constant="20" id="Fxq-80-pp2"/>
+                                            <constraint firstAttribute="trailing" secondItem="cbA-8x-UEd" secondAttribute="trailing" constant="20" id="Fxq-80-pp2"/>
                                             <constraint firstItem="2h6-fA-PSn" firstAttribute="centerY" secondItem="cbA-8x-UEd" secondAttribute="centerY" id="Rai-Dk-BXl"/>
                                             <constraint firstAttribute="bottom" secondItem="2h6-fA-PSn" secondAttribute="bottom" priority="500" constant="10" id="UWL-A6-BjV"/>
-                                            <constraint firstItem="cbA-8x-UEd" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="2h6-fA-PSn" secondAttribute="trailing" constant="20" id="Uit-bV-Dti"/>
+                                            <constraint firstItem="cbA-8x-UEd" firstAttribute="leading" secondItem="2h6-fA-PSn" secondAttribute="trailing" priority="999" constant="20" id="Uit-bV-Dti"/>
                                             <constraint firstItem="2h6-fA-PSn" firstAttribute="top" secondItem="Juh-XV-Ska" secondAttribute="top" constant="10" id="WaJ-CH-azN"/>
                                             <constraint firstItem="2h6-fA-PSn" firstAttribute="leading" secondItem="Juh-XV-Ska" secondAttribute="leading" constant="20" id="jeJ-N5-TV7"/>
                                         </constraints>
@@ -409,13 +408,13 @@
     </scenes>
     <resources>
         <namedColor name="Album Contents">
-            <color red="0.25882352941176473" green="0.47843137254901963" blue="0.63137254901960782" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.36100000143051147" green="0.48199999332427979" blue="0.23100000619888306" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Album Title">
-            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.97600001096725464" green="0.97299998998641968" blue="0.9179999828338623" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Full Photo Background">
-            <color red="0.6470588235294118" green="0.74509803921568629" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.36100000143051147" green="0.48199999332427979" blue="0.23100000619888306" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Photo Title">
             <color red="0.97647058823529409" green="0.97254901960784312" blue="0.91764705882352937" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -423,20 +422,14 @@
         <namedColor name="Post Body">
             <color red="0.25" green="0.25" blue="0.25" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
-        <namedColor name="Post Body">
-            <color red="0.25" green="0.25" blue="0.25" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="Post Body">
-            <color red="0.25" green="0.25" blue="0.25" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
         <namedColor name="Post Details">
-            <color red="0.97647058823529409" green="0.97254901960784312" blue="0.91764705882352937" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.97600001096725464" green="0.97299998998641968" blue="0.9179999828338623" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Post List">
-            <color red="0.98431372549019602" green="0.96470588235294119" blue="0.95294117647058818" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </namedColor>
         <namedColor name="Post Title">
-            <color red="0.1000000015" green="0.1000000015" blue="0.1000000015" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.36100000143051147" green="0.48199999332427979" blue="0.23100000619888306" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Separator">
             <color red="0.0" green="0.0" blue="0.0" alpha="0.079999998211860657" colorSpace="custom" customColorSpace="sRGB"/>

@@ -115,7 +115,6 @@ class PostDetailsHeaderView: UICollectionReusableView {
         return view
     }()
     
-    
     override func systemLayoutSizeFitting(_ targetSize: CGSize, withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority, verticalFittingPriority: UILayoutPriority) -> CGSize {
         
         // define label's max width so height can be calculated

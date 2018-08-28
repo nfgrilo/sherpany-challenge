@@ -260,6 +260,14 @@ extension PostDetailsDataSource: UICollectionViewDelegateFlowLayout {
             
         else {
             // album title
+            if let view = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionElementKindSectionHeader, withReuseIdentifier: PostAlbumHeaderView.viewIdentifier, for: IndexPath(row: 0, section: section)) as? PostAlbumHeaderView {
+                // calculate fitting height after laying out with model data
+                let albumIndex = self.albumIndex(for: section)
+                view.title = albumSections?[albumIndex].title ?? ""
+                return view.systemLayoutSizeFitting(collectionView.bounds.size,
+                                                    withHorizontalFittingPriority: .required,
+                                                    verticalFittingPriority: .defaultLow)
+            }
             return CGSize(width: collectionView.frame.width, height: PostAlbumHeaderView.headerHeight)
         }
     }

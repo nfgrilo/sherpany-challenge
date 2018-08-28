@@ -40,6 +40,15 @@ class PostDetailsViewController: UICollectionViewController, Storyboarded {
         }
     }
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        // refresh for Dynamic Type
+        NotificationCenter.default.addObserver(forName: NSNotification.Name.UIContentSizeCategoryDidChange, object: nil, queue: nil) { [weak self] _ in
+            self?.reloadData(restoreScrolling: true)
+        }
+    }
+    
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         
