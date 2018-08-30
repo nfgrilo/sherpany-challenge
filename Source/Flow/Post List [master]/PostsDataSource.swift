@@ -125,10 +125,14 @@ extension PostsDataSource: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didEndEditingRowAt indexPath: IndexPath?) {
         // restore selection (if it wasn't removed)
-        if indexPath != selectedIndexPath, let oldSelection = selectedIndexPath {
+        if indexPath != selectedIndexPath, let oldSelection = selectedIndexPath, let indexPath = indexPath {
+            // fix selection if needed
+            let newSelection = indexPath.row > oldSelection.row ? oldSelection : IndexPath(row: max(0, oldSelection.row - 1), section: oldSelection.section)
             // -> do it on next run loop
             DispatchQueue.main.async {
-                tableView.selectRow(at: oldSelection, animated: false, scrollPosition: .none)
+                let _ = tableView.delegate?.tableView?(tableView, willSelectRowAt: newSelection)
+                tableView.selectRow(at: newSelection, animated: false, scrollPosition: .none)
+                tableView.delegate?.tableView?(tableView, didSelectRowAt: newSelection)
             }
         }
     }
