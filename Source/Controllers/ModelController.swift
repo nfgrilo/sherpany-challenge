@@ -24,6 +24,9 @@ class ModelController {
     /// This is handled on `ModelController+Delegate`.
     fileprivate var delegates = NSPointerArray.weakObjects()
     
+    /// Are we fetching & merging data with persisted one?
+    private var isRefreshingData: Bool = false
+    
     
     /// Initialize the model controller.
     ///
@@ -239,13 +242,27 @@ class ModelController {
     ///
     /// - Parameter completion: Completion closure called when complete.
     func refreshDataOnline(completion: ((Bool) -> Void)? = nil) {
+        guard !isRefreshingData else {
+            print("⚠️ Data is already being fetched & merged")
+            return
+        }
+        isRefreshingData = true
+        
         // 1. fetch all data at once (Requirement #3)
         print("Fetching data from REST API...")
         notifyDelegates() { delegate in
             delegate.dataWillRefresh()
         }
         apiController.fetchAllData { [weak self] result in
-            // this closure is executed on a background thread (background QOS)
+            
+            // final complete closure
+            let finishClosure: (Bool) -> Void = { success in
+                completion?(success)
+                self?.notifyDelegates() { delegate in
+                    delegate.dataDidRefresh(success: success)
+                }
+                self?.isRefreshingData = false
+            }
             
             var onlineData: AggregateResponse?
             
@@ -255,22 +272,19 @@ class ModelController {
                 onlineData = response.first
             case .failure(let error):
                 print("Error fetching online data: \(error)")
-                completion?(false)
+                finishClosure(false)
                 return
             }
             guard let fetchedData = onlineData else {
-                completion?(false)
+                finishClosure(false)
                 return
             }
             
             // 2. merge fetched data with persisted data
             //    & call completion
             //    & notify delegates when done
-            self?.mergeData(from: fetchedData) { [weak self] in
-                completion?(true)
-                self?.notifyDelegates() { delegate in
-                    delegate.dataDidRefresh(success: true)
-                }
+            self?.mergeData(from: fetchedData) {
+                finishClosure(true)
             }
         }
     }
