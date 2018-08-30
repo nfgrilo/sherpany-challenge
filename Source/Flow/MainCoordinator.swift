@@ -58,6 +58,8 @@ class MainCoordinator: Coordinator {
         splitViewController.maximumPrimaryColumnWidth = splitViewController.minimumPrimaryColumnWidth
         
         // setup navigation bar
+        //  -> set status bar white (+ `UIViewControllerBasedStatusBarAppearance=NO` on Info.plist)
+        UIApplication.shared.statusBarStyle = .lightContent
         //  -> hide text on back buttons (only showing "<")
         UIBarButtonItem.appearance().setTitleTextAttributes([ .foregroundColor: UIColor.clear ], for: .normal)
         UIBarButtonItem.appearance().setTitleTextAttributes([ .foregroundColor : UIColor.clear ], for: .highlighted)
