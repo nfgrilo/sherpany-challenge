@@ -117,7 +117,6 @@ class ModelController {
                     context.delete(object)
                 }
                 try context.save()
-                self?.container.saveToPersistentStore()
             } catch {
                 print("Failed to delete post with error: \(error)")
             }
@@ -373,8 +372,7 @@ class ModelController {
             do {
                 if context.hasChanges {
                     try context.save()
-                    self?.container.saveToPersistentStore()
-                    print("Successfuly saved to Core Data.")
+                    print("Successfuly saved context")
                 }
             } catch {
                 print("Failed to save to Core Data: \(error).")

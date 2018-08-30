@@ -11,6 +11,7 @@ import CoreData
 @testable import Sherpany_Posts
 
 class MockCoreDataContainer: CoreDataContainer {
+    
     override func newBackgroundManagedObjectContext() -> NSManagedObjectContext {
         if bgManagedObjectContext == nil {
             let managedObjectContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
@@ -23,6 +24,4 @@ class MockCoreDataContainer: CoreDataContainer {
     }
     
     private var bgManagedObjectContext: NSManagedObjectContext?
-    
-    override func saveToPersistentStore() {}
 }

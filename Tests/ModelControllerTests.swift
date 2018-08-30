@@ -249,13 +249,13 @@ class ModelControllerTests: XCTestCase {
         
         let e = XCTestExpectation(description: "Data received")
         modelController.refreshDataOnline() { [weak self] success in
-            defer { e.fulfill() /* fullfill expectation on return */ }
-
             // assertions after merge
             XCTAssert(success, "Completion closure was called on success")
             
             // we're using the main context, bound to main thread
             DispatchQueue.main.sync {
+                defer { e.fulfill() /* fullfill expectation on return */ }
+                
                 // post 1 was updated
                 let post1 = self?.post(id: 1)
                 XCTAssertNotEqual(oldPost1Title, post1?.title, "Post 1 title was updated")
@@ -393,7 +393,7 @@ class ModelControllerTests: XCTestCase {
 extension ModelControllerTests {
     
     func createFakeData() {
-        let context = mockPersistantContainer.backgroundManagedObjectContext
+        let context = mockPersistantContainer.newBackgroundManagedObjectContext()
         context.performAndWait {
             // user 1
             let user1 = ManagedUser(context: context)
@@ -456,7 +456,7 @@ extension ModelControllerTests {
     }
     
     func removeFakeData() {
-        let context = mockPersistantContainer.backgroundManagedObjectContext
+        let context = mockPersistantContainer.newBackgroundManagedObjectContext()
         context.performAndWait {
             let userRequest: NSFetchRequest<ManagedUser> = ManagedUser.fetchRequest()
             for obj in (try! context.fetch(userRequest)) {
