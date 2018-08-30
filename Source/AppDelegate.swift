@@ -31,6 +31,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        guard NSClassFromString("XCTestCase") == nil else {
+            // if running tests, return
+            return false
+        }
+        
         // window
         let window = UIWindow(frame: UIScreen.main.bounds)
         self.window = window
@@ -38,7 +43,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         // shared controllers
         let apiController = APIController()
         self.apiController = apiController
-        let modelController = ModelController(apiController: apiController)
+        let modelController = ModelController(container: persistentContainer, apiController: apiController)
         self.modelController = modelController
         let photoController = PhotoController()
         self.photoController = photoController
@@ -58,5 +63,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         modelController?.refreshDataOnline()
     }
 
+    
+    // MARK: - Core Data stack
+    
+    /// The Core Data container that encapsulates the entire Core Data stack.
+    lazy var persistentContainer: CoreDataContainer = {
+        let container = CoreDataContainer(name: "Posts")
+        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+            if let error = error as NSError? {
+                fatalError("Failed to load Core Data stack: \(error), \(error.userInfo)")
+            }
+            container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        })
+        return container
+    }()
+    
 }
+
 

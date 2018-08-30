@@ -13,6 +13,9 @@ import CoreData
 
 class ModelController {
     
+    /// Persistent store coordinator.
+    private var container: CoreDataContainer
+    
     /// REST API controller.
     private var apiController: APIController
     
@@ -24,8 +27,11 @@ class ModelController {
     
     /// Initialize the model controller.
     ///
-    /// - Parameter apiController: The shared instance of API controller for data fetching.
-    init(apiController: APIController) {
+    /// - Parameters:
+    ///   - container: The shared instance of Core Data container.
+    ///   - apiController: The shared instance of API controller for data fetching.
+    init(container: CoreDataContainer, apiController: APIController) {
+        self.container = container
         self.apiController = apiController
     }
     
@@ -36,7 +42,9 @@ class ModelController {
     ///
     /// - Parameter completion: An array of `Post` objects.
     func allPosts(completion: @escaping ([Post]) -> Void) {
-        persistentContainer.performBackgroundTask { context in
+        // reads can be done on readonly main context
+        let context = container.mainManagedObjectContext
+        context.perform {
             // setup fetch request
             let fetchRequest: NSFetchRequest<ManagedPost> = ManagedPost.fetchRequest()
             fetchRequest.sortDescriptors = [NSSortDescriptor(key: "id", ascending: true)]
@@ -64,7 +72,9 @@ class ModelController {
     ///   - id: The post id.
     ///   - completion: Completion closure called when complete.
     func post(with id: Int64, completion: @escaping (Post?) -> Void) {
-        persistentContainer.performBackgroundTask { context in
+        // reads can be done on readonly main context
+        let context = container.mainManagedObjectContext
+        context.perform {
             // setup fetch request
             let fetchRequest: NSFetchRequest<ManagedPost> = ManagedPost.fetchRequest()
             fetchRequest.predicate = NSPredicate(format: "id == %i", id)
@@ -79,7 +89,7 @@ class ModelController {
                     post = Post(managedPost: managedPost, fetchUserAlbums: true)
                 }
             } catch {
-                print("Failed to delete post with error: \(error)")
+                print("Failed to get post with error: \(error)")
             }
             
             // call completion
@@ -93,7 +103,9 @@ class ModelController {
     ///   - id: The post id.
     ///   - completion: Completion closure called when complete.
     func removePost(_ id: Int64, completion: @escaping () -> Void) {
-        persistentContainer.performBackgroundTask { [weak self] context in
+        // writes are done on background on a private queue
+        let context = container.newBackgroundManagedObjectContext()
+        context.perform { [weak self] in
             // setup fetch request
             let fetchRequest: NSFetchRequest<ManagedPost> = ManagedPost.fetchRequest()
             fetchRequest.predicate = NSPredicate(format: "id == %i", id)
@@ -101,11 +113,11 @@ class ModelController {
             
             // remove post
             do {
-                let objects = try context.fetch(fetchRequest)
-                for object in objects {
+                if let object = try context.fetch(fetchRequest).first {
                     context.delete(object)
                 }
                 try context.save()
+                self?.container.saveToPersistentStore()
             } catch {
                 print("Failed to delete post with error: \(error)")
             }
@@ -121,6 +133,72 @@ class ModelController {
     }
     
     
+    // MARK: - Users
+    
+    /// Gets the user with the specified id
+    ///
+    /// - Parameters:
+    ///   - id: The user id.
+    ///   - completion: Completion closure called when complete.
+    func user(with id: Int64, completion: @escaping (User?) -> Void) {
+        // reads can be done on readonly main context
+        let context = container.mainManagedObjectContext
+        context.perform {
+            // setup fetch request
+            let fetchRequest: NSFetchRequest<ManagedUser> = ManagedUser.fetchRequest()
+            fetchRequest.predicate = NSPredicate(format: "id == %i", id)
+            fetchRequest.fetchLimit = 1
+            
+            // get post
+            var user: User?
+            do {
+                if let managedUser = try context.fetch(fetchRequest).first {
+                    user = User(managedUser: managedUser)
+                }
+            } catch {
+                print("Failed to get user with error: \(error)")
+            }
+            
+            // call completion
+            completion(user)
+        }
+    }
+    
+    
+    // MARK: - Albums
+    
+    /// Gets the album with the specified id
+    ///
+    /// - Parameters:
+    ///   - id: The album id.
+    ///   - completion: Completion closure called when complete.
+    func album(with id: Int64, completion: @escaping (Album?) -> Void) {
+        // reads can be done on readonly main context
+        let context = container.mainManagedObjectContext
+        context.perform {
+            // setup fetch request
+            let fetchRequest: NSFetchRequest<ManagedAlbum> = ManagedAlbum.fetchRequest()
+            fetchRequest.predicate = NSPredicate(format: "id == %i", id)
+            //  -> pre-fetching avoiding multiple fault fires
+            fetchRequest.relationshipKeyPathsForPrefetching = ["photos"]
+            fetchRequest.fetchLimit = 1
+            
+            // get post
+            var album: Album?
+            do {
+                if let managedAlbum = try context.fetch(fetchRequest).first {
+                    album = Album(managedAlbum: managedAlbum)
+                }
+            } catch {
+                print("Failed to get album with error: \(error)")
+            }
+            
+            // call completion
+            completion(album)
+        }
+    }
+    
+    
     // MARK: - Photos
     
     /// Gets the photo with the specified id
@@ -129,7 +207,9 @@ class ModelController {
     ///   - id: The photo id.
     ///   - completion: Completion closure called when complete.
     func photo(with id: Int64, completion: @escaping (Photo?) -> Void) {
-        persistentContainer.performBackgroundTask { context in
+        // reads can be done on readonly main context
+        let context = container.mainManagedObjectContext
+        context.perform {
             // setup fetch request
             let fetchRequest: NSFetchRequest<ManagedPhoto> = ManagedPhoto.fetchRequest()
             fetchRequest.predicate = NSPredicate(format: "id == %i", id)
@@ -157,7 +237,9 @@ class ModelController {
     ///
     /// This will fetch all the data from the REST API and merge it with existing
     /// persisted data on Core Data.
-    func refreshDataOnline() {
+    ///
+    /// - Parameter completion: Completion closure called when complete.
+    func refreshDataOnline(completion: ((Bool) -> Void)? = nil) {
         // 1. fetch all data at once (Requirement #3)
         print("Fetching data from REST API...")
         notifyDelegates() { delegate in
@@ -174,15 +256,21 @@ class ModelController {
                 onlineData = response.first
             case .failure(let error):
                 print("Error fetching online data: \(error)")
+                completion?(false)
                 return
             }
-            guard let fetchedData = onlineData else { return }
+            guard let fetchedData = onlineData else {
+                completion?(false)
+                return
+            }
             
             // 2. merge fetched data with persisted data
+            //    & call completion
             //    & notify delegates when done
             self?.mergeData(from: fetchedData) { [weak self] in
+                completion?(true)
                 self?.notifyDelegates() { delegate in
-                    delegate.dataDidRefresh()
+                    delegate.dataDidRefresh(success: true)
                 }
             }
         }
@@ -192,7 +280,9 @@ class ModelController {
     ///
     /// Requirement #5: ✅ (merge fetched data with persisted data)
     ///
-    /// - Parameter fetchedData: An `AggregateResponse` object with all fresh fetched data.
+    /// - Parameters:
+    ///   - fetchedData: An `AggregateResponse` object with all fresh fetched data.
+    ///   - completion: Completion closure called when complete.
     private func mergeData(from fetchedData: AggregateResponse, completion: (() -> Void)? = nil) {
         print("Merging fetched data with persisted data...")
         // Merging will be performed by:
@@ -201,8 +291,9 @@ class ModelController {
         //    its `id`, creating a new one if needed:
         //      * added `id` as Entity Constraint to all entities
         //      * adjusted managed object context merge policy
-        persistentContainer.performBackgroundTask({ [weak self] (context) in
-            
+        
+        let context = container.newBackgroundManagedObjectContext()
+        context.perform { [weak self] in
             // merge operations should occur on a property basis (`id`)
             // and the in memory version “wins” over the persisted one.
             // all entities have been modeled with an `id` constraint.
@@ -282,6 +373,7 @@ class ModelController {
             do {
                 if context.hasChanges {
                     try context.save()
+                    self?.container.saveToPersistentStore()
                     print("Successfuly saved to Core Data.")
                 }
             } catch {
@@ -290,7 +382,7 @@ class ModelController {
             
             // finish
             completion?()
-        })
+        }
     }
     
     
@@ -329,28 +421,12 @@ class ModelController {
         do {
             let objects = try context.fetch(fetchRequest) as? [NSManagedObject]
             for object in objects ?? [] {
-                print("Deleting \(object)")
                 context.delete(object)
             }
         } catch {
             print("Failed to delete entries with error: \(error)")
         }
     }
-    
- 
-    // MARK: - Core Data stack
-    
-    /// The Core Data container that encapsulates the entire Core Data stack.
-    lazy var persistentContainer: NSPersistentContainer = {
-        let container = NSPersistentContainer(name: "Posts")
-        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
-            if let error = error as NSError? {
-                fatalError("Failed to load Core Data stack: \(error), \(error.userInfo)")
-            }
-            container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-        })
-        return container
-    }()
     
 }
 
@@ -377,11 +453,22 @@ extension ModelController {
     ///
     /// - Parameter closure: The closure to be called for each delegate.
     func notifyDelegates(_ closure: (ModelControllerDelegate) -> Void) {
+        registeredDelegates().forEach {
+            closure($0)
+        }
+    }
+    
+    /// Gets existing delegates.
+    ///
+    /// - Returns: An array of delegates.
+    func registeredDelegates() -> [ModelControllerDelegate] {
+        var list: [ModelControllerDelegate] = []
         for i in 0..<delegates.count {
             if let delegate = delegates.object(at: i) as? ModelControllerDelegate {
-                closure(delegate)
+                list.append(delegate)
             }
         }
+        return list
     }
     
 }

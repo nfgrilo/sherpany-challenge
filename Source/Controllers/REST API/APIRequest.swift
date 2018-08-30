@@ -15,16 +15,14 @@ protocol NetworkRequest: class {
     associatedtype Model
     
     /// Load a response from the Rest API.
-    func load(completion: @escaping ([Model]?) -> Void)
+    func load(session: URLSession, completion: @escaping ([Model]?) -> Void)
     
     /// Parse a response returned by the Rest API.
     func parseResponse(_ data: Data) -> [Model]?
 }
 
 extension NetworkRequest {
-    fileprivate func load(_ url: URL, completion: @escaping ([Model]?) -> Void) {
-        let configuration = URLSessionConfiguration.ephemeral
-        let session = URLSession(configuration: configuration, delegate: nil, delegateQueue: OperationQueue.main)
+    func load(_ url: URL, session: URLSession, completion: @escaping ([Model]?) -> Void) {
         let task = session.dataTask(with: url, completionHandler: { [weak self] (data: Data?, response: URLResponse?, error: Error?) -> Void in
             guard let data = data else {
                 completion(nil)
@@ -59,12 +57,12 @@ extension APIRequest: NetworkRequest {
         }
     }
     
-    func load(completion: @escaping ([Resource.Model]?) -> Void) {
+    func load(session: URLSession, completion: @escaping ([Resource.Model]?) -> Void) {
         guard let url = resource.url else {
             completion(nil)
             return
         }
-        load(url, completion: completion)
+        load(url, session: session, completion: completion)
     }
 }
 

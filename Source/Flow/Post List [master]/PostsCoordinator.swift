@@ -104,6 +104,9 @@ class PostsCoordinator: Coordinator {
         // remove from Core Data
         dataSource?.removePost(in: tableView, at: indexPath)
         
+        // clear remembered selection
+        selectedPost = nil
+        
         // inform post selection delegate that selected post has been changed
         postSelectedDelegate?.postSelected(postId: nil)
     }
@@ -114,6 +117,9 @@ class PostsCoordinator: Coordinator {
     func setSearchFeedback(_ text: String?) {
         viewController?.setSearchFeedbackView(with: text)
     }
+    
+    /// Whether data is being refreshed (fetched & merged into Core Data).
+    var isRefreshingData: Bool = false
 }
 
 
@@ -124,13 +130,15 @@ extension PostsCoordinator: ModelControllerDelegate {
     }
     
     func dataWillRefresh() {
+        isRefreshingData = true
+        
         // show loading indicator
         DispatchQueue.main.async { [weak self] in
             self?.viewController?.showProgressView(true)
         }
     }
     
-    func dataDidRefresh() {
+    func dataDidRefresh(success: Bool) {
         // hide loading indicator
         DispatchQueue.main.async { [weak self] in
             self?.viewController?.showProgressView(false)
@@ -159,6 +167,8 @@ extension PostsCoordinator: ModelControllerDelegate {
                     tableView.selectRow(at: newSelection, animated: false, scrollPosition: .none)
                     tableView.delegate?.tableView?(tableView, didSelectRowAt: newSelection)
                 }
+                
+                self?.isRefreshingData = false
             }
             
         }

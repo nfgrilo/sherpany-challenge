@@ -19,8 +19,18 @@ class APIController {
         case failure(Error)
     }
     
+    /// URL session used to make requests.
+    private var session: URLSession
+    
     /// API requests currently being executed.
     private var requests: [AnyObject] = []
+    
+    
+    // MARK: - Initialization
+    
+    init(session: URLSession = .shared) {
+        self.session = session
+    }
     
     
     // MARK: - Fetch All Data
@@ -32,10 +42,10 @@ class APIController {
         let dispatchGroup = DispatchGroup()
         
         // variables that will hold fetched values
-        var posts: [PostResponse]!
-        var users: [UserResponse]!
-        var albums: [AlbumResponse]!
-        var photos: [PhotoResponse]!
+        var posts: [PostResponse]?
+        var users: [UserResponse]?
+        var albums: [AlbumResponse]?
+        var photos: [PhotoResponse]?
         var errors: [Error] = []
         
         // fetch all posts
@@ -96,11 +106,15 @@ class APIController {
                 completion(.failure( APIError.compoundErrors(errors: errors) ))
                 return
             }
-            let allData = AggregateResponse(posts: posts, users: users, albums: albums, photos: photos)
-            completion(.success( [allData] ))
+            if let posts = posts, let users = users, let albums = albums, let photos = photos {
+                let allData = AggregateResponse(posts: posts, users: users, albums: albums, photos: photos)
+                completion(.success( [allData] ))
+            }
+            else {
+                completion(.failure( APIError.emptyResponse ))
+            }
         }
     }
-    
     
     // MARK: - Individual data fetching
     
@@ -117,7 +131,7 @@ class APIController {
         // keep a strong ref to request
         requests.append(request)
         
-        request.load { [weak self] (postResponse: [PostResponse]?) in
+        request.load(session: session) { [weak self] (postResponse: [PostResponse]?) in
             // call completion
             guard let posts = postResponse else {
                 completion(.failure( APIError.emptyResponse ))
@@ -145,7 +159,7 @@ class APIController {
         // keep a strong ref to request
         requests.append(request)
         
-        request.load { [weak self] (userResponse: [UserResponse]?) in
+        request.load(session: session) { [weak self] (userResponse: [UserResponse]?) in
             // call completion
             guard let users = userResponse else {
                 completion(.failure( APIError.emptyResponse ))
@@ -180,7 +194,7 @@ class APIController {
         // keep a strong ref to request
         requests.append(request)
         
-        request.load { [weak self] (albumResponse: [AlbumResponse]?) in
+        request.load(session: session) { [weak self] (albumResponse: [AlbumResponse]?) in
             // call completion
             guard let albums = albumResponse else {
                 completion(.failure( APIError.emptyResponse ))
@@ -215,7 +229,7 @@ class APIController {
         // keep a strong ref to request
         requests.append(request)
         
-        request.load { [weak self] (photoResponse: [PhotoResponse]?) in
+        request.load(session: session) { [weak self] (photoResponse: [PhotoResponse]?) in
             // call completion
             guard let photos = photoResponse else {
                 completion(.failure( APIError.emptyResponse ))

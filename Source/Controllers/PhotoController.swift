@@ -67,9 +67,28 @@ class PhotoController {
     /// Writes are made without concurrency (asynchronously with barrier).
     private var executingTasks: [Task] = []
     
+    /// URL session used to make requests.
+    private var session: URLSession
+    
     
     /// Initialize the controller.
-    init() {
+    ///
+    /// - Parameter session: An optional pre-configured URL session (usefull for testing).
+    init(session: URLSession? = nil) {
+        // URL session to use
+        if let session = session {
+            self.session = session
+        }
+        else {
+            //  > PS: `URLSessionConfiguration.default` should be used instead to take
+            //  > advantage of disk caching of photos, etc. However, for the code challenge
+            //  > purpose, it is intentionally using `.ephemeral` (no disk cache - memory only).
+            let configuration = URLSessionConfiguration.ephemeral
+            configuration.httpMaximumConnectionsPerHost = PhotoController.maxConcurrentDownloads
+            let session = URLSession(configuration: configuration)
+            self.session = session
+        }
+        
         // limit number of cached photos
         cache.countLimit = 500
         
@@ -103,10 +122,24 @@ class PhotoController {
     ///
     /// - Parameters:
     ///   - urls: The photo URLs.
+    ///   - priority: Priority for these URLs.
     ///   - completion: The closure to be called when complete.
     func fetchPhotos(from urls: [URL], priority: Task.Priority = .normal, completion: TaskCompletion? = nil) {
+        let priorities = urls.map { _ in priority }
+        fetchPhotos(from: urls, priorities: priorities, completion: completion)
+    }
+    
+    /// Fetch and cache photos from the network.
+    ///
+    /// - Parameters:
+    ///   - urls: The photo URLs.
+    ///   - priorities: Priorities for each of these URLs.
+    ///   - completion: The closure to be called when complete.
+    func fetchPhotos(from urls: [URL], priorities: [Task.Priority]? = nil, completion: TaskCompletion? = nil) {
         var newTasks: [Task] = []
-        for url in urls {
+        for i in 0..<urls.count {
+            let url = urls[i]
+            
             // photo already cached?
             if let cachedPhoto = photo(for: url) {
                 completion?(url, cachedPhoto)
@@ -119,7 +152,12 @@ class PhotoController {
                 continue
             }
             //  -> update priority
-            task.priority = priority
+            if let priorities = priorities {
+                let priorityIndex = max(0, min(i, priorities.count - 1))
+                if priorityIndex < priorities.count {
+                    task.priority = priorities[priorityIndex]
+                }
+            }
             //  -> define task work item (fetch image & notify "observers")
             if task.workItem == nil {
                 task.workItem = DispatchWorkItem() { [weak self, weak task] in
@@ -349,8 +387,7 @@ class PhotoController {
     private let tasksQueue = DispatchQueue(label: "PhotoController Tasks Access", qos: .background, attributes: .concurrent)
     
     /// Concurrent queue for network requests.
-    private let networkQueue = DispatchQueue(label: "PhotoController Network Access", qos: .background, attributes: .concurrent)
-    
+    internal var networkQueue = DispatchQueue(label: "PhotoController Network Access", qos: .background, attributes: .concurrent)
     
     // MARK: - Network access
     
@@ -378,12 +415,6 @@ class PhotoController {
         }
         
         // setup network data task
-        //  > PS: `URLSessionConfiguration.default` should be used instead to take
-        //  > advantage of disk caching of photos, etc. However, for the code challenge
-        //  > purpose, I intentionally left this `.ephemeral` (no disk cache - memory only).
-        let configuration = URLSessionConfiguration.ephemeral
-        configuration.httpMaximumConnectionsPerHost = PhotoController.maxConcurrentDownloads
-        let session = URLSession(configuration: configuration)
         let dataTask = session.dataTask(with: task.url, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) -> Void in
             guard let data = data else {
                 completion?(task.url, nil)

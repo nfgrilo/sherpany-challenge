@@ -97,14 +97,16 @@ extension PostsDataSource: UITableViewDelegate {
         }
     }
     
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        let selectedCell = tableView.cellForRow(at: indexPath) as? PostTableViewCell
+        selectedCell?.isSelected = false
+    }
+    
     
     // MARK: Swipe to delete
     // Requirement #8: ✅
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        // don't allow deletes if searching!
-        guard !isSearching() else { return nil }
-        
         // delete action
         let delete = UITableViewRowAction(style: .destructive, title: "Delete") { [weak self] (action, indexPath) in
             // inform coordinator that selected post has been deleted from table view
@@ -112,6 +114,18 @@ extension PostsDataSource: UITableViewDelegate {
         }
         
         return [delete]
+    }
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        // don't allow deletes while searching or refreshing data!
+        return !isSearching() && !isRefreshingData()
+    }
+    
+    /// Check if data is currently being updated.
+    ///
+    /// - Returns: Whether data is being updated (fetched & merged into Core Data).
+    func isRefreshingData() -> Bool {
+        return coordinator?.isRefreshingData ?? false
     }
 }
 

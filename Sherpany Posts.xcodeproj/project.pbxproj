@@ -12,8 +12,24 @@
 		28111F532122529F00CA324F /* PostsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28111F522122529F00CA324F /* PostsViewController.swift */; };
 		28111F55212255C300CA324F /* PostDetailsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28111F54212255C300CA324F /* PostDetailsCoordinator.swift */; };
 		28111F57212258E600CA324F /* PostsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28111F56212258E600CA324F /* PostsDataSource.swift */; };
+		2826D8BE21359224000D815A /* ModelControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2826D8BD21359224000D815A /* ModelControllerTests.swift */; };
+		2826D8C6213598CD000D815A /* APIControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2826D8C5213598CD000D815A /* APIControllerTests.swift */; };
+		2826D8C92135B015000D815A /* MockURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2826D8C82135B015000D815A /* MockURLSession.swift */; };
+		2826D8CC2135B280000D815A /* AllPosts.json in Resources */ = {isa = PBXBuildFile; fileRef = 2826D8CB2135B280000D815A /* AllPosts.json */; };
+		2826D8CE2135B3B0000D815A /* AllUsers.json in Resources */ = {isa = PBXBuildFile; fileRef = 2826D8CD2135B3B0000D815A /* AllUsers.json */; };
+		2826D8D02135B3CC000D815A /* AllAlbums.json in Resources */ = {isa = PBXBuildFile; fileRef = 2826D8CF2135B3CC000D815A /* AllAlbums.json */; };
+		2826D8D22135B3E4000D815A /* AllPhotos.json in Resources */ = {isa = PBXBuildFile; fileRef = 2826D8D12135B3E4000D815A /* AllPhotos.json */; };
+		2826D8D42135B8CA000D815A /* OnePost.json in Resources */ = {isa = PBXBuildFile; fileRef = 2826D8D32135B8CA000D815A /* OnePost.json */; };
+		2826D8D62135B8D4000D815A /* OneUser.json in Resources */ = {isa = PBXBuildFile; fileRef = 2826D8D52135B8D4000D815A /* OneUser.json */; };
+		2826D8D82135B8DD000D815A /* OneAlbum.json in Resources */ = {isa = PBXBuildFile; fileRef = 2826D8D72135B8DD000D815A /* OneAlbum.json */; };
+		2826D8DA2135B8E8000D815A /* OnePhoto.json in Resources */ = {isa = PBXBuildFile; fileRef = 2826D8D92135B8E8000D815A /* OnePhoto.json */; };
+		2826D8DC21368F3E000D815A /* FakeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2826D8DB21368F3E000D815A /* FakeData.swift */; };
+		2826D8DF2136AC36000D815A /* CoreDataContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2826D8DD2136AC32000D815A /* CoreDataContainer.swift */; };
 		2827CCDA212F0A1C008023EB /* FullscreenPhotoCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2827CCD9212F0A1C008023EB /* FullscreenPhotoCoordinator.swift */; };
 		2827CCDC212F0A91008023EB /* FullscreenPhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2827CCDB212F0A91008023EB /* FullscreenPhotoViewController.swift */; };
+		28406AAB2136F9AA0024CD03 /* MockCoreDataContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28406AAA2136F9AA0024CD03 /* MockCoreDataContainer.swift */; };
+		28406AAD21370BC00024CD03 /* PhotoControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28406AAC21370BC00024CD03 /* PhotoControllerTests.swift */; };
+		28406AAF21370D8C0024CD03 /* SamplePhoto.png in Resources */ = {isa = PBXBuildFile; fileRef = 28406AAE21370D8C0024CD03 /* SamplePhoto.png */; };
 		286DE1DE212241E600F2ED03 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286DE1DD212241E600F2ED03 /* Coordinator.swift */; };
 		286DE1E02122424600F2ED03 /* Storyboarded.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286DE1DF2122424600F2ED03 /* Storyboarded.swift */; };
 		28902E06212C7D2C008C0C9F /* PostAlbumHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28902E05212C7D2C008C0C9F /* PostAlbumHeaderView.swift */; };
@@ -48,14 +64,42 @@
 		28FC07C12126CD7700C6EE7B /* NoPostDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28FC07C02126CD7700C6EE7B /* NoPostDetailsViewController.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		2826D8C021359224000D815A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 28DD3B1B2121EDF200B05A4B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 28DD3B222121EDF200B05A4B;
+			remoteInfo = "Sherpany Posts";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		28111F4C2122445300CA324F /* MainCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
 		28111F502122507A00CA324F /* PostsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostsCoordinator.swift; sourceTree = "<group>"; };
 		28111F522122529F00CA324F /* PostsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostsViewController.swift; sourceTree = "<group>"; };
 		28111F54212255C300CA324F /* PostDetailsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailsCoordinator.swift; sourceTree = "<group>"; };
 		28111F56212258E600CA324F /* PostsDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostsDataSource.swift; sourceTree = "<group>"; };
+		2826D8BB21359224000D815A /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2826D8BD21359224000D815A /* ModelControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelControllerTests.swift; sourceTree = "<group>"; };
+		2826D8BF21359224000D815A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2826D8C5213598CD000D815A /* APIControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIControllerTests.swift; sourceTree = "<group>"; };
+		2826D8C82135B015000D815A /* MockURLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockURLSession.swift; sourceTree = "<group>"; };
+		2826D8CB2135B280000D815A /* AllPosts.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = AllPosts.json; sourceTree = "<group>"; };
+		2826D8CD2135B3B0000D815A /* AllUsers.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = AllUsers.json; sourceTree = "<group>"; };
+		2826D8CF2135B3CC000D815A /* AllAlbums.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = AllAlbums.json; sourceTree = "<group>"; };
+		2826D8D12135B3E4000D815A /* AllPhotos.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = AllPhotos.json; sourceTree = "<group>"; };
+		2826D8D32135B8CA000D815A /* OnePost.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = OnePost.json; sourceTree = "<group>"; };
+		2826D8D52135B8D4000D815A /* OneUser.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = OneUser.json; sourceTree = "<group>"; };
+		2826D8D72135B8DD000D815A /* OneAlbum.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = OneAlbum.json; sourceTree = "<group>"; };
+		2826D8D92135B8E8000D815A /* OnePhoto.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = OnePhoto.json; sourceTree = "<group>"; };
+		2826D8DB21368F3E000D815A /* FakeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeData.swift; sourceTree = "<group>"; };
+		2826D8DD2136AC32000D815A /* CoreDataContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataContainer.swift; sourceTree = "<group>"; };
 		2827CCD9212F0A1C008023EB /* FullscreenPhotoCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenPhotoCoordinator.swift; sourceTree = "<group>"; };
 		2827CCDB212F0A91008023EB /* FullscreenPhotoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenPhotoViewController.swift; sourceTree = "<group>"; };
+		28406AAA2136F9AA0024CD03 /* MockCoreDataContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCoreDataContainer.swift; sourceTree = "<group>"; };
+		28406AAC21370BC00024CD03 /* PhotoControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoControllerTests.swift; sourceTree = "<group>"; };
+		28406AAE21370D8C0024CD03 /* SamplePhoto.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SamplePhoto.png; sourceTree = "<group>"; };
 		286DE1DD212241E600F2ED03 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		286DE1DF2122424600F2ED03 /* Storyboarded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storyboarded.swift; sourceTree = "<group>"; };
 		28902E05212C7D2C008C0C9F /* PostAlbumHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostAlbumHeaderView.swift; sourceTree = "<group>"; };
@@ -93,6 +137,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		2826D8B821359224000D815A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		28DD3B202121EDF200B05A4B /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -181,6 +232,45 @@
 			path = "Fullscreen Photo";
 			sourceTree = "<group>";
 		};
+		2826D8BC21359224000D815A /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				2826D8BF21359224000D815A /* Info.plist */,
+				2826D8C5213598CD000D815A /* APIControllerTests.swift */,
+				2826D8BD21359224000D815A /* ModelControllerTests.swift */,
+				28406AAC21370BC00024CD03 /* PhotoControllerTests.swift */,
+				2826D8C72135AFF5000D815A /* Mocks */,
+				2826D8CA2135B265000D815A /* FakeData */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		2826D8C72135AFF5000D815A /* Mocks */ = {
+			isa = PBXGroup;
+			children = (
+				2826D8C82135B015000D815A /* MockURLSession.swift */,
+				28406AAA2136F9AA0024CD03 /* MockCoreDataContainer.swift */,
+			);
+			path = Mocks;
+			sourceTree = "<group>";
+		};
+		2826D8CA2135B265000D815A /* FakeData */ = {
+			isa = PBXGroup;
+			children = (
+				2826D8DB21368F3E000D815A /* FakeData.swift */,
+				28406AAE21370D8C0024CD03 /* SamplePhoto.png */,
+				2826D8CB2135B280000D815A /* AllPosts.json */,
+				2826D8CD2135B3B0000D815A /* AllUsers.json */,
+				2826D8CF2135B3CC000D815A /* AllAlbums.json */,
+				2826D8D12135B3E4000D815A /* AllPhotos.json */,
+				2826D8D32135B8CA000D815A /* OnePost.json */,
+				2826D8D52135B8D4000D815A /* OneUser.json */,
+				2826D8D72135B8DD000D815A /* OneAlbum.json */,
+				2826D8D92135B8E8000D815A /* OnePhoto.json */,
+			);
+			path = FakeData;
+			sourceTree = "<group>";
+		};
 		2827CCD8212F09EF008023EB /* Fullscreen Photo */ = {
 			isa = PBXGroup;
 			children = (
@@ -194,6 +284,7 @@
 			children = (
 				286DE1DD212241E600F2ED03 /* Coordinator.swift */,
 				286DE1DF2122424600F2ED03 /* Storyboarded.swift */,
+				2826D8DD2136AC32000D815A /* CoreDataContainer.swift */,
 				28ECB13A21234A1A00764592 /* Extensions */,
 			);
 			path = "[Shared]";
@@ -211,6 +302,7 @@
 			isa = PBXGroup;
 			children = (
 				28DD3B252121EDF200B05A4B /* Source */,
+				2826D8BC21359224000D815A /* Tests */,
 				28DD3B242121EDF200B05A4B /* Products */,
 			);
 			sourceTree = "<group>";
@@ -219,6 +311,7 @@
 			isa = PBXGroup;
 			children = (
 				28DD3B232121EDF200B05A4B /* Sherpany Posts.app */,
+				2826D8BB21359224000D815A /* Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -297,6 +390,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		2826D8BA21359224000D815A /* Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2826D8C421359224000D815A /* Build configuration list for PBXNativeTarget "Tests" */;
+			buildPhases = (
+				2826D8B721359224000D815A /* Sources */,
+				2826D8B821359224000D815A /* Frameworks */,
+				2826D8B921359224000D815A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2826D8C121359224000D815A /* PBXTargetDependency */,
+			);
+			name = Tests;
+			productName = Tests;
+			productReference = 2826D8BB21359224000D815A /* Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		28DD3B222121EDF200B05A4B /* Sherpany Posts */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 28DD3B3A2121EDF300B05A4B /* Build configuration list for PBXNativeTarget "Sherpany Posts" */;
@@ -325,6 +436,10 @@
 				LastUpgradeCheck = 0940;
 				ORGANIZATIONNAME = NunoGrilo.com;
 				TargetAttributes = {
+					2826D8BA21359224000D815A = {
+						CreatedOnToolsVersion = 9.4.1;
+						TestTargetID = 28DD3B222121EDF200B05A4B;
+					};
 					28DD3B222121EDF200B05A4B = {
 						CreatedOnToolsVersion = 9.4.1;
 					};
@@ -344,11 +459,28 @@
 			projectRoot = "";
 			targets = (
 				28DD3B222121EDF200B05A4B /* Sherpany Posts */,
+				2826D8BA21359224000D815A /* Tests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		2826D8B921359224000D815A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2826D8D02135B3CC000D815A /* AllAlbums.json in Resources */,
+				2826D8DA2135B8E8000D815A /* OnePhoto.json in Resources */,
+				2826D8D42135B8CA000D815A /* OnePost.json in Resources */,
+				2826D8CE2135B3B0000D815A /* AllUsers.json in Resources */,
+				2826D8CC2135B280000D815A /* AllPosts.json in Resources */,
+				2826D8D22135B3E4000D815A /* AllPhotos.json in Resources */,
+				28406AAF21370D8C0024CD03 /* SamplePhoto.png in Resources */,
+				2826D8D82135B8DD000D815A /* OneAlbum.json in Resources */,
+				2826D8D62135B8D4000D815A /* OneUser.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		28DD3B212121EDF200B05A4B /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -379,6 +511,19 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		2826D8B721359224000D815A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				28406AAB2136F9AA0024CD03 /* MockCoreDataContainer.swift in Sources */,
+				2826D8C92135B015000D815A /* MockURLSession.swift in Sources */,
+				28406AAD21370BC00024CD03 /* PhotoControllerTests.swift in Sources */,
+				2826D8C6213598CD000D815A /* APIControllerTests.swift in Sources */,
+				2826D8DC21368F3E000D815A /* FakeData.swift in Sources */,
+				2826D8BE21359224000D815A /* ModelControllerTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		28DD3B1F2121EDF200B05A4B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -409,6 +554,7 @@
 				28111F4D2122445300CA324F /* MainCoordinator.swift in Sources */,
 				28FC07B1212590AE00C6EE7B /* ModelControllerDelegate.swift in Sources */,
 				28ECB13621232FF600764592 /* APIRequest.swift in Sources */,
+				2826D8DF2136AC36000D815A /* CoreDataContainer.swift in Sources */,
 				28ECB13E2123509C00764592 /* Post.swift in Sources */,
 				28111F55212255C300CA324F /* PostDetailsCoordinator.swift in Sources */,
 				28ECB13C21234A2600764592 /* UIAlertController.swift in Sources */,
@@ -423,6 +569,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		2826D8C121359224000D815A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 28DD3B222121EDF200B05A4B /* Sherpany Posts */;
+			targetProxy = 2826D8C021359224000D815A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		28DD3B2F2121EDF200B05A4B /* Main.storyboard */ = {
@@ -444,6 +598,46 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		2826D8C221359224000D815A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = Tests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.nunogrilo.Tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Sherpany Posts.app/Sherpany Posts";
+			};
+			name = Debug;
+		};
+		2826D8C321359224000D815A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = Tests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.nunogrilo.Tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Sherpany Posts.app/Sherpany Posts";
+			};
+			name = Release;
+		};
 		28DD3B382121EDF300B05A4B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -599,6 +793,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		2826D8C421359224000D815A /* Build configuration list for PBXNativeTarget "Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2826D8C221359224000D815A /* Debug */,
+				2826D8C321359224000D815A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		28DD3B1E2121EDF200B05A4B /* Build configuration list for PBXProject "Sherpany Posts" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

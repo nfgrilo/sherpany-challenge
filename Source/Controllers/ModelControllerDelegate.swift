@@ -16,7 +16,7 @@ protocol ModelControllerDelegate: class {
     func dataWillRefresh()
     
     /// Called whenever data is updated from REST API & merged into Core Data.
-    func dataDidRefresh()
+    func dataDidRefresh(success: Bool)
     
     /// Called when a post was removed.
     ///
