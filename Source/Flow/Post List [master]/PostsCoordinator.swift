@@ -87,7 +87,14 @@ class PostsCoordinator: Coordinator {
     /// Called from table view controller when a post has been selected.
     ///
     /// - Parameter id: The index path of selected post.
-    func postSelected(in tableView: UITableView, at indexPath: IndexPath) {
+    func postSelected(in tableView: UITableView, at indexPath: IndexPath?) {
+        guard let indexPath = indexPath else {
+            // clear selection
+            selectedPost = nil
+            postSelectedDelegate?.postSelected(postId: nil)
+            return
+        }
+        
         // remember selection
         selectedPost = dataSource?.post(at: indexPath)
         
@@ -103,12 +110,6 @@ class PostsCoordinator: Coordinator {
     func postDeleted(in tableView: UITableView, at indexPath: IndexPath) {
         // remove from Core Data
         dataSource?.removePost(in: tableView, at: indexPath)
-        
-        // clear remembered selection
-        selectedPost = nil
-        
-        // inform post selection delegate that selected post has been changed
-        postSelectedDelegate?.postSelected(postId: nil)
     }
     
     /// Show search feedback to the user.

@@ -4,7 +4,6 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -257,6 +256,7 @@
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="separatorColor" name="Separator"/>
                                 <inset key="separatorInset" minX="10" minY="0.0" maxX="10" maxY="0.0"/>
+                                <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="PostTableViewCell" rowHeight="84" id="WCw-Qf-5nD" customClass="PostTableViewCell" customModule="Sherpany_Posts" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="300" height="84"/>
@@ -268,17 +268,17 @@
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Post Title" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x4k-Kk-6V8">
                                                     <rect key="frame" x="20" y="15" width="260" height="29.5"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleTitle3"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                    <nil key="highlightedColor"/>
+                                                    <color key="textColor" name="Post List Title"/>
+                                                    <color key="highlightedColor" name="Post List Selection Title"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" verticalCompressionResistancePriority="751" text="Author" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wWJ-Ib-iw8">
                                                     <rect key="frame" x="20" y="52.5" width="260" height="16"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                    <nil key="highlightedColor"/>
+                                                    <color key="textColor" name="Post List Author"/>
+                                                    <color key="highlightedColor" name="Post List Selection Author"/>
                                                 </label>
                                             </subviews>
-                                            <color key="backgroundColor" name="Post List"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
                                                 <constraint firstItem="x4k-Kk-6V8" firstAttribute="top" secondItem="37f-cq-3Eg" secondAttribute="top" constant="15" id="75x-D6-LFk"/>
                                                 <constraint firstItem="wWJ-Ib-iw8" firstAttribute="leading" secondItem="x4k-Kk-6V8" secondAttribute="leading" id="FuG-FN-4Z3"/>
@@ -289,7 +289,7 @@
                                                 <constraint firstAttribute="bottom" secondItem="wWJ-Ib-iw8" secondAttribute="bottom" constant="15" id="x6i-zw-bqY"/>
                                             </constraints>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="backgroundColor" name="Post List"/>
                                         <connections>
                                             <outlet property="postAuthor" destination="wWJ-Ib-iw8" id="BY1-bo-nE2"/>
                                             <outlet property="postTitle" destination="x4k-Kk-6V8" id="bQz-bN-SCR"/>
@@ -427,6 +427,18 @@
         </namedColor>
         <namedColor name="Post List">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </namedColor>
+        <namedColor name="Post List Author">
+            <color red="0.40000000596046448" green="0.40000000596046448" blue="0.40000000596046448" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Post List Selection Author">
+            <color red="0.97600001096725464" green="0.97299998998641968" blue="0.9179999828338623" alpha="0.75" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Post List Selection Title">
+            <color red="0.97600001096725464" green="0.97299998998641968" blue="0.9179999828338623" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Post List Title">
+            <color red="0.36100000143051147" green="0.48199999332427979" blue="0.23100000619888306" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Post Title">
             <color red="0.36100000143051147" green="0.48199999332427979" blue="0.23100000619888306" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

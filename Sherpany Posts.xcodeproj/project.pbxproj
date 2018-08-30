@@ -188,7 +188,6 @@
 			isa = PBXGroup;
 			children = (
 				28111F522122529F00CA324F /* PostsViewController.swift */,
-				28FC07B42125ADA600C6EE7B /* PostSelectedDelegate.swift */,
 				28FC07AC21257A6E00C6EE7B /* PostTableViewCell.swift */,
 				28CBC2CB213156C80045A337 /* Post UI Feedback */,
 			);
@@ -210,6 +209,7 @@
 			children = (
 				28111F502122507A00CA324F /* PostsCoordinator.swift */,
 				28111F56212258E600CA324F /* PostsDataSource.swift */,
+				28FC07B42125ADA600C6EE7B /* PostSelectedDelegate.swift */,
 			);
 			path = "Post List [master]";
 			sourceTree = "<group>";

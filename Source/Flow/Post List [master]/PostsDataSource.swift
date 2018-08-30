@@ -19,6 +19,12 @@ class PostsDataSource: NSObject {
     /// Weak reference to table view.
     weak var tableView: UITableView?
     
+    /// Currently selected index path.
+    ///
+    /// Need to keep track of this, so that selection & highlighting doesn't
+    /// flickr or get lost when scrolling (specially, for the first time).
+    var selectedIndexPath: IndexPath?
+    
     /// Model controller.
     private let modelController: ModelController
     
@@ -34,12 +40,6 @@ class PostsDataSource: NSObject {
     init(modelController: ModelController) {
         self.modelController = modelController
     }
-    
-    lazy var selectionView: UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor(named: "Post Selection") ?? .lightGray
-        return view
-    }()
     
 }
 
@@ -63,18 +63,20 @@ extension PostsDataSource: UITableViewDataSource {
         // create cell
         let cell = tableView.dequeueReusableCell(withIdentifier: PostTableViewCell.viewIdentifier, for: indexPath)
         
-        // set model
-        if let postCell = cell as? PostTableViewCell {
-            if let post = self.post(at: indexPath) {
-                postCell.model = PostTableViewCell.Model(post: post)
-            }
-            
-            // selection
-            cell.selectedBackgroundView = selectionView
-            cell.isSelected = false
+        // setup cell
+        guard let postCell = cell as? PostTableViewCell, let post = self.post(at: indexPath) else {
+            return cell
         }
         
-        return cell
+        // cell model
+        postCell.model = PostTableViewCell.Model(post: post)
+        
+        // cell selection view
+        let selectionView = UIView()
+        selectionView.backgroundColor = UIColor(named: "Post Selection") ?? .lightGray
+        postCell.selectedBackgroundView = selectionView
+        
+        return postCell
     }
     
 }
@@ -86,20 +88,11 @@ extension PostsDataSource: UITableViewDelegate {
     // MARK: Post selection
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // keep track of selection
+        selectedIndexPath = indexPath
+        
         // inform post selection delegate that selected post has been changed
         coordinator?.postSelected(in: tableView, at: indexPath)
-        
-        // inform cell to adapt colors
-        let selectedCell = tableView.cellForRow(at: indexPath) as? PostTableViewCell
-        selectedCell?.isSelected = true
-        for cell in tableView.visibleCells where cell != selectedCell {
-            cell.isSelected = false
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        let selectedCell = tableView.cellForRow(at: indexPath) as? PostTableViewCell
-        selectedCell?.isSelected = false
     }
     
     
@@ -109,6 +102,15 @@ extension PostsDataSource: UITableViewDelegate {
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         // delete action
         let delete = UITableViewRowAction(style: .destructive, title: "Delete") { [weak self] (action, indexPath) in
+            // deleted currently selected cell?
+            if indexPath == self?.selectedIndexPath {
+                // -> clear selection
+                self?.selectedIndexPath = nil
+                
+                // -> inform post selection delegate that selected post has been changed
+                self?.coordinator?.postSelected(in: tableView, at: nil)
+            }
+            
             // inform coordinator that selected post has been deleted from table view
             self?.coordinator?.postDeleted(in: tableView, at: indexPath)
         }
@@ -121,12 +123,23 @@ extension PostsDataSource: UITableViewDelegate {
         return !isSearching() && !isRefreshingData()
     }
     
+    func tableView(_ tableView: UITableView, didEndEditingRowAt indexPath: IndexPath?) {
+        // restore selection (if it wasn't removed)
+        if indexPath != selectedIndexPath, let oldSelection = selectedIndexPath {
+            // -> do it on next run loop
+            DispatchQueue.main.async {
+                tableView.selectRow(at: oldSelection, animated: false, scrollPosition: .none)
+            }
+        }
+    }
+    
     /// Check if data is currently being updated.
     ///
     /// - Returns: Whether data is being updated (fetched & merged into Core Data).
     func isRefreshingData() -> Bool {
         return coordinator?.isRefreshingData ?? false
     }
+    
 }
 
 
