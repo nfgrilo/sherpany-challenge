@@ -124,6 +124,56 @@ class ModelControllerTests: XCTestCase {
         wait(for: [eCompletion, eDelegate], timeout: 1)
     }
     
+    func test_removePost_whileRefreshingData() {
+        // setup expected data
+        mockSession.expectedData = { [weak self] url in
+            Thread.sleep(forTimeInterval: 0.250) // intentionally slow down process
+            if url.pathComponents.contains("posts") {
+                return self?.fakeData.allPostsData
+            }
+            else if url.pathComponents.contains("users") {
+                return self?.fakeData.allUsersData
+            }
+            else if url.pathComponents.contains("albums") {
+                return self?.fakeData.allAlbumsData
+            }
+            else if url.pathComponents.contains("photos") {
+                return self?.fakeData.allPhotosData
+            }
+            return nil
+        }
+        mockSession.expectedError = nil
+        
+        // initiate a data refresh
+        let eDataFetched = XCTestExpectation(description: "Data fetched & merged")
+        let ePostNotRemoved = XCTestExpectation(description: "Post not removed?")
+        let ePostRemoved = XCTestExpectation(description: "Post removed")
+        modelController.refreshDataOnline() { [weak self] success in
+            defer { eDataFetched.fulfill() /* fullfill expectation on return */ }
+            
+            // assert post was removed
+            self?.modelController.post(with: 1) { post in
+                defer { ePostRemoved.fulfill() /* fullfill expectation on return */ }
+                
+                XCTAssertNil(post, "Post was removed (from queue)")
+            }
+        }
+        
+        // remove post while data is refreshing
+        modelController.removePost(1) { [weak self] in
+            // make sure it is still there
+            self?.modelController.post(with: 1) { post in
+                defer { ePostNotRemoved.fulfill() /* fullfill expectation on return */ }
+                
+                XCTAssertNotNil(post, "Post was NOT removed (but queued instead)")
+            }
+        }
+        
+        // remove post while
+        
+        wait(for: [eDataFetched, ePostNotRemoved, ePostRemoved], timeout: 1)
+    }
+    
     
     // MARK: - user(with:completion:)
     
