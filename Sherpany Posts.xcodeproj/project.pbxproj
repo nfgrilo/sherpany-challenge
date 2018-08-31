@@ -27,7 +27,6 @@
 		2826D8DF2136AC36000D815A /* CoreDataContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2826D8DD2136AC32000D815A /* CoreDataContainer.swift */; };
 		2827CCDA212F0A1C008023EB /* FullscreenPhotoCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2827CCD9212F0A1C008023EB /* FullscreenPhotoCoordinator.swift */; };
 		2827CCDC212F0A91008023EB /* FullscreenPhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2827CCDB212F0A91008023EB /* FullscreenPhotoViewController.swift */; };
-		28406AAB2136F9AA0024CD03 /* MockCoreDataContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28406AAA2136F9AA0024CD03 /* MockCoreDataContainer.swift */; };
 		28406AAD21370BC00024CD03 /* PhotoControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28406AAC21370BC00024CD03 /* PhotoControllerTests.swift */; };
 		28406AAF21370D8C0024CD03 /* SamplePhoto.png in Resources */ = {isa = PBXBuildFile; fileRef = 28406AAE21370D8C0024CD03 /* SamplePhoto.png */; };
 		286DE1DE212241E600F2ED03 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286DE1DD212241E600F2ED03 /* Coordinator.swift */; };
@@ -97,7 +96,6 @@
 		2826D8DD2136AC32000D815A /* CoreDataContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataContainer.swift; sourceTree = "<group>"; };
 		2827CCD9212F0A1C008023EB /* FullscreenPhotoCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenPhotoCoordinator.swift; sourceTree = "<group>"; };
 		2827CCDB212F0A91008023EB /* FullscreenPhotoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenPhotoViewController.swift; sourceTree = "<group>"; };
-		28406AAA2136F9AA0024CD03 /* MockCoreDataContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCoreDataContainer.swift; sourceTree = "<group>"; };
 		28406AAC21370BC00024CD03 /* PhotoControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoControllerTests.swift; sourceTree = "<group>"; };
 		28406AAE21370D8C0024CD03 /* SamplePhoto.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SamplePhoto.png; sourceTree = "<group>"; };
 		286DE1DD212241E600F2ED03 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
@@ -249,7 +247,6 @@
 			isa = PBXGroup;
 			children = (
 				2826D8C82135B015000D815A /* MockURLSession.swift */,
-				28406AAA2136F9AA0024CD03 /* MockCoreDataContainer.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -515,7 +512,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				28406AAB2136F9AA0024CD03 /* MockCoreDataContainer.swift in Sources */,
 				2826D8C92135B015000D815A /* MockURLSession.swift in Sources */,
 				28406AAD21370BC00024CD03 /* PhotoControllerTests.swift in Sources */,
 				2826D8C6213598CD000D815A /* APIControllerTests.swift in Sources */,

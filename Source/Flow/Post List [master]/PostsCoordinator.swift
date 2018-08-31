@@ -119,20 +119,16 @@ class PostsCoordinator: Coordinator {
         viewController?.setSearchFeedbackView(with: text)
     }
     
-    /// Whether data is being refreshed (fetched & merged into Core Data).
-    var isRefreshingData: Bool = false
 }
 
 
 // MARK: - ModelController delegate
 extension PostsCoordinator: ModelControllerDelegate {
     func postWasRemoved(postId: Int64) {
-        // do nothing - already handled
+        // nothing to do
     }
     
     func dataWillRefresh() {
-        isRefreshingData = true
-        
         // show loading indicator
         DispatchQueue.main.async { [weak self] in
             self?.viewController?.showProgressView(true)
@@ -168,10 +164,7 @@ extension PostsCoordinator: ModelControllerDelegate {
                     tableView.selectRow(at: newSelection, animated: false, scrollPosition: .none)
                     tableView.delegate?.tableView?(tableView, didSelectRowAt: newSelection)
                 }
-                
-                self?.isRefreshingData = false
             }
-            
         }
     }
 }

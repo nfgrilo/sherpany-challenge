@@ -55,13 +55,25 @@ The **Posts** app is making use of 4 coordinators:
 
 ### Persistence
 
+#### Core Data Stack
+
+A slight variation of the "standard" Core Data stack that comes for free with `NSPersistentContainer` was used:
+
+- `mainManagedObjectContext`: 
+  - main thread context, read-only, have persistent store as parent, automatically merge changes from persistent store and has merge policy set to `mergeByPropertyStoreTrump`
+- `backgroundManagedObjectContext`: 
+  - background context, used to perform long/write operations, have persistent store as parent, merge policy set to `mergeByPropertyObjectTrump`
+
 #### Merging of fetched data with persisted data
 
 Merging of fetched data with Core Data persisted data is handled the following way (search "`Requirement #5`" in Xcode):
 
-1. Set appropriate **Core Data merging policy** by setting the `mergePolicy` of the managed object context to `NSMergeByPropertyObjectTrumpMergePolicy` (so that, data in memory takes precedence over persisted data).
-2. **Remove any orphan** `Post` or `User` (although it is not possible to remove any of these from the app), which will cascade delete related entities when appropriate.
-3. Persisted data is then **iterated and updated with fetched data** in `O(n)` time and `O(n)` space complexity.
+1. Modeled all entities with an `id` (unique) constraint.
+2. Set appropriate **Core Data merging policy** by setting the `mergePolicy` of the managed object context to `NSMergeByPropertyObjectTrumpMergePolicy` (so that, data in memory takes precedence over persisted data).
+3. **Remove any orphan** `Post` or `User` (although it is not possible to remove any of these from the app), which will cascade delete related entities when appropriate.
+4. Persisted data is then **iterated and updated with fetched data** in `O(n)` time and `O(n)` space complexity.
+
+**PS:** if a post is requested to be removed *while* a data refresh operation is in place (fetching & merging takes some time), the post removal will be postponed (so the post *will actually be removed*, and after the data refresh completes).
 
 #### Model objects
 

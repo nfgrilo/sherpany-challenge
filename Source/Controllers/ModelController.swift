@@ -24,9 +24,6 @@ class ModelController {
     /// This is handled on `ModelController+Delegate`.
     fileprivate var delegates = NSPointerArray.weakObjects()
     
-    /// Are we fetching & merging data with persisted one?
-    private var isRefreshingData: Bool = false
-    
     
     /// Initialize the model controller.
     ///
@@ -105,9 +102,22 @@ class ModelController {
     /// - Parameters:
     ///   - id: The post id.
     ///   - completion: Completion closure called when complete.
-    func removePost(_ id: Int64, completion: @escaping () -> Void) {
+    func removePost(_ id: Int64, completion: (() -> Void)? = nil) {
+        guard !isRefreshingData else {
+            // refreshing/merging data? -> remove the object later
+            print("Post will be removed later (data refresh in place)")
+            let context = container.mainManagedObjectContext
+            context.perform { [weak self] in
+                self?.queuePostForRemoval(id: id, in: context)
+            }
+            
+            // call completion & return
+            completion?()
+            return
+        }
+        
         // writes are done on background on a private queue
-        let context = container.newBackgroundManagedObjectContext()
+        let context = container.backgroundManagedObjectContext
         context.perform { [weak self] in
             // setup fetch request
             let fetchRequest: NSFetchRequest<ManagedPost> = ManagedPost.fetchRequest()
@@ -120,12 +130,13 @@ class ModelController {
                     context.delete(object)
                 }
                 try context.save()
+                print("Successfuly saved context after removing post")
             } catch {
                 print("Failed to delete post with error: \(error)")
             }
             
             // call completion
-            completion()
+            completion?()
             
             // notify delegates
             self?.notifyDelegates() { delegate in
@@ -233,7 +244,10 @@ class ModelController {
     }
     
     
-    // MARK: - Rest API interaction
+    // MARK: - Refresh Data (REST API interaction)
+    
+    /// Are we fetching & merging data with persisted one?
+    private var isRefreshingData: Bool = false
     
     /// Refreshes all data.
     ///
@@ -305,13 +319,8 @@ class ModelController {
         //      * added `id` as Entity Constraint to all entities
         //      * adjusted managed object context merge policy
         
-        let context = container.newBackgroundManagedObjectContext()
+        let context = container.backgroundManagedObjectContext
         context.perform { [weak self] in
-            // merge operations should occur on a property basis (`id`)
-            // and the in memory version “wins” over the persisted one.
-            // all entities have been modeled with an `id` constraint.
-            context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-            
             // 2.1 remove "orphans"
             self?.removeOrphans(using: fetchedData, in: context)
             
@@ -386,19 +395,24 @@ class ModelController {
             do {
                 if context.hasChanges {
                     try context.save()
-                    print("Successfuly saved context")
+                    print("Successfuly saved context after merging data")
                 }
             } catch {
                 print("Failed to save to Core Data: \(error).")
             }
             
+            // 2.4 perform any pending object removal *after* saving the context
+            //     since the process takes long time due to merging taking place.
+            //
+            //     Doing it here will guarantee that the app will get the most
+            //     up-to-date data when completion closure and/or delgate method
+            //     is called.
+            self?.removePendingRemovals(in: context)
+            
             // finish
             completion?()
         }
     }
-    
-    
-    // MARK: - Deletions
     
     /// Remove "orphan" objects from CoreData when compared to fetched data.
     ///
@@ -437,6 +451,64 @@ class ModelController {
             }
         } catch {
             print("Failed to delete entries with error: \(error)")
+        }
+    }
+    
+    
+    // MARK: - Postponed object (posts) removals
+    
+    /// Concurrent queue for queueing objects for removal.
+    ///
+    /// If a data refresh is in place, object removals will be postponed for later.
+    private let pendingRemovalsQueue = DispatchQueue(label: "ModelController Removal List Access", qos: .background, attributes: .concurrent)
+    
+    /// Objects pending removal.
+    private var pendingRemovals: [NSManagedObjectID] = []
+    
+    /// Queue a post for removal later.
+    ///
+    /// - Parameters:
+    ///   - id: The post ID.
+    ///   - context: Perform the operation on the given context.
+    private func queuePostForRemoval(id: Int64, in context: NSManagedObjectContext) {
+        // setup fetch request
+        let fetchRequest: NSFetchRequest<ManagedPost> = ManagedPost.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "id == %i", id)
+        fetchRequest.fetchLimit = 1
+        
+        // get post managed object id
+        do {
+            if let objectID = try context.fetch(fetchRequest).first?.objectID {
+                pendingRemovalsQueue.async { [weak self] in
+                    self?.pendingRemovals.append(objectID)
+                }
+            }
+        } catch {
+            print("Failed to get post managed object id with error: \(error)")
+        }
+    }
+    
+    /// Remove objects pending for removal.
+    ///
+    /// - Parameter context: Perform the operation on the given context.
+    private func removePendingRemovals(in context: NSManagedObjectContext) {
+        var objectsIDs: [NSManagedObjectID] = []
+        pendingRemovalsQueue.sync(flags: .barrier) { [weak self] in
+            objectsIDs = self?.pendingRemovals ?? []
+            self?.pendingRemovals.removeAll()
+        }
+        if !objectsIDs.isEmpty {
+            objectsIDs.compactMap { context.object(with: $0) }.forEach {
+                context.delete($0)
+            }
+            do {
+                if context.hasChanges {
+                    try context.save()
+                    print("Removed queued objects for removal")
+                }
+            } catch {
+                print("Failed to save to Core Data: \(error).")
+            }
         }
     }
     

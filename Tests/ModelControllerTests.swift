@@ -366,10 +366,10 @@ class ModelControllerTests: XCTestCase {
     // MARK: - Core Data stack for mocking
     
     // In-memory persistent container.
-    lazy var mockPersistantContainer: MockCoreDataContainer = {
+    lazy var mockPersistantContainer: CoreDataContainer = {
         let appBundle = Bundle(for: AppDelegate.self)
         let managedObjectModel = NSManagedObjectModel.mergedModel(from: [appBundle])!
-        let container = MockCoreDataContainer(name: "Posts", managedObjectModel: managedObjectModel)
+        let container = CoreDataContainer(name: "Posts", managedObjectModel: managedObjectModel)
         let description = NSPersistentStoreDescription()
         description.type = NSInMemoryStoreType
         description.shouldAddStoreAsynchronously = false
@@ -393,7 +393,7 @@ class ModelControllerTests: XCTestCase {
 extension ModelControllerTests {
     
     func createFakeData() {
-        let context = mockPersistantContainer.newBackgroundManagedObjectContext()
+        let context = mockPersistantContainer.backgroundManagedObjectContext
         context.performAndWait {
             // user 1
             let user1 = ManagedUser(context: context)
@@ -456,7 +456,7 @@ extension ModelControllerTests {
     }
     
     func removeFakeData() {
-        let context = mockPersistantContainer.newBackgroundManagedObjectContext()
+        let context = mockPersistantContainer.backgroundManagedObjectContext
         context.performAndWait {
             let userRequest: NSFetchRequest<ManagedUser> = ManagedUser.fetchRequest()
             for obj in (try! context.fetch(userRequest)) {

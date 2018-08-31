@@ -73,7 +73,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             if let error = error as NSError? {
                 fatalError("Failed to load Core Data stack: \(error), \(error.userInfo)")
             }
-            container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         })
         return container
     }()

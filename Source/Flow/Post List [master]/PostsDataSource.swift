@@ -119,8 +119,8 @@ extension PostsDataSource: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // don't allow deletes while searching or refreshing data!
-        return !isSearching() && !isRefreshingData()
+        // don't allow deletes while searching
+        return !isSearching()
     }
     
     func tableView(_ tableView: UITableView, didEndEditingRowAt indexPath: IndexPath?) {
@@ -135,13 +135,6 @@ extension PostsDataSource: UITableViewDelegate {
                 tableView.delegate?.tableView?(tableView, didSelectRowAt: newSelection)
             }
         }
-    }
-    
-    /// Check if data is currently being updated.
-    ///
-    /// - Returns: Whether data is being updated (fetched & merged into Core Data).
-    func isRefreshingData() -> Bool {
-        return coordinator?.isRefreshingData ?? false
     }
     
 }
@@ -284,24 +277,36 @@ extension PostsDataSource {
         }
     }
     
-    /// Remove a post.
+    /// Remove the post at a specified index path from UI and Persistent Store (model, table view and store).
     func removePost(in tableView: UITableView, at indexPath: IndexPath) {
         // get post being removed
         guard let post = self.post(at: indexPath) else {
             return
         }
         
+        // remove immediatelly from table view
+        removePostCell(in: tableView, post: post)
+        
         // remove from Core Data
-        modelController.removePost(post.id) { [weak self] in
-            // remove from table data source
-            if let modelIndex = self?.model.index(of: post) {
-                self?.model.remove(at: modelIndex)
-            }
-            
-            // remove row from table view
-            DispatchQueue.main.async {
-                tableView.deleteRows(at: [indexPath], with: .fade)
-            }
+        // PS: if a data refresh is in place, this removal will be postponed.
+        modelController.removePost(post.id)
+    }
+    
+    /// Remove a specific post from UI only (model and table view).
+    func removePostCell(in tableView: UITableView, post: Post, animate: Bool = true) {
+        // get post being removed
+        guard let indexPath = indexPath(for: post.id) else {
+            return
+        }
+        
+        // remove from table data source
+        if let modelIndex = model.index(of: post) {
+            model.remove(at: modelIndex)
+        }
+        
+        // remove row from table view
+        DispatchQueue.main.async {
+            tableView.deleteRows(at: [indexPath], with: animate ? .fade : .none)
         }
     }
     
