@@ -54,6 +54,9 @@ class PhotoController {
         }
     }
     
+    /// Delegate.
+    public var delegate: PhotoControllerDelegate?
+    
     /// Queue of waiting tasks.
     ///
     /// Reads are made synchronously on the concurrent `tasksQueue` queue.
@@ -415,7 +418,9 @@ class PhotoController {
         }
         
         // setup network data task
-        let dataTask = session.dataTask(with: task.url, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) -> Void in
+        delegate?.willFetchPhoto(with: task.url)
+        let dataTask = session.dataTask(with: task.url, completionHandler: { [weak self] (data: Data?, response: URLResponse?, error: Error?) -> Void in
+            self?.delegate?.didFetchPhoto(with: task.url)
             guard let data = data else {
                 completion?(task.url, nil)
                 return

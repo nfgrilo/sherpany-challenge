@@ -23,6 +23,8 @@ class MainCoordinator: Coordinator {
     private var splitViewController: UISplitViewController?
     
     
+    // MARK: - Application Coordinator
+    
     /// Creates a new main coordinator.
     ///
     /// - Parameters:
@@ -68,5 +70,52 @@ class MainCoordinator: Coordinator {
         window.rootViewController = splitViewController
         window.makeKeyAndVisible()
     }
+    
+    
+    // MARK: - Network Activity Indication
+    
+    /// Number of current active network requests.
+    private var activeRequestsCount: Int = 0 {
+        didSet {
+            showNetworkActivityIndicator(activeRequestsCount > 0)
+        }
+    }
+    
+    /// Shows the indicator of network activity on status bar On or Off.
+    ///
+    /// - Parameter show: Whether to show or hide indicator.
+    func showNetworkActivityIndicator(_ show: Bool) {
+        DispatchQueue.main.async {
+            if UIApplication.shared.isNetworkActivityIndicatorVisible != show {
+                UIApplication.shared.isNetworkActivityIndicatorVisible = show
+            }
+        }
+    }
+    
+}
+
+
+extension MainCoordinator: APIControllerDelegate, PhotoControllerDelegate {
+    
+    // MARK: APIControllerDelegate
+    
+    func willFetchResource(with: URL) {
+        activeRequestsCount += 1
+    }
+    
+    func didFetchResource(with: URL) {
+        activeRequestsCount -= 1
+    }
+    
+    // MARK: PhotoControllerDelegate
+    
+    func willFetchPhoto(with: URL) {
+        activeRequestsCount += 1
+    }
+    
+    func didFetchPhoto(with: URL) {
+        activeRequestsCount -= 1
+    }
+    
     
 }

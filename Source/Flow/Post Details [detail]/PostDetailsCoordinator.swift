@@ -58,7 +58,6 @@ class PostDetailsCoordinator: Coordinator {
         // post details VC
         guard let postDetailsViewController = PostDetailsViewController.instantiate() else { return }
         self.postDetailsViewController = postDetailsViewController
-        postDetailsViewController.coordinator = self
         postDetailsViewController.title = "Challenge Accepted!" // Requirement #1: ✅
         navigationController.navigationBar.barTintColor = UIColor(named: "Navigation Bar") ?? .clear
         navigationController.navigationBar.barStyle = .black

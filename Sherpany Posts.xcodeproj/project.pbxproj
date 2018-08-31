@@ -29,6 +29,8 @@
 		2827CCDC212F0A91008023EB /* FullscreenPhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2827CCDB212F0A91008023EB /* FullscreenPhotoViewController.swift */; };
 		28406AAD21370BC00024CD03 /* PhotoControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28406AAC21370BC00024CD03 /* PhotoControllerTests.swift */; };
 		28406AAF21370D8C0024CD03 /* SamplePhoto.png in Resources */ = {isa = PBXBuildFile; fileRef = 28406AAE21370D8C0024CD03 /* SamplePhoto.png */; };
+		28406AB621395AC30024CD03 /* PhotoControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28406AB4213959970024CD03 /* PhotoControllerDelegate.swift */; };
+		28406AB821395AF90024CD03 /* APIControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28406AB721395AF90024CD03 /* APIControllerDelegate.swift */; };
 		286DE1DE212241E600F2ED03 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286DE1DD212241E600F2ED03 /* Coordinator.swift */; };
 		286DE1E02122424600F2ED03 /* Storyboarded.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286DE1DF2122424600F2ED03 /* Storyboarded.swift */; };
 		28902E06212C7D2C008C0C9F /* PostAlbumHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28902E05212C7D2C008C0C9F /* PostAlbumHeaderView.swift */; };
@@ -98,6 +100,8 @@
 		2827CCDB212F0A91008023EB /* FullscreenPhotoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenPhotoViewController.swift; sourceTree = "<group>"; };
 		28406AAC21370BC00024CD03 /* PhotoControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoControllerTests.swift; sourceTree = "<group>"; };
 		28406AAE21370D8C0024CD03 /* SamplePhoto.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SamplePhoto.png; sourceTree = "<group>"; };
+		28406AB4213959970024CD03 /* PhotoControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoControllerDelegate.swift; sourceTree = "<group>"; };
+		28406AB721395AF90024CD03 /* APIControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIControllerDelegate.swift; sourceTree = "<group>"; };
 		286DE1DD212241E600F2ED03 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		286DE1DF2122424600F2ED03 /* Storyboarded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storyboarded.swift; sourceTree = "<group>"; };
 		28902E05212C7D2C008C0C9F /* PostAlbumHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostAlbumHeaderView.swift; sourceTree = "<group>"; };
@@ -288,6 +292,7 @@
 			isa = PBXGroup;
 			children = (
 				28D6F214212BFDB600CD6090 /* PhotoController.swift */,
+				28406AB4213959970024CD03 /* PhotoControllerDelegate.swift */,
 			);
 			path = "Photo Controller";
 			sourceTree = "<group>";
@@ -351,6 +356,7 @@
 			isa = PBXGroup;
 			children = (
 				28ECB12D2123215400764592 /* APIController.swift */,
+				28406AB721395AF90024CD03 /* APIControllerDelegate.swift */,
 				28ECB133212324EB00764592 /* APIResource.swift */,
 				28ECB13521232FF600764592 /* APIRequest.swift */,
 				28ECB1312123220C00764592 /* APIResponse.swift */,
@@ -559,6 +565,7 @@
 				28ECB1322123220C00764592 /* APIResponse.swift in Sources */,
 				28FC07AD21257A6E00C6EE7B /* PostTableViewCell.swift in Sources */,
 				28FC07B52125ADA600C6EE7B /* PostSelectedDelegate.swift in Sources */,
+				28406AB821395AF90024CD03 /* APIControllerDelegate.swift in Sources */,
 				286DE1E02122424600F2ED03 /* Storyboarded.swift in Sources */,
 				28CBC2CD2131571B0045A337 /* PostUIFeedbackViewController.swift in Sources */,
 				28111F57212258E600CA324F /* PostsDataSource.swift in Sources */,
@@ -575,6 +582,7 @@
 				28FC07BF2125E79400C6EE7B /* PostDetailsDataSource.swift in Sources */,
 				28ECB1422123595B00764592 /* Album.swift in Sources */,
 				28FC07B32125995700C6EE7B /* NSPointerArray.swift in Sources */,
+				28406AB621395AC30024CD03 /* PhotoControllerDelegate.swift in Sources */,
 				28902E09212DCEAE008C0C9F /* PostDetailsHeaderView.swift in Sources */,
 				2827CCDA212F0A1C008023EB /* FullscreenPhotoCoordinator.swift in Sources */,
 			);

@@ -19,6 +19,9 @@ class APIController {
         case failure(Error)
     }
     
+    /// Delegate.
+    public var delegate: APIControllerDelegate?
+    
     /// URL session used to make requests.
     private var session: URLSession
     
@@ -130,8 +133,24 @@ class APIController {
         
         // keep a strong ref to request
         requests.append(request)
+        let removeRequestStrongRef = { [weak self] in
+            if let requestIndex = self?.requests.index(where: { return ($0 as? APIRequest) == request }) {
+                self?.requests.remove(at: requestIndex)
+            }
+        }
+        
+        // call delegate
+        guard let resourceURL = resource.url else {
+            completion(.failure( APIError.emptyResponse ))
+            removeRequestStrongRef()
+            return
+        }
+        delegate?.willFetchResource(with: resourceURL)
         
         request.load(session: session) { [weak self] (postResponse: [PostResponse]?) in
+            // call delegate
+            self?.delegate?.didFetchResource(with: resourceURL)
+            
             // call completion
             guard let posts = postResponse else {
                 completion(.failure( APIError.emptyResponse ))
@@ -140,9 +159,7 @@ class APIController {
             completion(.success(posts))
 
             // remove request reference so it can be deallocated
-            if let requestIndex = self?.requests.index(where: { return ($0 as? APIRequest) == request }) {
-                self?.requests.remove(at: requestIndex)
-            }
+            removeRequestStrongRef()
         }
     }
     
@@ -158,8 +175,24 @@ class APIController {
         
         // keep a strong ref to request
         requests.append(request)
+        let removeRequestStrongRef = { [weak self] in
+            if let requestIndex = self?.requests.index(where: { return ($0 as? APIRequest) == request }) {
+                self?.requests.remove(at: requestIndex)
+            }
+        }
+        
+        // call delegate
+        guard let resourceURL = resource.url else {
+            completion(.failure( APIError.emptyResponse ))
+            removeRequestStrongRef()
+            return
+        }
+        delegate?.willFetchResource(with: resourceURL)
         
         request.load(session: session) { [weak self] (userResponse: [UserResponse]?) in
+            // call delegate
+            self?.delegate?.didFetchResource(with: resourceURL)
+            
             // call completion
             guard let users = userResponse else {
                 completion(.failure( APIError.emptyResponse ))
@@ -168,9 +201,7 @@ class APIController {
             completion(.success(users))
             
             // remove request reference so it can be deallocated
-            if let requestIndex = self?.requests.index(where: { return ($0 as? APIRequest) == request }) {
-                self?.requests.remove(at: requestIndex)
-            }
+            removeRequestStrongRef()
         }
     }
     
@@ -193,8 +224,24 @@ class APIController {
         
         // keep a strong ref to request
         requests.append(request)
+        let removeRequestStrongRef = { [weak self] in
+            if let requestIndex = self?.requests.index(where: { return ($0 as? APIRequest) == request }) {
+                self?.requests.remove(at: requestIndex)
+            }
+        }
+        
+        // call delegate
+        guard let resourceURL = resource.url else {
+            completion(.failure( APIError.emptyResponse ))
+            removeRequestStrongRef()
+            return
+        }
+        delegate?.willFetchResource(with: resourceURL)
         
         request.load(session: session) { [weak self] (albumResponse: [AlbumResponse]?) in
+            // call delegate
+            self?.delegate?.didFetchResource(with: resourceURL)
+            
             // call completion
             guard let albums = albumResponse else {
                 completion(.failure( APIError.emptyResponse ))
@@ -203,9 +250,7 @@ class APIController {
             completion(.success(albums))
             
             // remove request reference so it can be deallocated
-            if let requestIndex = self?.requests.index(where: { return ($0 as? APIRequest) == request }) {
-                self?.requests.remove(at: requestIndex)
-            }
+            removeRequestStrongRef()
         }
     }
     
@@ -228,8 +273,24 @@ class APIController {
         
         // keep a strong ref to request
         requests.append(request)
+        let removeRequestStrongRef = { [weak self] in
+            if let requestIndex = self?.requests.index(where: { return ($0 as? APIRequest) == request }) {
+                self?.requests.remove(at: requestIndex)
+            }
+        }
+        
+        // call delegate
+        guard let resourceURL = resource.url else {
+            completion(.failure( APIError.emptyResponse ))
+            removeRequestStrongRef()
+            return
+        }
+        delegate?.willFetchResource(with: resourceURL)
         
         request.load(session: session) { [weak self] (photoResponse: [PhotoResponse]?) in
+            // call delegate
+            self?.delegate?.didFetchResource(with: resourceURL)
+            
             // call completion
             guard let photos = photoResponse else {
                 completion(.failure( APIError.emptyResponse ))
@@ -238,9 +299,7 @@ class APIController {
             completion(.success(photos))
             
             // remove request reference so it can be deallocated
-            if let requestIndex = self?.requests.index(where: { return ($0 as? APIRequest) == request }) {
-                self?.requests.remove(at: requestIndex)
-            }
+            removeRequestStrongRef()
         }
     }
 

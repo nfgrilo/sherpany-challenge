@@ -51,6 +51,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         // main coordinator
         let coordinator = MainCoordinator(window: window, modelController: modelController, photoController: photoController)
         self.coordinator = coordinator
+        apiController.delegate = coordinator
+        photoController.delegate = coordinator
         
         // let main coordinator take control
         coordinator.start()
