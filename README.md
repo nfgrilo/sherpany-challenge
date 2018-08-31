@@ -27,7 +27,7 @@
 ## Instructions
 
 1. Navigate to [repo](https://github.com/nfgrilo/sherpany-challenge.git)
-2. Clone locally using `git clone git clone https://[username]@github.com/nfgrilo/sherpany-challenge.git`
+2. Clone locally using `git clone https://github.com/nfgrilo/sherpany-challenge.git`
 3. Open `Sherpany Posts.xcodeproj` in Xcode
 4. Build & Run
 5. Enjoy!
