@@ -105,7 +105,6 @@ class ModelController {
     func removePost(_ id: Int64, completion: (() -> Void)? = nil) {
         guard !isRefreshingData else {
             // refreshing/merging data? -> remove the object later
-            print("Post will be removed later (data refresh in place)")
             let context = container.mainManagedObjectContext
             context.perform { [weak self] in
                 self?.queuePostForRemoval(id: id, in: context)
@@ -130,7 +129,6 @@ class ModelController {
                     context.delete(object)
                 }
                 try context.save()
-                print("Successfuly saved context after removing post")
             } catch {
                 print("Failed to delete post with error: \(error)")
             }
@@ -257,13 +255,11 @@ class ModelController {
     /// - Parameter completion: Completion closure called when complete.
     func refreshDataOnline(completion: ((Bool) -> Void)? = nil) {
         guard !isRefreshingData else {
-            print("⚠️ Data is already being fetched & merged")
             return
         }
         isRefreshingData = true
         
         // 1. fetch all data at once (Requirement #3)
-        print("Fetching data from REST API...")
         notifyDelegates() { delegate in
             delegate.dataWillRefresh()
         }
@@ -284,8 +280,7 @@ class ModelController {
             switch result {
             case .success(let response):
                 onlineData = response.first
-            case .failure(let error):
-                print("Error fetching online data: \(error)")
+            case .failure(_):
                 finishClosure(false)
                 return
             }
@@ -311,7 +306,6 @@ class ModelController {
     ///   - fetchedData: An `AggregateResponse` object with all fresh fetched data.
     ///   - completion: Completion closure called when complete.
     private func mergeData(from fetchedData: AggregateResponse, completion: (() -> Void)? = nil) {
-        print("Merging fetched data with persisted data...")
         // Merging will be performed by:
         //  - removing any persisted item that is not on fetched data (never happens on this app)
         //  - making use of "upsert", that is, checking if entity exists by
@@ -395,7 +389,6 @@ class ModelController {
             do {
                 if context.hasChanges {
                     try context.save()
-                    print("Successfuly saved context after merging data")
                 }
             } catch {
                 print("Failed to save to Core Data: \(error).")
@@ -504,7 +497,6 @@ class ModelController {
             do {
                 if context.hasChanges {
                     try context.save()
-                    print("Removed queued objects for removal")
                 }
             } catch {
                 print("Failed to save to Core Data: \(error).")

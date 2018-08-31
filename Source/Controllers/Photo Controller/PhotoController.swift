@@ -117,7 +117,6 @@ class PhotoController {
     
     /// Wipes all the image cache.
     @objc func cleanCache() {
-        print("⚠️ Cleaning photo cache...")
         cache.removeAllObjects()
     }
     

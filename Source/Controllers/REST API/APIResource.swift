@@ -37,7 +37,6 @@ extension APIResource {
                 // -> or b) single value?
                 return [try decoder.decode(Model.self, from: data)]
             } catch {
-                //print("Failed to parse json response data from server: \(error). Response: \(String(data: data, encoding: .utf8) ?? "(failed to convert Data to String)")")
                 throw error
             }
         }
