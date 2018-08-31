@@ -38,6 +38,7 @@ class PhotoControllerTests: XCTestCase {
         //  -> using serial network serial (instead of concurrent);
         //     this allows priorities to be properly tested
         photoController = PhotoController(session: mockSession)
+        photoController.tasksQueue = DispatchQueue(label: "PhotoController Tasks Access", qos: .background)
         photoController.networkQueue = DispatchQueue(label: "PhotoController Network Access", qos: .background)
     }
     
@@ -99,58 +100,34 @@ class PhotoControllerTests: XCTestCase {
     
     func test_fetchPhotos_priorities() {
         // URLs
-        let url0 = URL(string: "http://test/0")!    // 6x to fill queue -> .normal
-        let url1 = URL(string: "http://test/1")!    // |
-        let url2 = URL(string: "http://test/2")!    // |-> .low
+        let url1 = URL(string: "http://test/1")!    //  -> .low
+        let url2 = URL(string: "http://test/2")!    //  -> .low
         let url3 = URL(string: "http://test/3")!    //  -> .high
         let url4 = URL(string: "http://test/4")!    //  -> .veryLow
         let url5 = URL(string: "http://test/5")!    //  -> .normal
         let url6 = URL(string: "http://test/6")!    //  -> .high
         
         // expectations (in order)
-        let ePhotos0 = XCTestExpectation(description: "Initial buch of photos fetched")
         let ePhoto1 = XCTestExpectation(description: "Photo 1 fetched")
         let ePhoto2 = XCTestExpectation(description: "Photo 2 fetched")
         let ePhoto3 = XCTestExpectation(description: "Photo 3 fetched")
         let ePhoto4 = XCTestExpectation(description: "Photo 4 fetched")
         let ePhoto5 = XCTestExpectation(description: "Photo 5 fetched")
         let ePhoto6 = XCTestExpectation(description: "Photo 6 fetched")
-        let expectations = [ePhoto3, ePhoto5, ePhoto6, ePhoto2, ePhoto1, ePhoto4]
+        let expectations = [ePhoto6, ePhoto3, ePhoto5, ePhoto2, ePhoto1, ePhoto4]
         
-        // url0 - .normal (fill queue)
-        photoController.fetchPhotos(from: [url0, url0, url0, url0, url0, url0], priority: .normal) { url, image in
-            //print(ePhotos0.description)
-            ePhotos0.fulfill() // this will be called more than once - not relevant here, no problem
-        }
-        // url1, url2 - .low
-        photoController.fetchPhotos(from: [url1, url2], priority: .low) { url, image in
-            if url == url1 { /*print(ePhoto1.description);*/ ePhoto1.fulfill() }
-            else if url == url2 { /*print(ePhoto2.description);*/ ePhoto2.fulfill() }
-        }
-        // url3 - .high
-        photoController.fetchPhotos(from: [url3], priority: .high) { url, image in
-            //print(ePhoto3.description)
-            ePhoto3.fulfill()
-        }
-        // url4 - .veryLow
-        photoController.fetchPhotos(from: [url4], priority: .veryLow) { url, image in
-            //print(ePhoto4.description)
-            ePhoto4.fulfill()
-        }
-        // url5 - .normal
-        photoController.fetchPhotos(from: [url5], priority: .normal) { url, image in
-            //print(ePhoto5.description)
-            ePhoto5.fulfill()
-        }
-        // url6 - .high
-        photoController.fetchPhotos(from: [url6], priority: .high) { url, image in
-            //print(ePhoto6.description)
-            ePhoto6.fulfill()
+        // fetch with different priorities
+        photoController.fetchPhotos(from: [url1, url2, url3, url4, url5, url6], priorities: [.low, .low, .high, .veryLow, .normal, .high]) { url, image in
+            if url == url1 { ePhoto1.fulfill() }
+            else if url == url2 { ePhoto2.fulfill() }
+            else if url == url3 { ePhoto3.fulfill() }
+            else if url == url4 { ePhoto4.fulfill() }
+            else if url == url5 { ePhoto5.fulfill() }
+            else if url == url6 { ePhoto6.fulfill() }
         }
         
         // wait for expectations to fulfill in order
         wait(for: expectations, timeout: 1, enforceOrder: true)
-        wait(for: [ePhotos0], timeout: 1)
     }
     
     // MARK: - slowdownPhotoFetches(urls:)

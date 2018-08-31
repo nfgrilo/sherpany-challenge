@@ -386,7 +386,7 @@ class PhotoController {
     ///
     /// Reads should be made synchronously on the concurrent queue.
     /// Writes should made without concurrency (asynchronously with barrier).
-    private let tasksQueue = DispatchQueue(label: "PhotoController Tasks Access", qos: .background, attributes: .concurrent)
+    internal var tasksQueue = DispatchQueue(label: "PhotoController Tasks Access", qos: .background, attributes: .concurrent)
     
     /// Concurrent queue for network requests.
     internal var networkQueue = DispatchQueue(label: "PhotoController Network Access", qos: .background, attributes: .concurrent)
