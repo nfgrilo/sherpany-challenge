@@ -53,7 +53,6 @@ class PostsCoordinator: Coordinator {
         // create & setup vc
         guard let viewController = PostsViewController.instantiate() else { return }
         self.viewController = viewController
-        viewController.coordinator = self
         viewController.loadViewIfNeeded()
         viewController.title = "Posts"
         navigationController.navigationBar.prefersLargeTitles = true

@@ -174,9 +174,8 @@
 		280B2CF0212F27940023D497 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				28ECB138212348C700764592 /* ModelController.swift */,
-				28FC07B0212590AE00C6EE7B /* ModelControllerDelegate.swift */,
-				28D6F214212BFDB600CD6090 /* PhotoController.swift */,
+				28406AB2213957690024CD03 /* Model Controller */,
+				28406AB3213957760024CD03 /* Photo Controller */,
 				28ECB12C2123211300764592 /* REST API */,
 			);
 			path = Controllers;
@@ -274,6 +273,23 @@
 				2827CCDB212F0A91008023EB /* FullscreenPhotoViewController.swift */,
 			);
 			path = "Fullscreen Photo";
+			sourceTree = "<group>";
+		};
+		28406AB2213957690024CD03 /* Model Controller */ = {
+			isa = PBXGroup;
+			children = (
+				28ECB138212348C700764592 /* ModelController.swift */,
+				28FC07B0212590AE00C6EE7B /* ModelControllerDelegate.swift */,
+			);
+			path = "Model Controller";
+			sourceTree = "<group>";
+		};
+		28406AB3213957760024CD03 /* Photo Controller */ = {
+			isa = PBXGroup;
+			children = (
+				28D6F214212BFDB600CD6090 /* PhotoController.swift */,
+			);
+			path = "Photo Controller";
 			sourceTree = "<group>";
 		};
 		286DE1DC212241C900F2ED03 /* [Shared] */ = {

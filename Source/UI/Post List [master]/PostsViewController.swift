@@ -10,9 +10,6 @@ import UIKit
 
 class PostsViewController: UIViewController, Storyboarded {
     
-    /// Weak reference to parent coordinator.
-    weak var coordinator: PostsCoordinator?
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         

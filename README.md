@@ -127,6 +127,8 @@ A `UICollectionView` is used to show all the post details:
 - album titles: implemented as collection view sections
 - photos: implemented as collection view items
 
+A custom collection view layout was implemented (`PostAlbumCollectionViewFlowLayout`) in order to have top-aligned photos.
+
 `PostDetailsCoordinator` implements `PostSelectedDelegate` to be notified of post selection changes. Whenever a post is selected, the coordinator will instruct its view controller to refresh its contents preserving its viewing context (selected post, scrolling position, albums collapsed state, and if a full-sized photo is being shown).
 
 #### Full-Sized Photos

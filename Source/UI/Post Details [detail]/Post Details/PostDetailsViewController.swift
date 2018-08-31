@@ -10,9 +10,6 @@ import UIKit
 
 class PostDetailsViewController: UICollectionViewController, Storyboarded {
     
-    /// Weak reference to parent coordinator.
-    weak var coordinator: PostDetailsCoordinator?
-    
     /// Reloads collection view data & optionally restore scrolling offset.
     ///
     /// - Parameter restoreScrolling: Should restore scrolling offset?

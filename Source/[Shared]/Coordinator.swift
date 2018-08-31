@@ -12,7 +12,7 @@ import UIKit
 ///
 /// This is inspired on the great Coordinator pattern by Soroush Khanlou.
 /// More info at http://khanlou.com/2015/10/coordinators-redux/
-protocol BaseCoordinator {
+protocol CoordinatorProtocol {
     
     /// Child coordinators.
     var childCoordinators: [Coordinator] { get set }
@@ -24,7 +24,7 @@ protocol BaseCoordinator {
 
 
 /// Base class to be subclassed by other coordinators.
-class Coordinator: NSObject, BaseCoordinator {
+class Coordinator: NSObject, CoordinatorProtocol {
     
     func start() {}
     
