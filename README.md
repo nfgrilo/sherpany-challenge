@@ -27,8 +27,7 @@
 ## Instructions
 
 1. Navigate to [repo](https://github.com/nfgrilo/sherpany-challenge.git)
-2. Clone locally using
-   `git clone git@github.com:nfgrilo/sherpany-challenge.git`
+2. Clone locally using `git clone git clone https://[username]@github.com/nfgrilo/sherpany-challenge.git`
 3. Open `Sherpany Posts.xcodeproj` in Xcode
 4. Build & Run
 5. Enjoy!
@@ -70,7 +69,7 @@ Merging of fetched data with Core Data persisted data is handled the following w
 
 1. Modeled all entities with an `id` (unique) constraint.
 2. Set appropriate **Core Data merging policy** by setting the `mergePolicy` of the managed object context to `NSMergeByPropertyObjectTrumpMergePolicy` (so that, data in memory takes precedence over persisted data).
-3. **Remove any orphan** `Post` or `User` (although it is not possible to remove any of these from the app), which will cascade delete related entities when appropriate.
+3. **Remove any orphan** `Post` or `User` (although it is not possible to add any of these from the app), which will cascade delete related entities when appropriate.
 4. Persisted data is then **iterated and updated with fetched data** in `O(n)` time and `O(n)` space complexity.
 
 **PS:** if a post is requested to be removed *while* a data refresh operation is in place (fetching & merging takes some time), the post removal will be postponed (so the post *will actually be removed*, and after the data refresh completes).
@@ -86,7 +85,7 @@ This simpler model object consists of Swift structs, providing a simple and safe
 
 ### REST API
 
-The API resources were defined using a protocol-oriented approach (see files `API*.swift`), and are accessible from the controller `APIController`:
+The API resources were defined using a protocol-oriented approach, and are accessible from the controller `APIController`:
 
 - `APIResource`: describes each API resource by its method and URL
 - `APIRequest`: provides request related functionality (network fetch)
@@ -95,9 +94,9 @@ The API resources were defined using a protocol-oriented approach (see files `AP
 
 ### Photo Fetching
 
-The actual photo (image) fetching is made separately by the `PhotoController` controller.
+Photo (image) fetching is made by the `PhotoController` controller.
 
-Each photo request translate into a `PhotoController.Task` being added to a queue, so that no multiple connections to the same image resource are ever made. Additionally, tasks have different priorities depending on the context (prefetching, fetching for visible cell, cancelling prefetching, full-sized image fetch), so dequeuing is always made with higher priority tasks. 
+Each photo request translate into a `PhotoController.Task` being added to a queue, so that no multiple connections to the same image resource are ever made. Additionally, tasks have different priorities depending on the context (prefetching, fetching for visible cell, cancelling prefetching, full-sized image fetch), so dequeuing always pick the higher priority tasks. 
 
 When queueing (and dequeuing) tasks, thread-safety is accomplished by using a concurrent queue with barrier (faster than a serial queue). Read accesses can be asynchronously, while writes are made synchronously with barrier, so that once a "write" is placed on the queue, it is only executed when there are no more "reads" in the queue. 
 
@@ -115,7 +114,7 @@ This is handled by `MainCoordinator`. This coordinator will then create & delega
 
 The post list is handled by the `PostsCoordinator`. This will create the view controller, its data source and the search controller. The protocol `PostSelectedDelegate` is used to signal the observer (`PostDetailsCoordinator`) that the post selection has changed.
 
-`PostsCoordinator` is a delegate of `ModelController` (via `ModelControllerDelegate`) and it's notified when new data becomes available (after fetching & merging data with persisted one).
+`PostsCoordinator` is a delegate of `ModelController` (via `ModelControllerDelegate`) and it's notified when new data becomes available (after fetching & merging data with persisted one) to refresh the post list.
 
 #### Post Details & Related Albums
 
@@ -123,17 +122,19 @@ Post title, body and user albums are handled by `PostDetailsCoordinator`, which 
 
 A `UICollectionView` is used to show all the post details:
 
-- post title and post body: implemented as a collection view header (first)
-- album titles: implemented as collection view sections
-- photos: implemented as collection view items
+- post title and post body: implemented as the first collection view section header (`PostDetailsHeaderView`)
+- album titles: implemented as collection view sections (`PostAlbumHeaderView`)
+- photos: implemented as collection view items (`PostAlbumCollectionViewCell`)
 
 A custom collection view layout was implemented (`PostAlbumCollectionViewFlowLayout`) in order to have top-aligned photos.
 
-`PostDetailsCoordinator` implements `PostSelectedDelegate` to be notified of post selection changes. Whenever a post is selected, the coordinator will instruct its view controller to refresh its contents preserving its viewing context (selected post, scrolling position, albums collapsed state, and if a full-sized photo is being shown).
+`PostDetailsCoordinator` implements `PostSelectedDelegate` to be notified of post selection changes. Whenever a post is selected, the coordinator will instruct its view controller to refresh its contents. In case we have just refreshed all data (fetch & merge), it will re-select the same post and restore the viewing context (scrolling position, albums collapsed state, and if a full-sized photo is being shown).
 
 #### Full-Sized Photos
 
-`FullscreenPhotoCoordinator` handles the view controller responsible for showing full-sized images. It is a *child coordinator* of `PostDetailsCoordinator`.
+`FullscreenPhotoCoordinator` handles the view controller responsible for showing full-sized images. It is a *child coordinator* of `PostDetailsCoordinator`. The coordinator will then make use of `FullscreenPhotoViewController` to display full-sized photos. User can navigate back using the navigation bar back button or tapping the photo. 
+
+Network requests to full-sized photos are always made with *higher priority* than any thumbnail.
 
 
 ### Dependencies
