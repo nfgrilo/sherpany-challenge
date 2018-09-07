@@ -10,8 +10,8 @@ import UIKit
 
 class PostsDataSource: NSObject {
     
-    /// Weak reference to parent coordinator.
-    weak var coordinator: PostsCoordinator?
+    /// Weak reference to delegate.
+    weak var delegate: PostsDataSourceDelegate?
     
     /// Search controller.
     var searchController: UISearchController?
@@ -92,7 +92,8 @@ extension PostsDataSource: UITableViewDelegate {
         selectedIndexPath = indexPath
         
         // inform post selection delegate that selected post has been changed
-        coordinator?.postSelected(in: tableView, at: indexPath)
+        let post = self.post(at: indexPath)
+        delegate?.postWasSelected(post)
     }
     
     
@@ -104,15 +105,15 @@ extension PostsDataSource: UITableViewDelegate {
         let delete = UITableViewRowAction(style: .destructive, title: "Delete") { [weak self] (action, indexPath) in
             // deleted currently selected cell?
             if indexPath == self?.selectedIndexPath {
-                // -> clear selection
+                // -> clear selected index path
                 self?.selectedIndexPath = nil
                 
-                // -> inform post selection delegate that selected post has been changed
-                self?.coordinator?.postSelected(in: tableView, at: nil)
+                // -> clear post selection on delegate
+                self?.delegate?.postWasSelected(nil)
             }
             
-            // inform coordinator that selected post has been deleted from table view
-            self?.coordinator?.postDeleted(in: tableView, at: indexPath)
+            // remove post
+            self?.removePost(in: tableView, at: indexPath)
         }
         
         return [delete]
@@ -161,7 +162,7 @@ extension PostsDataSource: UISearchResultsUpdating {
         else {
             searchFeedback = nil
         }
-        coordinator?.setSearchFeedback(searchFeedback)
+        delegate?.searchFeedbackDidChange(searchFeedback)
     }
     
     /// Check if user is currently searching.
@@ -290,6 +291,9 @@ extension PostsDataSource {
         // remove from Core Data
         // PS: if a data refresh is in place, this removal will be postponed.
         modelController.removePost(post.id)
+        
+        // inform delegate
+        delegate?.postWasDeleted(post)
     }
     
     /// Remove a specific post from UI only (model and table view).

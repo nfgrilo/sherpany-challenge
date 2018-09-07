@@ -116,12 +116,10 @@ class PostAlbumCollectionViewCell: UICollectionViewCell {
 /// Posts Album collection view cell view-model.
 extension PostAlbumCollectionViewCell {
     struct Model {
-        let identifier: Int64
         let title: String
         let photo: UIImage?
         
-        init(identifier: Int64, title: String?, photo: UIImage?) {
-            self.identifier = identifier
+        init(title: String?, photo: UIImage?) {
             self.title = title ?? "(untitled photo)"
             self.photo = photo
         }

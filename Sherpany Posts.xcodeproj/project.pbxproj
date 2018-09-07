@@ -33,6 +33,8 @@
 		28406AB821395AF90024CD03 /* APIControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28406AB721395AF90024CD03 /* APIControllerDelegate.swift */; };
 		286DE1DE212241E600F2ED03 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286DE1DD212241E600F2ED03 /* Coordinator.swift */; };
 		286DE1E02122424600F2ED03 /* Storyboarded.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286DE1DF2122424600F2ED03 /* Storyboarded.swift */; };
+		286E49322143366C00C1CB7E /* PostsDataSourceDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286E49312143366C00C1CB7E /* PostsDataSourceDelegate.swift */; };
+		286E493421433C5300C1CB7E /* PostDetailsDataSourceDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286E493321433C5300C1CB7E /* PostDetailsDataSourceDelegate.swift */; };
 		28902E06212C7D2C008C0C9F /* PostAlbumHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28902E05212C7D2C008C0C9F /* PostAlbumHeaderView.swift */; };
 		28902E09212DCEAE008C0C9F /* PostDetailsHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28902E08212DCEAE008C0C9F /* PostDetailsHeaderView.swift */; };
 		28CBC2CD2131571B0045A337 /* PostUIFeedbackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28CBC2CC2131571B0045A337 /* PostUIFeedbackViewController.swift */; };
@@ -60,7 +62,7 @@
 		28FC07AD21257A6E00C6EE7B /* PostTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28FC07AC21257A6E00C6EE7B /* PostTableViewCell.swift */; };
 		28FC07B1212590AE00C6EE7B /* ModelControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28FC07B0212590AE00C6EE7B /* ModelControllerDelegate.swift */; };
 		28FC07B32125995700C6EE7B /* NSPointerArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28FC07B22125995700C6EE7B /* NSPointerArray.swift */; };
-		28FC07B52125ADA600C6EE7B /* PostSelectedDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28FC07B42125ADA600C6EE7B /* PostSelectedDelegate.swift */; };
+		28FC07B52125ADA600C6EE7B /* PostsCoordinatorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28FC07B42125ADA600C6EE7B /* PostsCoordinatorDelegate.swift */; };
 		28FC07BF2125E79400C6EE7B /* PostDetailsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28FC07BE2125E79400C6EE7B /* PostDetailsDataSource.swift */; };
 		28FC07C12126CD7700C6EE7B /* NoPostDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28FC07C02126CD7700C6EE7B /* NoPostDetailsViewController.swift */; };
 /* End PBXBuildFile section */
@@ -104,6 +106,8 @@
 		28406AB721395AF90024CD03 /* APIControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIControllerDelegate.swift; sourceTree = "<group>"; };
 		286DE1DD212241E600F2ED03 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		286DE1DF2122424600F2ED03 /* Storyboarded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storyboarded.swift; sourceTree = "<group>"; };
+		286E49312143366C00C1CB7E /* PostsDataSourceDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostsDataSourceDelegate.swift; sourceTree = "<group>"; };
+		286E493321433C5300C1CB7E /* PostDetailsDataSourceDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailsDataSourceDelegate.swift; sourceTree = "<group>"; };
 		28902E05212C7D2C008C0C9F /* PostAlbumHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostAlbumHeaderView.swift; sourceTree = "<group>"; };
 		28902E08212DCEAE008C0C9F /* PostDetailsHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailsHeaderView.swift; sourceTree = "<group>"; };
 		28CBC2CC2131571B0045A337 /* PostUIFeedbackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostUIFeedbackViewController.swift; sourceTree = "<group>"; };
@@ -133,7 +137,7 @@
 		28FC07AC21257A6E00C6EE7B /* PostTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostTableViewCell.swift; sourceTree = "<group>"; };
 		28FC07B0212590AE00C6EE7B /* ModelControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelControllerDelegate.swift; sourceTree = "<group>"; };
 		28FC07B22125995700C6EE7B /* NSPointerArray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSPointerArray.swift; sourceTree = "<group>"; };
-		28FC07B42125ADA600C6EE7B /* PostSelectedDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostSelectedDelegate.swift; sourceTree = "<group>"; };
+		28FC07B42125ADA600C6EE7B /* PostsCoordinatorDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostsCoordinatorDelegate.swift; sourceTree = "<group>"; };
 		28FC07BE2125E79400C6EE7B /* PostDetailsDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailsDataSource.swift; sourceTree = "<group>"; };
 		28FC07C02126CD7700C6EE7B /* NoPostDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoPostDetailsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -209,8 +213,9 @@
 			isa = PBXGroup;
 			children = (
 				28111F502122507A00CA324F /* PostsCoordinator.swift */,
+				28FC07B42125ADA600C6EE7B /* PostsCoordinatorDelegate.swift */,
 				28111F56212258E600CA324F /* PostsDataSource.swift */,
-				28FC07B42125ADA600C6EE7B /* PostSelectedDelegate.swift */,
+				286E49312143366C00C1CB7E /* PostsDataSourceDelegate.swift */,
 			);
 			path = "Post List [master]";
 			sourceTree = "<group>";
@@ -220,6 +225,7 @@
 			children = (
 				28111F54212255C300CA324F /* PostDetailsCoordinator.swift */,
 				28FC07BE2125E79400C6EE7B /* PostDetailsDataSource.swift */,
+				286E493321433C5300C1CB7E /* PostDetailsDataSourceDelegate.swift */,
 				2826D8A521354407000D815A /* Fullscreen Photo */,
 			);
 			path = "Post Details [detail]";
@@ -564,7 +570,7 @@
 				28DD3B2E2121EDF200B05A4B /* PostDetailsViewController.swift in Sources */,
 				28ECB1322123220C00764592 /* APIResponse.swift in Sources */,
 				28FC07AD21257A6E00C6EE7B /* PostTableViewCell.swift in Sources */,
-				28FC07B52125ADA600C6EE7B /* PostSelectedDelegate.swift in Sources */,
+				28FC07B52125ADA600C6EE7B /* PostsCoordinatorDelegate.swift in Sources */,
 				28406AB821395AF90024CD03 /* APIControllerDelegate.swift in Sources */,
 				286DE1E02122424600F2ED03 /* Storyboarded.swift in Sources */,
 				28CBC2CD2131571B0045A337 /* PostUIFeedbackViewController.swift in Sources */,
@@ -584,7 +590,9 @@
 				28FC07B32125995700C6EE7B /* NSPointerArray.swift in Sources */,
 				28406AB621395AC30024CD03 /* PhotoControllerDelegate.swift in Sources */,
 				28902E09212DCEAE008C0C9F /* PostDetailsHeaderView.swift in Sources */,
+				286E493421433C5300C1CB7E /* PostDetailsDataSourceDelegate.swift in Sources */,
 				2827CCDA212F0A1C008023EB /* FullscreenPhotoCoordinator.swift in Sources */,
+				286E49322143366C00C1CB7E /* PostsDataSourceDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

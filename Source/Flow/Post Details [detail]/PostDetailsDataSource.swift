@@ -12,8 +12,8 @@ import UIKit
 
 class PostDetailsDataSource: NSObject {
     
-    /// Weak reference to parent coordinator.
-    weak var coordinator: PostDetailsCoordinator?
+    /// Weak reference to delegate.
+    weak var delegate: PostDetailsDataSourceDelegate?
     
     /// Photo controller.
     private let photoController: PhotoController
@@ -148,7 +148,7 @@ extension PostDetailsDataSource: UICollectionViewDataSource {
         let title = photo.title
         let imageUrl = photo.thumbnailUrl
         let image = photoController.photo(for: imageUrl)
-        photoCell.model = PostAlbumCollectionViewCell.Model(identifier: photo.id, title: title, photo: image)
+        photoCell.model = PostAlbumCollectionViewCell.Model(title: title, photo: image)
         photoCell.delegate = self
         
         // no photo yet? -> fetch
@@ -160,7 +160,7 @@ extension PostDetailsDataSource: UICollectionViewDataSource {
                 guard currentCell.model?.photo == nil else { return }
                 
                 // queue a cell's model refresh
-                currentCell.model = PostAlbumCollectionViewCell.Model(identifier: photo.id, title: title, photo: image)
+                currentCell.model = PostAlbumCollectionViewCell.Model(title: title, photo: image)
                 self?.coalescedCollectionViewItems()
             }
         }
@@ -334,8 +334,9 @@ extension PostDetailsDataSource: PostAlbumHeaderViewDelegate {
 extension PostDetailsDataSource: PostAlbumCollectionViewCellDelegate {
     
     func photoTapped(on cell: PostAlbumCollectionViewCell) {
-        if let photoId = cell.model?.identifier {
-            coordinator?.showFullscreenPhoto(with: photoId)
+        if let cell = collectionView?.indexPath(for: cell),
+            let photo = self.photo(for: cell) {
+            delegate?.photoWasTapped(photo)
         }
     }
     

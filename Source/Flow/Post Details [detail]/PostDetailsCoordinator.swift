@@ -78,7 +78,7 @@ class PostDetailsCoordinator: Coordinator {
         //  -> data source
         let dataSource = PostDetailsDataSource(photoController: photoController)
         self.dataSource = dataSource
-        dataSource.coordinator = self
+        dataSource.delegate = self
         dataSource.collectionView = postDetailsViewController.collectionView
         postDetailsViewController.collectionView?.dataSource = dataSource
         postDetailsViewController.collectionView?.delegate = dataSource
@@ -155,25 +155,22 @@ class PostDetailsCoordinator: Coordinator {
         }
     }
     
-    func showFullscreenPhoto(with id: Int64) {
-        modelController.photo(with: id) { [weak self] photo in
-            guard let navigationController = self?.navigationController else { return }
-            
-            if let photo = photo, let photoController = self?.photoController {
-                // setup coordinator
-                let coordinator = FullscreenPhotoCoordinator(navigationController: navigationController, photoController: photoController, photo: photo)
-                
-                // keep child coordinator reference
-                self?.addChild(coordinator)
-                
-                // let coordinator take control
-                coordinator.start()
-                
-                // map this VC to this coordinator
-                if let vc = coordinator.viewController {
-                    self?.viewControllersToChildCoordinators[vc] = coordinator
-                }
-            }
+    /// Show full screen photo by loading a new coordinator.
+    ///
+    /// - Parameter photo: The photo to be shown.
+    func showFullscreenPhoto(with photo: Photo) {
+        // setup coordinator
+        let coordinator = FullscreenPhotoCoordinator(navigationController: navigationController, photoController: photoController, photo: photo)
+        
+        // keep child coordinator reference
+        addChild(coordinator)
+        
+        // let coordinator take control
+        coordinator.start()
+        
+        // map this VC to this coordinator
+        if let vc = coordinator.viewController {
+            viewControllersToChildCoordinators[vc] = coordinator
         }
     }
     
@@ -181,10 +178,21 @@ class PostDetailsCoordinator: Coordinator {
 
 
 // MARK: - Post selection delegate
-extension PostDetailsCoordinator: PostSelectedDelegate {
+extension PostDetailsCoordinator: PostDetailsDataSourceDelegate {
+    
+    func photoWasTapped(_ photo: Photo) {
+        // show full-sized photo
+        showFullscreenPhoto(with: photo)
+    }
+    
+}
+
+
+// MARK: - Post selection delegate
+extension PostDetailsCoordinator: PostsCoordinatorDelegate {
     
     // Requirement #9: ✅ (display the post details)
-    func postSelected(postId: Int64?) {
+    func postWasSelected(postId: Int64?) {
         // no post selected?
         guard let postId = postId else {
             state = .noSelection
@@ -202,6 +210,7 @@ extension PostDetailsCoordinator: PostSelectedDelegate {
     }
     
 }
+
 
 // MARK: Navigation controller delegate
 extension PostDetailsCoordinator: UINavigationControllerDelegate {

@@ -15,8 +15,8 @@ class PostsCoordinator: Coordinator {
     /// The navigation view controller currently being used to present view controllers.
     var navigationController: UINavigationController
     
-    /// Post selection delegate.
-    weak var postSelectedDelegate: PostSelectedDelegate?
+    /// Posts coordinator delegate (post selection).
+    weak var delegate: PostsCoordinatorDelegate?
     
     /// Weak reference to presented view controller.
     ///
@@ -62,7 +62,7 @@ class PostsCoordinator: Coordinator {
         // table view data source
         let dataSource = PostsDataSource(modelController: modelController)
         self.dataSource = dataSource
-        dataSource.coordinator = self
+        dataSource.delegate = self
         dataSource.tableView = viewController.tableView
         viewController.tableView.dataSource = dataSource
         viewController.tableView.delegate = dataSource
@@ -83,41 +83,26 @@ class PostsCoordinator: Coordinator {
         navigationController.pushViewController(viewController, animated: false)
     }
     
-    /// Called from table view controller when a post has been selected.
-    ///
-    /// - Parameter id: The index path of selected post.
-    func postSelected(in tableView: UITableView, at indexPath: IndexPath?) {
-        guard let indexPath = indexPath else {
-            // clear selection
-            selectedPost = nil
-            postSelectedDelegate?.postSelected(postId: nil)
-            return
-        }
-        
+}
+
+
+// MARK: - PostsDataSourceDelegate delegate
+extension PostsCoordinator: PostsDataSourceDelegate {
+    func postWasSelected(_ post: Post?) {
         // remember selection
-        selectedPost = dataSource?.post(at: indexPath)
+        selectedPost = post
         
         // inform post selection delegate that selected post has been changed
-        if let postId = selectedPost?.id {
-            postSelectedDelegate?.postSelected(postId: postId)
-        }
+        delegate?.postWasSelected(postId: post?.id)
     }
     
-    /// Called from table view controller when a post has been deleted.
-    ///
-    /// - Parameter id: The index path of selected post.
-    func postDeleted(in tableView: UITableView, at indexPath: IndexPath) {
-        // remove from Core Data
-        dataSource?.removePost(in: tableView, at: indexPath)
+    func postWasDeleted(_ post: Post) {
+        // nothing to do
     }
     
-    /// Show search feedback to the user.
-    ///
-    /// - Parameter text: Text to display.
-    func setSearchFeedback(_ text: String?) {
-        viewController?.setSearchFeedbackView(with: text)
+    func searchFeedbackDidChange(_ searchFeedback: String?) {
+        viewController?.setSearchFeedbackView(with: searchFeedback)
     }
-    
 }
 
 

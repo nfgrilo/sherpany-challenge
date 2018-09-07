@@ -49,7 +49,7 @@ class MainCoordinator: Coordinator {
         let detailsCoordinator = PostDetailsCoordinator(navigationController: detailNavigationController, modelController: modelController, photoController: photoController)
         addChild(detailsCoordinator)
         detailsCoordinator.start()
-        masterCoordinator.postSelectedDelegate = detailsCoordinator
+        masterCoordinator.delegate = detailsCoordinator
         
         // root: split view controller -> Requirement #6: ✅
         let splitViewController = UISplitViewController()
