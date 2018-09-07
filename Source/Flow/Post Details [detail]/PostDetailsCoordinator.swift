@@ -215,6 +215,7 @@ extension PostDetailsCoordinator: UINavigationControllerDelegate {
         
         // remove child coordinator
         if let coordinator = viewControllersToChildCoordinators[fromViewController] {
+            viewControllersToChildCoordinators.removeValue(forKey: fromViewController)
             removeChild(coordinator)
         }
     }

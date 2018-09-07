@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol FullscreenPhotoViewControllerDelegate {
+protocol FullscreenPhotoViewControllerDelegate: class {
     /// Called when user taps on photo.
     func photoTapped()
 }
@@ -22,7 +22,7 @@ class FullscreenPhotoViewController: UIViewController, Storyboarded {
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     /// The delegate to be informed when the photo is tapped.
-    var delegate: FullscreenPhotoViewControllerDelegate?
+    weak var delegate: FullscreenPhotoViewControllerDelegate?
     
     
     /// View-model.
