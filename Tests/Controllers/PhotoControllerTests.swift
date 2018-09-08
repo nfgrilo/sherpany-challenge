@@ -43,12 +43,12 @@ class PhotoControllerTests: XCTestCase {
     }
     
     override func tearDown() {
-        super.tearDown()
-        
         // clean up
         photoController = nil
         fakeData = nil
         mockSession = nil
+        
+        super.tearDown()
     }
     
     

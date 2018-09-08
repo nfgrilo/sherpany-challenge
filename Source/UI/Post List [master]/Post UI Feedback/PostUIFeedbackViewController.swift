@@ -21,12 +21,6 @@ class PostUIFeedbackViewController: UIViewController, Storyboarded {
     /// Progress view.
     @IBOutlet weak var progressView: UIView!
     
-    /// Is progress view visible
-    private var isProgressViewHidden: Bool = true
-    
-    /// Is text feedback view visible
-    private var isTextFeedbackViewHidden: Bool = true
-    
     
     // MARK: - Setup
     
@@ -67,8 +61,6 @@ class PostUIFeedbackViewController: UIViewController, Storyboarded {
         backgroundViewBottomConstraint?.isActive = true
         
         // initial setup
-        isTextFeedbackViewHidden = true
-        isProgressViewHidden = true
         adjustLayout()
         
         // register for notifications
@@ -90,33 +82,35 @@ class PostUIFeedbackViewController: UIViewController, Storyboarded {
     
     // MARK: - Show/Hide feedback
     
-    /// Show/hide the progress view.
-    ///
-    /// - Parameter show: Whether to show or hide it.
-    func showProgressView(_ show: Bool) {
-        isProgressViewHidden = !show
-        adjustLayout()
+    /// Show/hide the search feedback view.
+    var isProgressViewVisible: Bool = false {
+        didSet {
+            adjustLayout()
+        }
     }
     
-    /// Show/hide the search feedback view.
-    ///
-    /// - Parameter show: Whether to show or hide it.
-    func setSearchFeedbackView(with text: String?) {
-        let show = text != nil
-        
-        // update text
-        if let text = text {
-            textFeedbackLabel.text = text
+    /// Search feedback text.
+    var searchFeedbackText: String? = nil {
+        didSet {
+            // update text
+            if let text = searchFeedbackText {
+                textFeedbackLabel.text = text
+            }
+            
+            adjustLayout()
         }
-        
-        isTextFeedbackViewHidden = !show
-        adjustLayout()
     }
+    
+    /// Is search feedback visible?
+    var isTextFeedbackViewVisible: Bool {
+        return searchFeedbackText != nil
+    }
+    
     
     /// Layout and animate background view and its children.
     private func adjustLayout() {
         guard let hostingView = self.hostingView else { return }
-        let isBackgroundViewHidden = isProgressViewHidden && isTextFeedbackViewHidden
+        let isBackgroundViewHidden = !isProgressViewVisible && !isTextFeedbackViewVisible
 
         // background view
         view.layoutIfNeeded()
@@ -125,16 +119,16 @@ class PostUIFeedbackViewController: UIViewController, Storyboarded {
         
         // text feedback view
         let textFeedbackHeight = textFeedbackView.frame.height
-        textFeedbackBottomConstraint?.constant = isTextFeedbackViewHidden ? -textFeedbackHeight : 0
+        textFeedbackBottomConstraint?.constant = isTextFeedbackViewVisible ? 0 : -textFeedbackHeight
         
         // progress view
         let progressHeight = progressView.frame.height
-        progressBottomConstraint?.constant = isProgressViewHidden ? -progressHeight : 0
+        progressBottomConstraint?.constant = isProgressViewVisible ? 0 : -progressHeight
         
         // animate background view bottom anchor & feedback views
         let backgroundViewAlpha: CGFloat = isBackgroundViewHidden ? 0 : 1
-        let textFeedbackViewAlpha: CGFloat = isTextFeedbackViewHidden ? 0 : 1
-        let progressViewAlpha: CGFloat = isProgressViewHidden ? 0 : 1
+        let textFeedbackViewAlpha: CGFloat = isTextFeedbackViewVisible ? 1 : 0
+        let progressViewAlpha: CGFloat = isProgressViewVisible ? 1 : 0
         hostingView.setNeedsUpdateConstraints()
         UIView.animate(withDuration: 0.5) { [weak self] in
             self?.textFeedbackView.alpha = textFeedbackViewAlpha

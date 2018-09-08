@@ -12,6 +12,10 @@
 		28111F532122529F00CA324F /* PostsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28111F522122529F00CA324F /* PostsViewController.swift */; };
 		28111F55212255C300CA324F /* PostDetailsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28111F54212255C300CA324F /* PostDetailsCoordinator.swift */; };
 		28111F57212258E600CA324F /* PostsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28111F56212258E600CA324F /* PostsDataSource.swift */; };
+		281C045421434F3400C515AE /* CoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 281C045321434F3400C515AE /* CoordinatorTests.swift */; };
+		281C04562143515000C515AE /* PostsCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 281C04552143515000C515AE /* PostsCoordinatorTests.swift */; };
+		281C0458214352DF00C515AE /* MockDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 281C0457214352DF00C515AE /* MockDataController.swift */; };
+		281C045B2143D16000C515AE /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 281C045A2143D16000C515AE /* DataController.swift */; };
 		2826D8BE21359224000D815A /* ModelControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2826D8BD21359224000D815A /* ModelControllerTests.swift */; };
 		2826D8C6213598CD000D815A /* APIControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2826D8C5213598CD000D815A /* APIControllerTests.swift */; };
 		2826D8C92135B015000D815A /* MockURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2826D8C82135B015000D815A /* MockURLSession.swift */; };
@@ -35,6 +39,8 @@
 		286DE1E02122424600F2ED03 /* Storyboarded.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286DE1DF2122424600F2ED03 /* Storyboarded.swift */; };
 		286E49322143366C00C1CB7E /* PostsDataSourceDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286E49312143366C00C1CB7E /* PostsDataSourceDelegate.swift */; };
 		286E493421433C5300C1CB7E /* PostDetailsDataSourceDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 286E493321433C5300C1CB7E /* PostDetailsDataSourceDelegate.swift */; };
+		288D4BD92143FFE40027D380 /* FeedbackVisible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 288D4BD82143FFE40027D380 /* FeedbackVisible.swift */; };
+		288D4BDB21440DF40027D380 /* DataControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 288D4BDA21440DF40027D380 /* DataControllerTests.swift */; };
 		28902E06212C7D2C008C0C9F /* PostAlbumHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28902E05212C7D2C008C0C9F /* PostAlbumHeaderView.swift */; };
 		28902E09212DCEAE008C0C9F /* PostDetailsHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28902E08212DCEAE008C0C9F /* PostDetailsHeaderView.swift */; };
 		28CBC2CD2131571B0045A337 /* PostUIFeedbackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28CBC2CC2131571B0045A337 /* PostUIFeedbackViewController.swift */; };
@@ -83,6 +89,10 @@
 		28111F522122529F00CA324F /* PostsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostsViewController.swift; sourceTree = "<group>"; };
 		28111F54212255C300CA324F /* PostDetailsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailsCoordinator.swift; sourceTree = "<group>"; };
 		28111F56212258E600CA324F /* PostsDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostsDataSource.swift; sourceTree = "<group>"; };
+		281C045321434F3400C515AE /* CoordinatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinatorTests.swift; sourceTree = "<group>"; };
+		281C04552143515000C515AE /* PostsCoordinatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostsCoordinatorTests.swift; sourceTree = "<group>"; };
+		281C0457214352DF00C515AE /* MockDataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDataController.swift; sourceTree = "<group>"; };
+		281C045A2143D16000C515AE /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		2826D8BB21359224000D815A /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2826D8BD21359224000D815A /* ModelControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelControllerTests.swift; sourceTree = "<group>"; };
 		2826D8BF21359224000D815A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -108,6 +118,8 @@
 		286DE1DF2122424600F2ED03 /* Storyboarded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storyboarded.swift; sourceTree = "<group>"; };
 		286E49312143366C00C1CB7E /* PostsDataSourceDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostsDataSourceDelegate.swift; sourceTree = "<group>"; };
 		286E493321433C5300C1CB7E /* PostDetailsDataSourceDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailsDataSourceDelegate.swift; sourceTree = "<group>"; };
+		288D4BD82143FFE40027D380 /* FeedbackVisible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackVisible.swift; sourceTree = "<group>"; };
+		288D4BDA21440DF40027D380 /* DataControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataControllerTests.swift; sourceTree = "<group>"; };
 		28902E05212C7D2C008C0C9F /* PostAlbumHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostAlbumHeaderView.swift; sourceTree = "<group>"; };
 		28902E08212DCEAE008C0C9F /* PostDetailsHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailsHeaderView.swift; sourceTree = "<group>"; };
 		28CBC2CC2131571B0045A337 /* PostUIFeedbackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostUIFeedbackViewController.swift; sourceTree = "<group>"; };
@@ -182,6 +194,7 @@
 		280B2CF0212F27940023D497 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				281C04592143D15000C515AE /* Data Controller */,
 				28406AB2213957690024CD03 /* Model Controller */,
 				28406AB3213957760024CD03 /* Photo Controller */,
 				28ECB12C2123211300764592 /* REST API */,
@@ -207,6 +220,34 @@
 				2827CCD8212F09EF008023EB /* Fullscreen Photo */,
 			);
 			path = "Post Details [detail]";
+			sourceTree = "<group>";
+		};
+		281C045121434EFD00C515AE /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				2826D8C5213598CD000D815A /* APIControllerTests.swift */,
+				2826D8BD21359224000D815A /* ModelControllerTests.swift */,
+				28406AAC21370BC00024CD03 /* PhotoControllerTests.swift */,
+				288D4BDA21440DF40027D380 /* DataControllerTests.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		281C045221434F0500C515AE /* Coordinators */ = {
+			isa = PBXGroup;
+			children = (
+				281C045321434F3400C515AE /* CoordinatorTests.swift */,
+				281C04552143515000C515AE /* PostsCoordinatorTests.swift */,
+			);
+			path = Coordinators;
+			sourceTree = "<group>";
+		};
+		281C04592143D15000C515AE /* Data Controller */ = {
+			isa = PBXGroup;
+			children = (
+				281C045A2143D16000C515AE /* DataController.swift */,
+			);
+			path = "Data Controller";
 			sourceTree = "<group>";
 		};
 		2826D8A321354382000D815A /* Post List [master] */ = {
@@ -243,9 +284,8 @@
 			isa = PBXGroup;
 			children = (
 				2826D8BF21359224000D815A /* Info.plist */,
-				2826D8C5213598CD000D815A /* APIControllerTests.swift */,
-				2826D8BD21359224000D815A /* ModelControllerTests.swift */,
-				28406AAC21370BC00024CD03 /* PhotoControllerTests.swift */,
+				281C045221434F0500C515AE /* Coordinators */,
+				281C045121434EFD00C515AE /* Controllers */,
 				2826D8C72135AFF5000D815A /* Mocks */,
 				2826D8CA2135B265000D815A /* FakeData */,
 			);
@@ -256,6 +296,7 @@
 			isa = PBXGroup;
 			children = (
 				2826D8C82135B015000D815A /* MockURLSession.swift */,
+				281C0457214352DF00C515AE /* MockDataController.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -318,6 +359,7 @@
 			isa = PBXGroup;
 			children = (
 				28CBC2CC2131571B0045A337 /* PostUIFeedbackViewController.swift */,
+				288D4BD82143FFE40027D380 /* FeedbackVisible.swift */,
 			);
 			path = "Post UI Feedback";
 			sourceTree = "<group>";
@@ -419,6 +461,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2826D8C421359224000D815A /* Build configuration list for PBXNativeTarget "Tests" */;
 			buildPhases = (
+				281C045C2143E17200C515AE /* TODO / FIXME / WARN / ERROR */,
 				2826D8B721359224000D815A /* Sources */,
 				2826D8B821359224000D815A /* Frameworks */,
 				2826D8B921359224000D815A /* Resources */,
@@ -519,6 +562,20 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		281C045C2143E17200C515AE /* TODO / FIXME / WARN / ERROR */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "TODO / FIXME / WARN / ERROR";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "TAGS=\"TODO|FIXME|WARN|\\?\\?\\?:|\\!\\!\\!:\"\nERRORTAG=\"ERROR:|\\?\\?\\?:|\\!\\!\\!:\"\nfind \"${SRCROOT}/Tests\" \\( -name \"*.h\" -or -name \"*.m\" -or -name \"*.swift\" -type f \\) -print0 | xargs -0 egrep --with-filename --line-number --only-matching \"($TAGS).*\\$|($ERRORTAG).*\\$\" | perl -p -e \"s/($TAGS)/ warning: \\$1/\" | perl -p -e \"s/($ERRORTAG)/ error: \\$1/\"";
+		};
 		28ECB145212434F500764592 /* TODO / FIXME / WARN / ERROR */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -542,8 +599,12 @@
 			files = (
 				2826D8C92135B015000D815A /* MockURLSession.swift in Sources */,
 				28406AAD21370BC00024CD03 /* PhotoControllerTests.swift in Sources */,
+				281C045421434F3400C515AE /* CoordinatorTests.swift in Sources */,
+				281C0458214352DF00C515AE /* MockDataController.swift in Sources */,
 				2826D8C6213598CD000D815A /* APIControllerTests.swift in Sources */,
+				281C04562143515000C515AE /* PostsCoordinatorTests.swift in Sources */,
 				2826D8DC21368F3E000D815A /* FakeData.swift in Sources */,
+				288D4BDB21440DF40027D380 /* DataControllerTests.swift in Sources */,
 				2826D8BE21359224000D815A /* ModelControllerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -559,6 +620,8 @@
 				28D6F215212BFDB600CD6090 /* PhotoController.swift in Sources */,
 				286DE1DE212241E600F2ED03 /* Coordinator.swift in Sources */,
 				28FC07C12126CD7700C6EE7B /* NoPostDetailsViewController.swift in Sources */,
+				288D4BD92143FFE40027D380 /* FeedbackVisible.swift in Sources */,
+				281C045B2143D16000C515AE /* DataController.swift in Sources */,
 				28ECB12E2123215400764592 /* APIController.swift in Sources */,
 				2827CCDC212F0A91008023EB /* FullscreenPhotoViewController.swift in Sources */,
 				28ECB139212348C700764592 /* ModelController.swift in Sources */,

@@ -16,34 +16,41 @@ class ModelControllerTests: XCTestCase {
     
     var modelController: ModelController!
     var apiController: APIController!
+    var dataController: DataController!
     var mockSession: URLSessionMock!
     var fakeData: FakeData!
     
     override func setUp() {
         super.setUp()
         
-        // initialize fake data
-        fakeData = FakeData()
-        
         // initialize mock URL session
         mockSession = URLSessionMock()
         
         // initialize controllers
         apiController = APIController(session: mockSession)
-        modelController = ModelController(container: mockPersistantContainer, apiController: apiController)
-        
-        // insert fake data into Core Data
-        createFakeData()
+        dataController = MockDataController()
+        let eDataController = XCTestExpectation(description: "Data controller loaded persistent store")
+        dataController.loadPersistentStore { [unowned self] _, _ in
+            defer { eDataController.fulfill() }
+            
+            // model controller
+            self.modelController = ModelController(dataController: self.dataController, apiController: self.apiController)
+            
+            // initialize fake data
+            self.fakeData = FakeData()
+            self.fakeData.createFakeData(in: self.dataController.backgroundManagedObjectContext)
+        }
+        wait(for: [eDataController], timeout: 1)
     }
     
     override func tearDown() {
-        super.tearDown()
-        
         // clean up
         mockSession = nil
+        fakeData.removeFakeData(in: dataController.backgroundManagedObjectContext)
         fakeData = nil
         apiController = nil
-        removeFakeData()
+        
+        super.tearDown()
     }
     
     
@@ -412,138 +419,40 @@ class ModelControllerTests: XCTestCase {
         modelController.removeDelegate(delegate)
     }
     
-    
-    // MARK: - Core Data stack for mocking
-    
-    // In-memory persistent container.
-    lazy var mockPersistantContainer: CoreDataContainer = {
-        let appBundle = Bundle(for: AppDelegate.self)
-        let managedObjectModel = NSManagedObjectModel.mergedModel(from: [appBundle])!
-        let container = CoreDataContainer(name: "Posts", managedObjectModel: managedObjectModel)
-        let description = NSPersistentStoreDescription()
-        description.type = NSInMemoryStoreType
-        description.shouldAddStoreAsynchronously = false
-        container.persistentStoreDescriptions = [description]
-        container.loadPersistentStores { (storeDescription, error) in
-            // assert the data store is in-memory
-            precondition( storeDescription.type == NSInMemoryStoreType )
-            
-            // errors?
-            if let error = error {
-                fatalError("Failed creation of in-memory coordinator: \(error)")
-            }
-        }
-        return container
-    }()
-    
 }
 
 
-// MARK: - Fake data
+// MARK: - Core Data helper methods (for asserting expected values)
 extension ModelControllerTests {
-    
-    func createFakeData() {
-        let context = mockPersistantContainer.backgroundManagedObjectContext
-        context.performAndWait {
-            // user 1
-            let user1 = ManagedUser(context: context)
-            user1.id = 1
-            user1.name = "User 1"
-            user1.username = "user1"
-            user1.email = "user1@email.com"
-            
-            // user 2
-            let user2 = ManagedUser(context: context)
-            user2.id = 2
-            user2.name = "User 2"
-            user2.username = "user2"
-            user2.email = "user2@email.com"
-            
-            // user 999999
-            let user999999 = ManagedUser(context: context)
-            user999999.id = 999999
-            user999999.name = "User 999999"
-            user999999.username = "user999999"
-            user999999.email = "user999999@email.com"
-            
-            // post 1
-            let post1 = ManagedPost(context: context)
-            post1.id = 1
-            post1.title = "Post 1"
-            post1.user = user1
-            user1.addToPosts(post1)
-            
-            // post 2
-            let post2 = ManagedPost(context: context)
-            post2.id = 2
-            post2.title = "Post 2"
-            post2.user = user1
-            user1.addToPosts(post2)
-            
-            // album 1
-            let album1 = ManagedAlbum(context: context)
-            album1.id = 1
-            album1.title = "Album 1"
-            album1.user = user1
-
-            // photo 1
-            let photo1 = ManagedPhoto(context: context)
-            photo1.id = 1
-            photo1.title = "Photo 1"
-            photo1.url = URL(string: "http://someplace.com/photo/1")
-            photo1.thumbnailUrl = URL(string: "http://someplace.com/thumb/1")
-            photo1.album = album1
-            album1.addToPhotos(photo1)
-            
-            // save
-            do {
-                try context.save()
-            }
-            catch {
-                print("Error creating fake data: \(error)")
-            }
-        }
-    }
-    
-    func removeFakeData() {
-        let context = mockPersistantContainer.backgroundManagedObjectContext
-        context.performAndWait {
-            let userRequest: NSFetchRequest<ManagedUser> = ManagedUser.fetchRequest()
-            for obj in (try! context.fetch(userRequest)) {
-                context.delete(obj)
-            }
-            try! context.save()
-        }
-    }
     
     func post(id: Int64) -> ManagedPost? {
         var post: ManagedPost?
-        mockPersistantContainer.mainManagedObjectContext.performAndWait {
+        dataController.mainManagedObjectContext.performAndWait {
             let request: NSFetchRequest<ManagedPost> = ManagedPost.fetchRequest()
             request.predicate = NSPredicate(format: "id == %d", id)
             request.includesPropertyValues = true
-            post = try! mockPersistantContainer.mainManagedObjectContext.fetch(request).first
+            post = try! dataController.mainManagedObjectContext.fetch(request).first
         }
         return post
     }
     
     func user(id: Int64) -> ManagedUser? {
         var user: ManagedUser?
-        mockPersistantContainer.mainManagedObjectContext.performAndWait {
+        dataController.mainManagedObjectContext.performAndWait {
             let request: NSFetchRequest<ManagedUser> = ManagedUser.fetchRequest()
             request.predicate = NSPredicate(format: "id == %d", id)
-            user = try! mockPersistantContainer.mainManagedObjectContext.fetch(request).first
+            user = try! dataController.mainManagedObjectContext.fetch(request).first
         }
         return user
     }
     
     func album(id: Int64) -> ManagedAlbum? {
         var album: ManagedAlbum?
-        mockPersistantContainer.mainManagedObjectContext.performAndWait {
+        dataController.mainManagedObjectContext.performAndWait {
             let request: NSFetchRequest<ManagedAlbum> = ManagedAlbum.fetchRequest()
             request.relationshipKeyPathsForPrefetching = ["photos"]
             request.predicate = NSPredicate(format: "id == %d", id)
-            album = try! mockPersistantContainer.mainManagedObjectContext.fetch(request).first
+            album = try! dataController.mainManagedObjectContext.fetch(request).first
         }
         return album
     }

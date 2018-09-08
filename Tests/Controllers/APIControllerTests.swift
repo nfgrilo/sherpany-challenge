@@ -31,12 +31,12 @@ class APIControllerTests: XCTestCase {
     }
     
     override func tearDown() {
-        super.tearDown()
-        
         // clean up
         mockSession = nil
         apiController = nil
         fakeData = nil
+        
+        super.tearDown()
     }
     
     

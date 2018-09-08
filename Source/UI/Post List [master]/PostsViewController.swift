@@ -8,7 +8,13 @@
 
 import UIKit
 
-class PostsViewController: UIViewController, Storyboarded {
+protocol PostsViewControllerProtocol: NSObjectProtocol, Storyboarded, FeedbackVisible {
+    
+    var tableView: UITableView! { get set }
+    
+}
+
+class PostsViewController: UIViewController, PostsViewControllerProtocol, Storyboarded {
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,18 +53,28 @@ class PostsViewController: UIViewController, Storyboarded {
     /// The (hideable) loading view.
     private var feedbackViewController: PostUIFeedbackViewController?
     
-    /// Show/hide the progress view.
-    ///
-    /// - Parameter show: Whether to show or hide it.
-    func showProgressView(_ show: Bool) {
-        feedbackViewController?.showProgressView(show)
+}
+
+
+// MARK: - FeedbackVisible protocol
+extension PostsViewController: FeedbackVisible {
+    
+    var isProgressViewVisible: Bool {
+        get {
+            return feedbackViewController?.isProgressViewVisible ?? false
+        }
+        set {
+            feedbackViewController?.isProgressViewVisible = newValue
+        }
     }
     
-    /// Show/hide the search feedback view.
-    ///
-    /// - Parameter show: Whether to show or hide it.
-    func setSearchFeedbackView(with text: String?) {
-        feedbackViewController?.setSearchFeedbackView(with: text)
+    var searchFeedbackText: String? {
+        get {
+            return feedbackViewController?.searchFeedbackText
+        }
+        set {
+            feedbackViewController?.searchFeedbackText = newValue
+        }
     }
     
 }

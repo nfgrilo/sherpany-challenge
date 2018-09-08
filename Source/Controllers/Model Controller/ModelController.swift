@@ -14,7 +14,7 @@ import CoreData
 class ModelController {
     
     /// Persistent store coordinator.
-    private var container: CoreDataContainer
+    private var dataController: DataController
     
     /// REST API controller.
     private var apiController: APIController
@@ -28,10 +28,10 @@ class ModelController {
     /// Initialize the model controller.
     ///
     /// - Parameters:
-    ///   - container: The shared instance of Core Data container.
+    ///   - dataController: The shared instance of Data controller.
     ///   - apiController: The shared instance of API controller for data fetching.
-    init(container: CoreDataContainer, apiController: APIController) {
-        self.container = container
+    init(dataController: DataController, apiController: APIController) {
+        self.dataController = dataController
         self.apiController = apiController
     }
     
@@ -43,7 +43,7 @@ class ModelController {
     /// - Parameter completion: An array of `Post` objects.
     func allPosts(completion: @escaping ([Post]) -> Void) {
         // reads can be done on readonly main context
-        let context = container.mainManagedObjectContext
+        let context = dataController.mainManagedObjectContext
         context.perform {
             // setup fetch request
             let fetchRequest: NSFetchRequest<ManagedPost> = ManagedPost.fetchRequest()
@@ -73,7 +73,7 @@ class ModelController {
     ///   - completion: Completion closure called when complete.
     func post(with id: Int64, completion: @escaping (Post?) -> Void) {
         // reads can be done on readonly main context
-        let context = container.mainManagedObjectContext
+        let context = dataController.mainManagedObjectContext
         context.perform {
             // setup fetch request
             let fetchRequest: NSFetchRequest<ManagedPost> = ManagedPost.fetchRequest()
@@ -105,7 +105,7 @@ class ModelController {
     func removePost(_ id: Int64, completion: (() -> Void)? = nil) {
         guard !isRefreshingData else {
             // refreshing/merging data? -> remove the object later
-            let context = container.mainManagedObjectContext
+            let context = dataController.mainManagedObjectContext
             context.perform { [weak self] in
                 self?.queuePostForRemoval(id: id, in: context)
             }
@@ -116,7 +116,7 @@ class ModelController {
         }
         
         // writes are done on background on a private queue
-        let context = container.backgroundManagedObjectContext
+        let context = dataController.backgroundManagedObjectContext
         context.perform { [weak self] in
             // setup fetch request
             let fetchRequest: NSFetchRequest<ManagedPost> = ManagedPost.fetchRequest()
@@ -153,7 +153,7 @@ class ModelController {
     ///   - completion: Completion closure called when complete.
     func user(with id: Int64, completion: @escaping (User?) -> Void) {
         // reads can be done on readonly main context
-        let context = container.mainManagedObjectContext
+        let context = dataController.mainManagedObjectContext
         context.perform {
             // setup fetch request
             let fetchRequest: NSFetchRequest<ManagedUser> = ManagedUser.fetchRequest()
@@ -185,7 +185,7 @@ class ModelController {
     ///   - completion: Completion closure called when complete.
     func album(with id: Int64, completion: @escaping (Album?) -> Void) {
         // reads can be done on readonly main context
-        let context = container.mainManagedObjectContext
+        let context = dataController.mainManagedObjectContext
         context.perform {
             // setup fetch request
             let fetchRequest: NSFetchRequest<ManagedAlbum> = ManagedAlbum.fetchRequest()
@@ -219,7 +219,7 @@ class ModelController {
     ///   - completion: Completion closure called when complete.
     func photo(with id: Int64, completion: @escaping (Photo?) -> Void) {
         // reads can be done on readonly main context
-        let context = container.mainManagedObjectContext
+        let context = dataController.mainManagedObjectContext
         context.perform {
             // setup fetch request
             let fetchRequest: NSFetchRequest<ManagedPhoto> = ManagedPhoto.fetchRequest()
@@ -313,7 +313,7 @@ class ModelController {
         //      * added `id` as Entity Constraint to all entities
         //      * adjusted managed object context merge policy
         
-        let context = container.backgroundManagedObjectContext
+        let context = dataController.backgroundManagedObjectContext
         context.perform { [weak self] in
             // 2.1 remove "orphans"
             self?.removeOrphans(using: fetchedData, in: context)

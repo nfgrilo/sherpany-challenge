@@ -21,19 +21,19 @@ class PostsCoordinator: Coordinator {
     /// Weak reference to presented view controller.
     ///
     /// A strong reference is already made when vc is presented (added to vc hierarchy).
-    private weak var viewController: PostsViewController?
+    weak var viewController: PostsViewControllerProtocol?
     
     /// The posts search controller.
-    private var searchController: UISearchController?
+    var searchController: UISearchController?
     
     /// Model controller.
     private let modelController: ModelController
     
     /// Posts data source.
-    private var dataSource: PostsDataSource?
+    var dataSource: PostsDataSource?
     
     /// Currently selected post
-    private var selectedPost: Post?
+    var selectedPost: Post?
     
     
     /// Creates a new coordinator.
@@ -50,37 +50,70 @@ class PostsCoordinator: Coordinator {
         // model controller delegate
         modelController.addDelegate(self)
         
-        // create & setup vc
-        guard let viewController = PostsViewController.instantiate() else { return }
+        // view controller
+        guard let viewController = createViewController() else { return }
         self.viewController = viewController
-        viewController.loadViewIfNeeded()
-        viewController.title = "Posts"
-        navigationController.navigationBar.prefersLargeTitles = true
-        navigationController.navigationBar.barTintColor = UIColor(named: "Navigation Bar") ?? .clear
-        navigationController.navigationBar.barStyle = .black
         
-        // table view data source
-        let dataSource = PostsDataSource(modelController: modelController)
+        // data source
+        let dataSource = createDataSource(for: viewController.tableView)
         self.dataSource = dataSource
-        dataSource.delegate = self
-        dataSource.tableView = viewController.tableView
-        viewController.tableView.dataSource = dataSource
-        viewController.tableView.delegate = dataSource
-        dataSource.refreshPostList(in: viewController.tableView)
+        loadInitialData(in: viewController.tableView)
         
-        // setup search
-        // Bonus #3: ✅ (include search bar)
-        let searchController = UISearchController(searchResultsController: nil)
+        // search
+        let searchController = createSearchController(on: viewController, resultsUpdater: dataSource)
         self.searchController = searchController
         dataSource.searchController = searchController
-        searchController.searchResultsUpdater = dataSource
+        
+        // navigation bar
+        setupNavigationBar()
+        
+        // present it
+        navigationController.pushViewController(viewController, animated: false)
+    }
+    
+    /// Create and configure the managed view controller.
+    func createViewController() -> PostsViewController? {
+        guard let viewController = PostsViewController.instantiate() else { return nil }
+        viewController.loadViewIfNeeded()
+        viewController.title = "Posts"
+        return viewController
+    }
+    
+    /// Create and configure the (table view) data source.
+    func createDataSource(for tableView: UITableView) -> PostsDataSource {
+        let dataSource = PostsDataSource(modelController: modelController)
+        dataSource.delegate = self
+        dataSource.tableView = tableView
+        tableView.dataSource = dataSource
+        tableView.delegate = dataSource
+        return dataSource
+    }
+    
+    /// Load initial data.
+    ///
+    /// Must be called after data source has been setup.
+    func loadInitialData(in tableView: UITableView, completion: (() -> Void)? = nil) {
+        guard let dataSource = self.dataSource else { completion?(); return }
+        dataSource.refreshPostList(in: tableView, completion: completion)
+    }
+    
+    /// Create and configure the search view controller.
+    func createSearchController(on viewController: UIViewController, resultsUpdater: UISearchResultsUpdating) -> UISearchController {
+        // Bonus #3: ✅ (include search bar)
+        let searchController = UISearchController(searchResultsController: nil)
+        searchController.searchResultsUpdater = resultsUpdater
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.placeholder = "Search Posts"
         viewController.navigationItem.searchController = searchController
         viewController.definesPresentationContext = true
-        
-        // present it
-        navigationController.pushViewController(viewController, animated: false)
+        return searchController
+    }
+    
+    /// Configures the navigation bar.
+    func setupNavigationBar() {
+        navigationController.navigationBar.prefersLargeTitles = true
+        navigationController.navigationBar.barTintColor = UIColor(named: "Navigation Bar") ?? .clear
+        navigationController.navigationBar.barStyle = .black
     }
     
 }

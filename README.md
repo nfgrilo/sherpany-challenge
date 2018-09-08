@@ -63,6 +63,8 @@ A slight variation of the "standard" Core Data stack that comes for free with `N
 - `backgroundManagedObjectContext`: 
   - background context, used to perform long/write operations, have persistent store as parent, merge policy set to `mergeByPropertyObjectTrump`
 
+These are set on `DataController`.
+
 #### Merging of fetched data with persisted data
 
 Merging of fetched data with Core Data persisted data is handled the following way (search "`Requirement #5`" in Xcode):
@@ -179,6 +181,7 @@ Please note that you can **find code related with a specific bonus** by searchin
 4. ✅ UI State restoration when merge of fetched and persisted data ends (selected post, scrolling position, albums collapsed state, ...)
 5. ✅ Tapping a photo (thumbnail) shows a new view with the full size photo
 6. ✅ Dynamic Type support: UI adapts to text size changes in Settings app (General > Accessibility > Larger Text)
-7. ✅ Unit Tests for controllers: `APIController`, `ModelController` and `PhotoController`
+7. ✅ Unit Tests for controllers: `APIController`, `DataController`, `ModelController` and `PhotoController`
+8. 7. ✅ Unit Tests for coordinators: `PostsCoordinator`
 
 
